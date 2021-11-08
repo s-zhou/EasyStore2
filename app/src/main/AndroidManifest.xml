@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.easystore2">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".LoginRegistroActivity"
+            android:name=".LoginWithGoogleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Borrador"
+            android:exported="false" />
+        <activity
+            android:name=".ContinueWithActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -21,10 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="false"
-            android:label="@string/title_activity_login" />
     </application>
 
 </manifest>

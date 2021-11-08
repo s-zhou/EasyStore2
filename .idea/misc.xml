@@ -5,8 +5,10 @@
       <map>
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2703125" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_borrador.xml" value="0.6" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_login_registro.xml" value="0.136" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_login_registro.xml" value="0.176" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_login_with_google.xml" value="0.115625" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_main.xml" value="0.152" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/entrada.xml" value="0.2" />
       </map>
