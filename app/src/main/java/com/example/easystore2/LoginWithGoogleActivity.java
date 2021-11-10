@@ -31,7 +31,7 @@ public class LoginWithGoogleActivity extends AppCompatActivity {
 
                 if (user != null) {
                     Toast.makeText(LoginWithGoogleActivity.this, "Se ha iniciado sesion", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginWithGoogleActivity.this, Borrador.class));
+                    startActivity(new Intent(LoginWithGoogleActivity.this, HomeStore.class));
                 }
                 else{
                     startActivityForResult(AuthUI.getInstance()

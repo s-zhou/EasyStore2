@@ -28,7 +28,7 @@ public class ContinueWithActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Toast.makeText(ContinueWithActivity.this, "Se ha iniciado sesion", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(ContinueWithActivity.this, Borrador.class));
+                    startActivity(new Intent(ContinueWithActivity.this, HomeStore.class));
                 }
             }
         };
