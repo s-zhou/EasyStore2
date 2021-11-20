@@ -3,4 +3,18 @@
     <string name="continuar_google">Comenzar con Google</string>
     <string name="cerrar_sesion">Cerrar sesion</string>
     <string name="Rebost">Rebost</string>
+    <string name="AddProduct">Añadir producto</string>
+    <string name="ProductName"> Nombre del producto</string>
+    <string name="Quantity">Cantidad</string>
+    <string name="Category">Categoria</string>
+    <string name="unitSelectorSpinner"> </string>
+    <string name="v"> v </string>
+    <string-array name="SprintItemsUnit">
+        <item>L</item>
+        <item>mL</item>
+        <item>g</item>
+        <item>Kg</item>
+        <item>Unidades</item>
+    </string-array>
+
 </resources>

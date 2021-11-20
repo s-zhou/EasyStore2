@@ -18,6 +18,7 @@
 
             <TextView
                 android:id="@+id/textView"
+                android:padding="30px"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:background="#16675E"
@@ -34,7 +35,7 @@
                 android:id="@+id/button2"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="12dp"
                 android:background="?android:attr/actionModeWebSearchDrawable"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -53,6 +54,7 @@
                 android:layout_height="70dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="30dp"
+                android:onClick="creatProduct"
                 android:background="@drawable/fui_ic_check_circle_black_128dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
