@@ -7,6 +7,8 @@
     <string name="ProductName"> Nombre del producto</string>
     <string name="Quantity">Cantidad</string>
     <string name="Category">Categoria</string>
+    <string name="Description">Descripción</string>
+    <string name="ExpirationDate">Data de caducidad</string>
     <string name="unitSelectorSpinner"> </string>
     <string name="v"> v </string>
     <string-array name="SprintItemsUnit">

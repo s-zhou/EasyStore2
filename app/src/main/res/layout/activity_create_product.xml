@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -32,7 +33,7 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
-                android:id="@+id/CreateProductText"
+                android:id="@+id/CreateProductHeaderText"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:background="#16675E"
@@ -46,98 +47,198 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/Save"
+                android:id="@+id/SaveNewProductBotton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/fui_ic_check_circle_black_128dp"
-                app:layout_constraintEnd_toEndOf="@+id/CreateProductText"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+                app:layout_constraintEnd_toEndOf="@+id/CreateProductHeaderText"
+                app:layout_constraintTop_toTopOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <EditText
-            android:id="@+id/productName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="#D6C6C6"
-            android:hint="@string/ProductName"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:padding="0dp"
-            android:shadowColor="#C83B3B"
-            android:textColor="#000000"
-            android:textColorHint="#FF9C9C9C"
-            app:backgroundTint="#FC22978A" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/quantity"
+            <EditText
+                android:id="@+id/productName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/Quantity"
-                android:textColor="#9C9C9C" />
+                android:layout_marginRight="20dp"
+                android:backgroundTint="#D6C6C6"
+                android:hint="@string/ProductName"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:padding="0dp"
+                android:shadowColor="#C83B3B"
+                android:textColor="#000000"
+                android:textColorHint="#FF9C9C9C"
+                app:backgroundTint="#FC22978A" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/productName2"
-                    android:layout_width="82dp"
-                    android:layout_height="34dp"
-                    android:layout_marginLeft="20dp"
-                    android:backgroundTint="#D6C6C6"
-                    android:minHeight="48dp"
-                    android:padding="0dp"
-                    android:shadowColor="#C83B3B"
-                    android:textColor="#000000"
-                    android:textColorHint="#979797"
-                    app:backgroundTint="#FC22978A"
-                    android:inputType="numberDecimal"
-                    tools:ignore="SpeakableTextPresentCheck" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <TextView
+                    android:id="@+id/quantity"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/Quantity"
+                    android:textColor="#1E5A54" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp">
+
+                        <Button
+                            android:id="@+id/plusButton"
+                            android:layout_width="33dp"
+                            android:layout_height="34dp"
+                            android:layout_weight="1"
+                            android:background="@android:drawable/ic_input_add"
+                            android:shadowColor="#BF9C9C"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                        <Button
+                            android:id="@+id/lessButton"
+                            android:layout_width="33dp"
+                            android:layout_height="34dp"
+                            android:layout_weight="1"
+                            android:background="@android:drawable/button_onoff_indicator_on"
+                            app:layout_constraintStart_toEndOf="@+id/plusButton"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <EditText
+                        android:id="@+id/quantityEditText"
+                        android:layout_width="82dp"
+                        android:layout_height="34dp"
+                        android:backgroundTint="#D6C6C6"
+                        android:inputType="numberDecimal"
+                        android:minHeight="48dp"
+                        android:padding="0dp"
+                        android:shadowColor="#C83B3B"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textColorHint="#979797"
+                        app:backgroundTint="#FC22978A"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <Spinner
                         android:id="@+id/selectUnitSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:entries="@array/SprintItemsUnit" />
+                        android:entries="@array/SprintItemsUnit"
+                        tools:ignore="TouchTargetSizeCheck" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="134dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="-15dp"
+                    android:text="@string/ExpirationDate"
+                    android:textColor="#FF1E5A54" />
+
+                <EditText
+                    android:id="@+id/ExpiredTextDate"
+                    android:layout_width="104dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#FC22978A"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:minHeight="48dp"
+                    android:textColor="#000000"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="59dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/Category"
-                android:textColor="#9C9C9C"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="20dp" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Category"
+                    android:textColor="#FF1E5A54" />
+
+                <Spinner
+                    android:id="@+id/categorySelectorSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Description"
+                    android:layout_marginBottom="-10dp"
+                    android:textColor="#FF1E5A54" />
+
+                <EditText
+                    android:id="@+id/descriptionTextMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/design_default_color_background"
+                    android:ems="10"
+                    android:foregroundTint="@color/design_default_color_background"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/design_default_color_on_secondary"
+                    android:textColorHighlight="@color/design_default_color_background" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="-10dp"
+                android:layout_marginRight="25dp"
+                android:background="@color/design_default_color_secondary_variant"
+                android:backgroundTint="@color/design_default_color_secondary_variant" />
+        </LinearLayout>
 
     </LinearLayout>
 
