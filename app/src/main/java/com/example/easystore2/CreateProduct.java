@@ -1,8 +1,10 @@
 package com.example.easystore2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Database;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -12,21 +14,28 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateProduct extends AppCompatActivity implements View.OnClickListener {
     private TextView compCreatProductHeaderText;
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
     private Typeface Ruloko;
+    private Products product;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    private Button compSaveNewProduct, compPlusQuantity, compLessQuantity;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+    private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
     private boolean first = true;
     private int dayExpired, monthExpired, yearExpired;
@@ -43,6 +52,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compSaveNewProduct.setOnClickListener(this);
         compPlusQuantity.setOnClickListener(this);
         compLessQuantity.setOnClickListener(this);
+        compCancel.setOnClickListener(this);
     }
 
     private boolean validation() {
@@ -72,6 +82,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compDescriptionText = (EditText) findViewById(R.id.descriptionTextMultiLine);
         compPlusQuantity = (Button) findViewById(R.id.plusButton);
         compLessQuantity = (Button) findViewById(R.id.lessButton);
+        compCancel = (Button) findViewById(R.id.Cancel);
     }
 
     private void expiredCalendar() {
@@ -101,6 +112,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         categoryList.add("Selecciona categoria");
         categoryList.add("Nevera");
         categoryList.add("Armario");
+        categoryList.add("No categorizar");
         ArrayAdapter adapterColor = new ArrayAdapter(
                 this,
                 R.layout.color_spinner_layout,
@@ -127,7 +139,12 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             datePickerDialog.show();
         }
         else if(v == compSaveNewProduct){
-            if(this.validation()) pushDB();
+            if(this.validation()){
+                pushDB();
+                startActivity(new Intent(CreateProduct.this, HomeStore.class));
+            }
+        }else if(v == compCancel){
+            startActivity(new Intent(CreateProduct.this, HomeStore.class));
         }
         else if(v == compPlusQuantity){
             plusLess(1);
@@ -139,16 +156,20 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     }
 
     private void pushDB() {
-        String productName = compProductNameText.getText().toString();
-        String quantity = compQuantityText.getText().toString();
-        String unit = compQuantitySpinner.getSelectedItem().toString();
-        String dataExpired = compExpiredDate.getText().toString();
-        String category = compCategoriSelectorSpinner.getSelectedItem().toString();
-        String description = compDescriptionText.getText().toString();
+        product = new Products();
+        product.setProductName(compProductNameText.getText().toString());
+        product.setQuantity(compQuantityText.getText().toString()+ compQuantitySpinner.getSelectedItem().toString());
+        product.setExpiredDate(compExpiredDate.getText().toString());
+        String category=compCategoriSelectorSpinner.getSelectedItem().toString();
+        if(category == "Selecciona categoria") category = "No categorizar";
+        product.setCategory(category);
+        product.setDescription(compDescriptionText.getText().toString());
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
         FirebaseApp.initializeApp(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-
+        databaseReference.child("UserProducts").child(uid).child(product.getIdProduct()).setValue(product);
+        Toast.makeText(this, "creado", Toast.LENGTH_LONG).show();
     }
 
     private void plusLess(int num) {

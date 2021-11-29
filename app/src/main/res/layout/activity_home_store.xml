@@ -7,6 +7,17 @@
     android:background="#FFFFFF"
     tools:context=".HomeStore">
 
+    <Button
+        android:id="@+id/cerrar_sesion_btn2"
+        android:layout_width="236dp"
+        android:layout_height="114dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="309dp"
+        android:onClick="cerrarSesionHome"
+        android:text="@string/cerrar_sesion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
