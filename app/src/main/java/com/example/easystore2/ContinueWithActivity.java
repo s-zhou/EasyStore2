@@ -1,12 +1,12 @@
 package com.example.easystore2;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +28,7 @@ public class ContinueWithActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Toast.makeText(ContinueWithActivity.this, "Se ha iniciado sesion", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(ContinueWithActivity.this, HomeStore.class));
+                    startActivity(new Intent(ContinueWithActivity.this, MainActivityNavBar1.class));
                 }
             }
         };

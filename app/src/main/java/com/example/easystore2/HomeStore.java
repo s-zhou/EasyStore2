@@ -24,8 +24,8 @@ public class HomeStore extends AppCompatActivity {
         setContentView(R.layout.activity_home_store);
         String font1= "font/Ruluko-Regular.ttf";
         this.Ruloko= Typeface.createFromAsset(getAssets(),font1);
-        Text1 = (TextView) findViewById(R.id.textView);
-        Text1.setTypeface(Ruloko);
+        //Text1 = (TextView) findViewById(R.id.textView);
+        //Text1.setTypeface(Ruloko);
     }
 
     public void cerrarSesionHome(View view) {
