@@ -2,11 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+        app:title="Inventario"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#16675E"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"></androidx.appcompat.widget.Toolbar>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <ImageView
+            android:id="@+id/searchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:src="@drawable/ic_search" />
+    </androidx.appcompat.widget.Toolbar>
 </LinearLayout>

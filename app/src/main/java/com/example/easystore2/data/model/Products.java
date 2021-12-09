@@ -4,7 +4,6 @@ import java.util.UUID;
 
 public class Products {
     private String productName,quantity, expiredDate, category, description;
-    private String idProduct = String.valueOf(UUID.randomUUID());
     public Products(String ProductName,String Quantity, String ExpiredDate, String Category, String Description) {
         this.productName = ProductName;
         this.quantity = Quantity;
@@ -53,10 +52,6 @@ public class Products {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getIdProduct() {
-        return idProduct;
     }
 
 }

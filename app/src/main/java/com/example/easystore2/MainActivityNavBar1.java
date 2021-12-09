@@ -9,14 +9,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.easystore2.Fragments.ListFragment;
 import com.example.easystore2.Fragments.MainFragment;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivityNavBar1 extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivityNavBar1 extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -25,6 +29,9 @@ public class MainActivityNavBar1 extends AppCompatActivity implements Navigation
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    private Button searchBtn;
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -50,6 +57,7 @@ public class MainActivityNavBar1 extends AppCompatActivity implements Navigation
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container, new MainFragment());
         fragmentTransaction.commit();
+
     }
 
 
@@ -75,4 +83,5 @@ public class MainActivityNavBar1 extends AppCompatActivity implements Navigation
         }
         return false;
     }
+
 }

@@ -1,4 +1,5 @@
 package com.example.easystore2.Fragments;
+import android.content.Context;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,15 +9,84 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.easystore2.Adapter.AdapterProducts;
+import com.example.easystore2.Entities.Product;
 import com.example.easystore2.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainFragment extends Fragment {
+    AdapterProducts adapterProducts;
+    RecyclerView productRecyclerView;
+    ArrayList<Product> listProduct;
+    private MainFragment context;
+    private String uid;
+    private DatabaseReference reference;
+    private FirebaseUser user;
+    private DatabaseReference mDatabase;
+    FirebaseDatabase firebaseDatabase;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.main_fragment,container, false);
-    return view;
+        View view = inflater.inflate(R.layout.main_fragment,container, false);
+        productRecyclerView = view.findViewById(R.id.storeRecyclerView);
+        listProduct = new ArrayList<>();
+        //LOAD LIST
+        context = this;
+
+        loadList();
+        //SHOW LIST
+        showListItems();
+        return view;
+    }
+
+    private void showListItems() {
+        productRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapterProducts = new AdapterProducts(getContext(),listProduct);
+        productRecyclerView.setAdapter(adapterProducts);
+    }
+
+    private void loadList() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        uid = user.getUid();
+        reference = FirebaseDatabase.getInstance().getReference();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        databaseReference.child("UserProducts").child("holaaa").setValue("product");
+
+        DatabaseReference UserRef = FirebaseDatabase.getInstance().getReference().child("UserProducts");
+
+        databaseReference.child("UserProducts").child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listProduct = new ArrayList<>();
+                if(snapshot.exists()){
+                     for (DataSnapshot prod : snapshot.getChildren()) {
+                        String name = prod.child("productName").getValue().toString();
+                        String quantity = prod.child("quantity").getValue().toString();
+                        listProduct.add(new Product(name, quantity));
+                    }
+                    showListItems();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 

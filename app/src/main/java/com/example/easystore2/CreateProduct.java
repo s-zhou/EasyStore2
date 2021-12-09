@@ -158,7 +158,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void pushDB() {
         product = new Products();
         product.setProductName(compProductNameText.getText().toString());
-        product.setQuantity(compQuantityText.getText().toString()+ compQuantitySpinner.getSelectedItem().toString());
+        product.setQuantity(compQuantityText.getText().toString()+" "+ compQuantitySpinner.getSelectedItem().toString());
         product.setExpiredDate(compExpiredDate.getText().toString());
         String category=compCategoriSelectorSpinner.getSelectedItem().toString();
         if(category == "Selecciona categoria") category = "No categorizar";
@@ -168,7 +168,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         String uid = user.getUid();
         FirebaseApp.initializeApp(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference.child("UserProducts").child(uid).child(product.getIdProduct()).setValue(product);
+        databaseReference.child("UserProducts").child(uid).child(product.getProductName()).setValue(product);
         Toast.makeText(this, "creado", Toast.LENGTH_LONG).show();
     }
 
