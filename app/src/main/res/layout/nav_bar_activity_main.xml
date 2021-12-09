@@ -4,30 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivityNavBar1"
+    tools:context=".MainActivityNavBar"
     android:id="@+id/drawer">
   <include
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      layout="@layout/drawer_toolbar"
+      layout="@layout/nav_bar_drawer_toolbar"
       >
   </include>
   <include
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      layout="@layout/content_main"
+      layout="@layout/nav_bar_content_main"
       >
   </include>
-
   <com.google.android.material.navigation.NavigationView
       android:id="@+id/navigationView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:menu="@menu/drawer_menu"
-      app:headerLayout="@layout/drawer_header"
+      app:menu="@menu/nav_bar_drawer_menu"
+      app:headerLayout="@layout/nav_bar_drawer_header"
+      app="@layout/nav_bar_logout"
       android:layout_gravity="start"
       android:fitsSystemWindows="true"
       />
+
 
 
 

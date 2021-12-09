@@ -1,7 +1,6 @@
 package com.example.easystore2;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Database;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -25,8 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CreateProduct extends AppCompatActivity implements View.OnClickListener {
     private TextView compCreatProductHeaderText;
@@ -141,10 +138,10 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else if(v == compSaveNewProduct){
             if(this.validation()){
                 pushDB();
-                startActivity(new Intent(CreateProduct.this, MainActivityNavBar1.class));
+                startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
             }
         }else if(v == compCancel){
-            startActivity(new Intent(CreateProduct.this, MainActivityNavBar1.class));
+            startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
         }
         else if(v == compPlusQuantity){
             plusLess(1);

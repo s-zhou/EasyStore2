@@ -15,7 +15,7 @@ public class ListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.list_fragment,container, false);
+    View view = inflater.inflate(R.layout.nav_bar_list_fragment,container, false);
     return view;
     }
 

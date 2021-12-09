@@ -12,6 +12,10 @@
             android:icon="@drawable/ic_list"
             android:title="lista"
             ></item>
+        <item
+            android:id="@+id/close"
+            android:title="cerrar sesion"
+            ></item>
     </menu>
 </item>
 </menu>

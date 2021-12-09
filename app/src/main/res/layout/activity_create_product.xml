@@ -23,11 +23,11 @@
 
             <Button
                 android:id="@+id/Cancel"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/fui_ic_check_circle_black_128dp"
+                android:background="@drawable/ic_baseline_arrow_back_ios_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -117,10 +117,13 @@
 
                         <Button
                             android:id="@+id/lessButton"
-                            android:layout_width="33dp"
-                            android:layout_height="34dp"
+                            android:layout_width="24dp"
+                            android:layout_height="6dp"
+                            android:layout_marginTop="12dp"
                             android:layout_weight="1"
                             android:background="@android:drawable/button_onoff_indicator_on"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toEndOf="@+id/plusButton"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />

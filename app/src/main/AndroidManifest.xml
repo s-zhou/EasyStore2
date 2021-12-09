@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MainActivityNavBar1"
+            android:name=".MainActivityNavBar"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
@@ -21,9 +21,6 @@
             android:exported="false" />
         <activity
             android:name=".HomeStore"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivityNavBar"
             android:exported="false" />
         <activity
             android:name=".LoginWithGoogleActivity"
