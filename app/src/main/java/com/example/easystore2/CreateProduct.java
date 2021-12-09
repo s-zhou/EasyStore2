@@ -141,10 +141,10 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else if(v == compSaveNewProduct){
             if(this.validation()){
                 pushDB();
-                startActivity(new Intent(CreateProduct.this, HomeStore.class));
+                startActivity(new Intent(CreateProduct.this, MainActivityNavBar1.class));
             }
         }else if(v == compCancel){
-            startActivity(new Intent(CreateProduct.this, HomeStore.class));
+            startActivity(new Intent(CreateProduct.this, MainActivityNavBar1.class));
         }
         else if(v == compPlusQuantity){
             plusLess(1);
