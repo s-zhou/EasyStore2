@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +13,7 @@ import com.example.easystore2.R;
 
 import java.util.ArrayList;
 
-public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHolder> implements View.OnClickListener {
+public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements View.OnClickListener {
     LayoutInflater inflater;
     ArrayList<Product> model;
     private View.OnClickListener listener;
@@ -26,7 +24,7 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.product_list, parent, false);
+        View view = inflater.inflate(R.layout.product_list_item, parent, false);
         view.setOnClickListener(this);
         return new ViewHolder(view);
     }
@@ -58,15 +56,6 @@ public class AdapterProducts extends RecyclerView.Adapter<AdapterProducts.ViewHo
     public void onClick(View v) {
         if(listener!=null){
             listener.onClick(v);
-        }
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView productName, productQuantity;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            productName = itemView.findViewById(R.id.productNameText);
-            productQuantity= itemView.findViewById(R.id.productQuantityText);
         }
     }
 

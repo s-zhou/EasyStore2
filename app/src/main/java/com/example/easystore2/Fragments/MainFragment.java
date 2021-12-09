@@ -18,7 +18,6 @@ import com.example.easystore2.Adapter.AdapterProducts;
 import com.example.easystore2.ContinueWithActivity;
 import com.example.easystore2.CreateProduct;
 import com.example.easystore2.Entities.Product;
-import com.example.easystore2.HomeStore;
 import com.example.easystore2.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,7 +45,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_fragment,container, false);
+        View view = inflater.inflate(R.layout.main_fragment_product_list,container, false);
         creatProductBtn = view.findViewById(R.id.createProductBtn);
         creatProductBtn.setOnClickListener(this);
         productRecyclerView = view.findViewById(R.id.storeRecyclerView);
@@ -74,7 +73,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         databaseReference.child("UserProducts").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                listProduct = new ArrayList<>();
                 if(snapshot.exists()){
                      for (DataSnapshot prod : snapshot.getChildren()) {
                         String name = prod.child("productName").getValue().toString();

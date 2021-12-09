@@ -91,12 +91,15 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, new MainFragment());
+            toolbar.setTitle("Inventario");
             fragmentTransaction.commit();
         }else if(item.getItemId() == R.id.list){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, new ListFragment());
+            toolbar.setTitle("Lista");
             fragmentTransaction.commit();
+
         }else if(item.getItemId() == R.id.close){
             AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>(){
                 @Override

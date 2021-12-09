@@ -26,9 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateProduct extends AppCompatActivity implements View.OnClickListener {
-    private TextView compCreatProductHeaderText;
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
-    private Typeface Ruloko;
     private Products product;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
@@ -42,7 +40,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_product);
         inicialiceComponents();
-        textStyle();
         unitSelectorSpinner();
         expiredCalendar();
         categorySelectorSpinner();
@@ -60,15 +57,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         }
         return true;
     }
-
-    private void textStyle() {
-        String font1= "font/Ruluko-Regular.ttf";
-        this.Ruloko= Typeface.createFromAsset(getAssets(),font1);
-        compCreatProductHeaderText.setTypeface(Ruloko);
-    }
-
     private void inicialiceComponents() {
-        compCreatProductHeaderText = (TextView) findViewById(R.id.CreateProductHeaderText);
         compProductNameText = (EditText) findViewById(R.id.productName);
         compQuantityText =(EditText) findViewById(R.id.quantityEditText);
         compQuantityText.setText("0");

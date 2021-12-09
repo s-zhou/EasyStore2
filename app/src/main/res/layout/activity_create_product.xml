@@ -14,52 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="-51dp">
+        tools:layout_editor_absoluteX="-46dp"
+        tools:layout_editor_absoluteY="-16dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <include
+            layout="@layout/create_product_drawer_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-            <Button
-                android:id="@+id/Cancel"
-                android:layout_width="40dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/ic_baseline_arrow_back_ios_24"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <TextView
-                android:id="@+id/CreateProductHeaderText"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:background="#16675E"
-                android:padding="30px"
-                android:text="@string/AddProduct"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/SaveNewProductBotton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/fui_ic_check_circle_black_128dp"
-                app:layout_constraintEnd_toEndOf="@+id/CreateProductHeaderText"
-                app:layout_constraintTop_toTopOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"></include>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
@@ -214,8 +179,8 @@
                     android:id="@+id/descriptionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/Description"
                     android:layout_marginBottom="-10dp"
+                    android:text="@string/Description"
                     android:textColor="#FF1E5A54" />
 
                 <EditText
@@ -227,6 +192,7 @@
                     android:foregroundTint="@color/design_default_color_background"
                     android:gravity="start|top"
                     android:inputType="textMultiLine"
+                    android:maxLines="15"
                     android:textColor="@color/design_default_color_on_secondary"
                     android:textColorHighlight="@color/design_default_color_background" />
 
@@ -241,8 +207,26 @@
                 android:layout_marginRight="25dp"
                 android:background="@color/design_default_color_secondary_variant"
                 android:backgroundTint="@color/design_default_color_secondary_variant" />
+
         </LinearLayout>
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteY="425dp">
+
+        <Button
+            android:id="@+id/SaveNewProductBotton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#7dc002"
+            android:padding="15dp"
+            android:text="Añadir"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="-4dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
