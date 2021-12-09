@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.easystore2.Adapter.AdapterProducts;
 import com.example.easystore2.ContinueWithActivity;
 import com.example.easystore2.CreateProduct;
-import com.example.easystore2.Entities.Product;
+import com.example.easystore2.Entities.ProductRV;
 import com.example.easystore2.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment implements View.OnClickListener{
     AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
-    ArrayList<Product> listProduct;
+    ArrayList<ProductRV> listProductRV;
     private String uid;
 
     private FirebaseUser user;
@@ -49,7 +49,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         creatProductBtn = view.findViewById(R.id.createProductBtn);
         creatProductBtn.setOnClickListener(this);
         productRecyclerView = view.findViewById(R.id.storeRecyclerView);
-        listProduct = new ArrayList<>();
+        listProductRV = new ArrayList<>();
         //LOAD LIST
         loadList();
 
@@ -60,7 +60,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
     private void showListItems() {
         productRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapterProducts = new AdapterProducts(getContext(),listProduct);
+        adapterProducts = new AdapterProducts(getContext(), listProductRV);
         productRecyclerView.setAdapter(adapterProducts);
     }
 
@@ -77,7 +77,10 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                      for (DataSnapshot prod : snapshot.getChildren()) {
                         String name = prod.child("productName").getValue().toString();
                         String quantity = prod.child("quantity").getValue().toString();
-                        listProduct.add(new Product(name, quantity));
+                        String expiredDate = prod.child("expiredDate").getValue().toString();
+                        String category = prod.child("category").getValue().toString();
+                        String description = prod.child("description").getValue().toString();
+                        listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description));
                     }
                     showListItems();
                 }
@@ -91,18 +94,10 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    public void explanProductInfo(View view) {
 
-    public void cerrarSesionHome(View view) {
-        AuthUI.getInstance().signOut( getActivity()).addOnCompleteListener(new OnCompleteListener<Void>(){
-            @Override
-            public void onComplete(@NonNull Task<Void> task){
-                Toast.makeText( getActivity(), "Sesion cerrada", Toast.LENGTH_SHORT).show();
-                getActivity().finish();
-                Intent intent = new Intent( getActivity(), ContinueWithActivity.class);
-                startActivity(intent);
-            }
-        });
     }
+
 
     /**
      * Called when a view has been clicked.

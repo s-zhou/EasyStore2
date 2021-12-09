@@ -34,10 +34,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
                 android:paddingRight="10dp"
                 android:text="10g"
                 android:textSize="15dp"
-                app:layout_constraintEnd_toStartOf="@+id/productDropdown" />
+                app:layout_constraintEnd_toStartOf="@+id/productDropdown"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/expiredDate"
@@ -47,7 +49,7 @@
                 android:paddingTop="5dp"
                 android:text="Data de caducidad"
                 android:textSize="15dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productNameText" />
 
@@ -60,7 +62,7 @@
                 android:paddingTop="5dp"
                 android:text="Categoria"
                 android:textSize="15dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:paddingRight="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productQuantityText" />
@@ -71,7 +73,9 @@
                 android:layout_height="20dp"
                 android:background="@drawable/ic_down"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:onClick="explanProductInfo"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/description"
@@ -81,7 +85,7 @@
                 android:paddingTop="5dp"
                 android:text="Descripcion"
                 android:textSize="15dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/expiredDate" />
 
