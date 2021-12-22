@@ -1,16 +1,24 @@
 package com.example.easystore2.Adapter;
 
+
 import android.content.Context;
+import android.content.Intent;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.easystore2.ContinueWithActivity;
+import com.example.easystore2.CreateProduct;
 import com.example.easystore2.Entities.ProductRV;
+import com.example.easystore2.HomeStore;
 import com.example.easystore2.R;
 
 import java.util.ArrayList;
@@ -19,17 +27,41 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
     LayoutInflater inflater;
     ArrayList<ProductRV> model;
     private Button dropdownBtn;
+    private ConstraintLayout productListItemLayout;
     private TextView expiredDateTV, categoryTV, descriptionTV;
     private View.OnClickListener listener;
+    private LinearLayout modifyProductText;
+    private Context context;
     public AdapterProducts(Context context, ArrayList<ProductRV> model){
         this.inflater = LayoutInflater.from(context);
         this.model = model;
+        this.context = context;
+
     }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.product_list_item, parent, false);
+
+        productListItemLayout = view.findViewById(R.id.productListItemLayout);
+        productListItemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CreateProduct.class);
+                v.getContext().startActivity(intent);
+            }
+        });
+
         dropdownBtn = view.findViewById(R.id.productDropdown);
+        modifyProductText = view.findViewById(R.id.modifyProductText);
+        modifyProductText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CreateProduct.class);
+                v.getContext().startActivity(intent);
+
+            }
+        });
         dropdownBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

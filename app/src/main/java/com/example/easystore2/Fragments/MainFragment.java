@@ -94,11 +94,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    public void explanProductInfo(View view) {
-
-    }
-
-
     /**
      * Called when a view has been clicked.
      *

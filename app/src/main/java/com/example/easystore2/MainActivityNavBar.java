@@ -101,6 +101,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             fragmentTransaction.commit();
 
         }else if(item.getItemId() == R.id.close){
+            //logout
             AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>(){
                 @Override
                 public void onComplete(@NonNull Task<Void> task){
