@@ -1,19 +1,24 @@
 package com.example.easystore2.Entities;
 
-public class ProductRV {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class ProductRV implements Serializable {
     private String productName;
     private String productQuantity;
     private String productExpiredDate;
     private String productCategory;
     private String productDescription;
+    private String unit;
     public ProductRV() {
     }
-    public ProductRV(String productName, String productQuantity, String productExpiredDate, String productCategory, String productDescription) {
+    public ProductRV(String productName, String productQuantity, String productExpiredDate, String productCategory, String productDescription, String unit) {
         this.productName = productName;
         this.productQuantity = productQuantity;
         this.productExpiredDate = productExpiredDate;
         this.productCategory = productCategory;
         this.productDescription = productDescription;
+        this.unit = unit;
     }
 
     public String getProductName() {
@@ -56,5 +61,13 @@ public class ProductRV {
         this.productDescription = productDescription;
     }
 
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
 }

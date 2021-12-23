@@ -2,10 +2,12 @@ package com.example.easystore2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,9 +30,10 @@ import java.util.Calendar;
 public class CreateProduct extends AppCompatActivity implements View.OnClickListener {
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
     private Products product;
+    private ArrayList<String> newCategories = new ArrayList<String>();
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-    private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel;
+    private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
     private boolean first = true;
     private int dayExpired, monthExpired, yearExpired;
@@ -39,25 +42,45 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_product);
-        inicialiceComponents();
+        associateComponents();
         unitSelectorSpinner();
         expiredCalendar();
         categorySelectorSpinner();
+        initializeComponentValues();
         compSaveNewProduct.setOnClickListener(this);
         compPlusQuantity.setOnClickListener(this);
         compLessQuantity.setOnClickListener(this);
         compCancel.setOnClickListener(this);
+        addCategory.setOnClickListener(this);
+    }
+
+    private void initializeComponentValues() {
+        Bundle parameters = this.getIntent().getExtras();
+
+        if(parameters != null){
+            compProductNameText.setText(parameters.getString("name"));
+            compQuantityText.setText(parameters.getString("quantity"));
+            compExpiredDate.setText(parameters.getString("expiredDate"));
+            compCategoriSelectorSpinner.setSelection(parameters.getInt("category"));
+            compDescriptionText.setText(parameters.getString("description"));
+        }
     }
 
     private boolean validation() {
         String productName = compProductNameText.getText().toString();
+        int quantity = Integer.parseInt(compQuantityText.getText().toString());
+
         if(productName.equals("")){
             compProductNameText.setError("Campo obligatorio");
             return false;
         }
+        if(quantity<=0){
+            compQuantityText.setError("Cantidad no puede ser negativo o 0");
+            return false;
+        }
         return true;
     }
-    private void inicialiceComponents() {
+    private void associateComponents() {
         compProductNameText = (EditText) findViewById(R.id.productName);
         compQuantityText =(EditText) findViewById(R.id.quantityEditText);
         compQuantityText.setText("0");
@@ -69,6 +92,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compPlusQuantity = (Button) findViewById(R.id.plusButton);
         compLessQuantity = (Button) findViewById(R.id.lessButton);
         compCancel = (Button) findViewById(R.id.Cancel);
+        addCategory= (Button) findViewById(R.id.addCategoryBtn);
     }
 
     private void expiredCalendar() {
@@ -95,10 +119,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     }
 
     private void categorySelectorSpinner(){
-        categoryList.add("Selecciona categoria");
+        categoryList.add("Sin categorizar");
         categoryList.add("Nevera");
         categoryList.add("Armario");
-        categoryList.add("No categorizar");
         ArrayAdapter adapterColor = new ArrayAdapter(
                 this,
                 R.layout.color_spinner_layout,
@@ -138,18 +161,21 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else if(v == compLessQuantity){
             plusLess(-1);
         }
-
+        else if(v == addCategory) {
+            mostrarDialogoPersonalizado();
+        }
     }
 
     private void pushDB() {
         product = new Products();
         product.setProductName(compProductNameText.getText().toString());
-        product.setQuantity(compQuantityText.getText().toString()+" "+ compQuantitySpinner.getSelectedItem().toString());
+        product.setQuantity(compQuantityText.getText().toString());
+        product.setUnit(compQuantitySpinner.getSelectedItem().toString());
         product.setExpiredDate(compExpiredDate.getText().toString());
-        String category=compCategoriSelectorSpinner.getSelectedItem().toString();
-        if(category == "Selecciona categoria") category = "No categorizar";
+        String category=String.valueOf(compCategoriSelectorSpinner.getSelectedItemPosition());
         product.setCategory(category);
         product.setDescription(compDescriptionText.getText().toString());
+        product.setCategoryAdded(newCategories);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         FirebaseApp.initializeApp(this);
@@ -168,4 +194,76 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else quantity = String.valueOf(Integer.parseInt(quantity) + num);
         compQuantityText.setText(quantity);
     }
-}
+    private void mostrarDialogoBasico(){
+        final EditText edittext = new EditText(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(edittext);
+        builder.setTitle("Introduce el nombre de la nueva categoria")
+                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(),"Eliminamos datos...",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(),"Cancel...",Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    //TODO set btn Cancel onClickListener
+    private void mostrarDialogoPersonalizado() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
+
+        LayoutInflater inflater = getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.custom_dialog, null);
+
+        builder.setView(view);
+
+        //TODO BOTONES POR DEFECTO
+        /**
+         builder.setView(inflater.inflate(R.layout.dialog_personalizado,null))
+         .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
+        @Override public void onClick(DialogInterface dialog, int which) {
+        Toast.makeText(getApplicationContext(),"Conectando...",Toast.LENGTH_SHORT).show();
+        }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        @Override public void onClick(DialogInterface dialog, int which) {
+        Toast.makeText(getApplicationContext(),"Cancel",Toast.LENGTH_SHORT).show();
+        }
+        });
+         */
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        EditText txt = view.findViewById(R.id.newCategoryEditTxt);
+
+        Button btnSave = view.findViewById(R.id.SaveBtn);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newCategories.add(txt.getText().toString());
+                Toast.makeText(getApplicationContext(), "Guardado", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        Button Cancel = view.findViewById(R.id.CancelBtn);
+        Cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Cancelado", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+
+    }

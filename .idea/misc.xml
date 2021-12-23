@@ -12,7 +12,8 @@
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2703125" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/drawable/ic_menu.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/drawable/ic_search.xml" value="0.14635416666666667" />
-        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_create_product.xml" value="0.176" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_borrador.xml" value="0.1" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_create_product.xml" value="0.4074074074074074" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_fragment_list.xml" value="0.1" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_home_store.xml" value="0.264" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
@@ -24,6 +25,7 @@
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/color_spinner_layout.xml" value="0.16893115942028986" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/create_product_drawer_toolbar.xml" value="0.2" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/custom_dialog.xml" value="0.2985842985842986" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/drawer_header.xml" value="0.176" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/drawer_toolbar.xml" value="0.2" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/entrada.xml" value="0.2" />
@@ -39,7 +41,7 @@
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_logout.xml" value="0.2" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_toolbar_home.xml" value="0.21693840579710144" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/product_list.xml" value="0.72" />
-        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/product_list_item.xml" value="0.47866419294990725" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/product_list_item.xml" value="0.8800000000000001" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/products_fragment.xml" value="0.1" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/spinner_dropdown_unit_layout.xml" value="0.16893115942028986" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/toolbar_home.xml" value="0.2" />
