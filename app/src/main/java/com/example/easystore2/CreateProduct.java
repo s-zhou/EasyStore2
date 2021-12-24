@@ -1,9 +1,11 @@
 package com.example.easystore2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,12 +19,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.easystore2.Entities.ProductRV;
 import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +36,7 @@ import java.util.Calendar;
 public class CreateProduct extends AppCompatActivity implements View.OnClickListener {
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
     private Products product;
+    private Context context;
     private ArrayList<String> newCategories = new ArrayList<String>();
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
@@ -41,11 +48,11 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context=this;
         setContentView(R.layout.activity_create_product);
         associateComponents();
         unitSelectorSpinner();
         expiredCalendar();
-        categorySelectorSpinner();
         initializeComponentValues();
         compSaveNewProduct.setOnClickListener(this);
         compPlusQuantity.setOnClickListener(this);
@@ -56,14 +63,48 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
 
     private void initializeComponentValues() {
         Bundle parameters = this.getIntent().getExtras();
-
+        String productCat = "Sin categorizar";
         if(parameters != null){
+            productCat =parameters.getString("category");
             compProductNameText.setText(parameters.getString("name"));
             compQuantityText.setText(parameters.getString("quantity"));
             compExpiredDate.setText(parameters.getString("expiredDate"));
-            compCategoriSelectorSpinner.setSelection(parameters.getInt("category"));
             compDescriptionText.setText(parameters.getString("description"));
         }
+        setCategoriesSpinner(productCat);
+    }
+
+    private void setCategoriesSpinner(String category) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        databaseReference.child("User").child(user.getUid()).child("Categories").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    ArrayList<String> newCategori = new ArrayList<String>();
+                    for (DataSnapshot cat : snapshot.getChildren()) {
+                        String catName = cat.getValue().toString();
+                        newCategori.add(catName);
+                    }
+                    categoryList = newCategori;
+                }
+                int catPos = categoryList.indexOf(category);
+
+                if(catPos==-1){
+                    categoryList.add("Sin categorizar");
+                    catPos = categoryList.indexOf(category);
+                }
+                categorySelectorSpinner(catPos);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private boolean validation() {
@@ -118,10 +159,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void categorySelectorSpinner(){
-        categoryList.add("Sin categorizar");
-        categoryList.add("Nevera");
-        categoryList.add("Armario");
+    private void categorySelectorSpinner(int catPos){
         ArrayAdapter adapterColor = new ArrayAdapter(
                 this,
                 R.layout.color_spinner_layout,
@@ -129,6 +167,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         );
         adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
         compCategoriSelectorSpinner.setAdapter(adapterColor);
+        compCategoriSelectorSpinner.setSelection(catPos);
 
     }
 
@@ -172,15 +211,14 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         product.setQuantity(compQuantityText.getText().toString());
         product.setUnit(compQuantitySpinner.getSelectedItem().toString());
         product.setExpiredDate(compExpiredDate.getText().toString());
-        String category=String.valueOf(compCategoriSelectorSpinner.getSelectedItemPosition());
+        String category=compCategoriSelectorSpinner.getSelectedItem().toString();
         product.setCategory(category);
         product.setDescription(compDescriptionText.getText().toString());
-        product.setCategoryAdded(newCategories);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         FirebaseApp.initializeApp(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference.child("UserProducts").child(uid).child(product.getProductName()).setValue(product);
+        databaseReference.child("User").child(uid).child("Products").child(product.getProductName()).setValue(product);
         Toast.makeText(this, "creado", Toast.LENGTH_LONG).show();
     }
 
@@ -194,28 +232,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else quantity = String.valueOf(Integer.parseInt(quantity) + num);
         compQuantityText.setText(quantity);
     }
-    private void mostrarDialogoBasico(){
-        final EditText edittext = new EditText(getApplicationContext());
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(edittext);
-        builder.setTitle("Introduce el nombre de la nueva categoria")
-                .setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(),"Eliminamos datos...",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(),"Cancel...",Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                })
-                .setCancelable(false)
-                .show();
-    }
-
     //TODO set btn Cancel onClickListener
     private void mostrarDialogoPersonalizado() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
@@ -249,8 +265,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newCategories.add(txt.getText().toString());
-                Toast.makeText(getApplicationContext(), "Guardado", Toast.LENGTH_SHORT).show();
+                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = user.getUid();
+                FirebaseApp.initializeApp(context);
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference.child("User").child(uid).child("Categories").child(txt.getText().toString()).setValue(txt.getText().toString());
+                setCategoriesSpinner(txt.getText().toString());
+                Toast.makeText(getApplicationContext(), "Nueva categoria guardado", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

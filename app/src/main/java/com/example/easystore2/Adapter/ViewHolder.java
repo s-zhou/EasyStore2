@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.easystore2.R;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView productName, productQuantity,productExpiredDate, productCategory, productDescrition;
+    TextView productName, productQuantity,productExpiredDate, productCategory, productDescrition, unit;
 
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -18,5 +18,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         productExpiredDate = itemView.findViewById(R.id.expiredDate);
         productCategory = itemView.findViewById(R.id.category);
         productDescrition = itemView.findViewById(R.id.description);
+        unit = itemView.findViewById(R.id.productUnitText);
     }
 }

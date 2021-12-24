@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 public class Products {
     private String productName,quantity, expiredDate, category, description, unit;
-    ArrayList categoryAdded;
 
-    public Products(String ProductName, String Quantity, String ExpiredDate, String Category, String Description, String unit, ArrayList categoryAdded) {
+    public Products(String ProductName, String Quantity, String ExpiredDate, String Category, String Description, String unit) {
         this.productName = ProductName;
         this.quantity = Quantity;
         this.expiredDate = ExpiredDate;
         this.category= Category;
         this.description= Description;
         this.unit = unit;
-        this.categoryAdded = categoryAdded;
     }
 
     public Products(){}
@@ -66,11 +64,4 @@ public class Products {
         this.unit = unit;
     }
 
-    public ArrayList getCategoryAdded() {
-        return categoryAdded;
-    }
-
-    public void setCategoryAdded(ArrayList categoryAdded) {
-        this.categoryAdded = categoryAdded;
-    }
 }

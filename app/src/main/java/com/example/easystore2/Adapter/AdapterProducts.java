@@ -83,6 +83,7 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String name = model.get(position).getProductName();
         String quantity = model.get(position).getProductQuantity();
+        String unit = model.get(position).getUnit();
         String dataExpired = model.get(position).getProductExpiredDate();
         String category = model.get(position).getProductCategory();
         String description = model.get(position).getProductDescription();
@@ -90,6 +91,7 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
         holder.productQuantity.setText(quantity);
         holder.productExpiredDate.setText(dataExpired);
         holder.productCategory.setText(category);
+        holder.unit.setText(unit);
         if(description.equals("")) description =" -";
         holder.productDescrition.setText(description);
     }

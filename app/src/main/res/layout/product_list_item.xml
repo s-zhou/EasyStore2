@@ -53,9 +53,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:paddingRight="2dp"
                     android:text="10 "
-                    android:textSize="15dp"
 
+                    android:textSize="15dp"
                     app:layout_constraintEnd_toStartOf="@+id/productUnitText"
                     app:layout_constraintTop_toTopOf="parent" />
 

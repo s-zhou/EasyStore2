@@ -65,8 +65,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                 intent.putExtra("name",p.getProductName());
                 intent.putExtra("quantity",p.getProductQuantity());
                 intent.putExtra("expiredDate",p.getProductExpiredDate());
-                int category = categoryToInt(p.getProductCategory());
-                intent.putExtra("category",category);
+                intent.putExtra("category",p.getProductCategory());
                 intent.putExtra("description",p.getProductDescription());
                 startActivity(intent);
             }
@@ -85,7 +84,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
 
-        databaseReference.child("UserProducts").child(uid).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("User").child(uid).child("Products").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -95,7 +94,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         String expiredDate = prod.child("expiredDate").getValue().toString();
                         String category = prod.child("category").getValue().toString();
                         String unit = prod.child("unit").getValue().toString();
-                        category = getCategoryToSting(Integer.parseInt(category));
                         String description = prod.child("description").getValue().toString();
                         listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit));
                     }
