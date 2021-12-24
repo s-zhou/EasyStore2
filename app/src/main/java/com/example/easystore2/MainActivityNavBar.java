@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -109,6 +110,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                     finish();
                     Intent intent = new Intent(getApplicationContext(), ContinueWithActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             });
         }

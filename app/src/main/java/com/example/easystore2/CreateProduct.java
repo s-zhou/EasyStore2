@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -70,6 +71,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             compQuantityText.setText(parameters.getString("quantity"));
             compExpiredDate.setText(parameters.getString("expiredDate"));
             compDescriptionText.setText(parameters.getString("description"));
+            compSaveNewProduct.setText("Editar");
         }
         setCategoriesSpinner(productCat);
     }
@@ -190,9 +192,12 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             if(this.validation()){
                 pushDB();
                 startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
+                finish();
             }
         }else if(v == compCancel){
             startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
+            finish();
+
         }
         else if(v == compPlusQuantity){
             plusLess(1);
@@ -219,7 +224,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         FirebaseApp.initializeApp(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference.child("User").child(uid).child("Products").child(product.getProductName()).setValue(product);
-        Toast.makeText(this, "creado", Toast.LENGTH_LONG).show();
+
+        if(this.getIntent().getExtras()==null)Toast.makeText(this, "Creado", Toast.LENGTH_LONG).show();
+        else Toast.makeText(this, "Modificado", Toast.LENGTH_LONG).show();
     }
 
     private void plusLess(int num) {
@@ -232,33 +239,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else quantity = String.valueOf(Integer.parseInt(quantity) + num);
         compQuantityText.setText(quantity);
     }
-    //TODO set btn Cancel onClickListener
     private void mostrarDialogoPersonalizado() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
-
         LayoutInflater inflater = getLayoutInflater();
-
         View view = inflater.inflate(R.layout.custom_dialog, null);
-
         builder.setView(view);
-
-        //TODO BOTONES POR DEFECTO
-        /**
-         builder.setView(inflater.inflate(R.layout.dialog_personalizado,null))
-         .setPositiveButton("Reintentar", new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialog, int which) {
-        Toast.makeText(getApplicationContext(),"Conectando...",Toast.LENGTH_SHORT).show();
-        }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        @Override public void onClick(DialogInterface dialog, int which) {
-        Toast.makeText(getApplicationContext(),"Cancel",Toast.LENGTH_SHORT).show();
-        }
-        });
-         */
-
         final AlertDialog dialog = builder.create();
         dialog.show();
-
         EditText txt = view.findViewById(R.id.newCategoryEditTxt);
 
         Button btnSave = view.findViewById(R.id.SaveBtn);
@@ -279,7 +266,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Cancelado", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class HomeStore extends AppCompatActivity {
                 finish();
                 Intent intent = new Intent(getApplicationContext(), ContinueWithActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

@@ -82,9 +82,9 @@
 
                         <Button
                             android:id="@+id/lessButton"
-                            android:layout_width="24dp"
-                            android:layout_height="6dp"
-                            android:layout_marginTop="12dp"
+                            android:layout_width="21dp"
+                            android:layout_height="7dp"
+                            android:layout_marginTop="14dp"
                             android:layout_weight="1"
                             android:background="@android:drawable/button_onoff_indicator_on"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -243,5 +243,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="-4dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
