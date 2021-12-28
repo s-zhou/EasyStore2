@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class MainFragment extends Fragment implements View.OnClickListener{
-    AdapterProducts adapterProducts;
+    public AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
     ArrayList<ProductRV> listProductRV;
     private String uid;
@@ -128,4 +130,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             startActivity(new Intent( getActivity(), CreateProduct.class));
         }
     }
+
+
 }
