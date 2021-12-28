@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF"
+    android:foregroundTint="#FFFFFF"
+    tools:context=".CreateProduct">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="-46dp"
+        tools:layout_editor_absoluteY="-16dp">
+
+        <include
+            layout="@layout/create_product_drawer_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/productName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:backgroundTint="#D6C6C6"
+                android:hint="@string/ProductName"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:padding="0dp"
+                android:shadowColor="#C83B3B"
+                android:textColor="#000000"
+                android:textColorHint="#FF9C9C9C"
+                app:backgroundTint="#FC22978A" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/Quantity"
+                    android:textColor="#1E5A54" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp">
+
+                        <Button
+                            android:id="@+id/plusButton"
+                            android:layout_width="33dp"
+                            android:layout_height="34dp"
+                            android:layout_weight="1"
+                            android:background="@android:drawable/ic_input_add"
+                            android:shadowColor="#BF9C9C"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                        <Button
+                            android:id="@+id/lessButton"
+                            android:layout_width="21dp"
+                            android:layout_height="7dp"
+                            android:layout_marginTop="14dp"
+                            android:layout_weight="1"
+                            android:background="@android:drawable/button_onoff_indicator_on"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@+id/plusButton"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <EditText
+                        android:id="@+id/quantityEditText"
+                        android:layout_width="82dp"
+                        android:layout_height="34dp"
+                        android:backgroundTint="#D6C6C6"
+                        android:inputType="numberDecimal"
+                        android:minHeight="48dp"
+                        android:padding="0dp"
+                        android:shadowColor="#C83B3B"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textColorHint="#979797"
+                        app:backgroundTint="#FC22978A"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                    <Spinner
+                        android:id="@+id/selectUnitSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:entries="@array/SprintItemsUnit"
+                        tools:ignore="TouchTargetSizeCheck" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="134dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="-15dp"
+                    android:text="@string/ExpirationDate"
+                    android:textColor="#FF1E5A54" />
+
+                <EditText
+                    android:id="@+id/ExpiredTextDate"
+                    android:layout_width="104dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#FC22978A"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:minHeight="48dp"
+                    android:textColor="#000000"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="59dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Category"
+                    android:textColor="#FF1E5A54" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/categorySelectorSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/addCategoryBtn"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@android:drawable/ic_input_add"
+                        android:shadowColor="#BF9C9C"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-10dp"
+                    android:text="@string/Description"
+                    android:textColor="#FF1E5A54" />
+
+                <EditText
+                    android:id="@+id/descriptionTextMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/design_default_color_background"
+                    android:ems="10"
+                    android:foregroundTint="@color/design_default_color_background"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:maxLines="15"
+                    android:textColor="@color/design_default_color_on_secondary"
+                    android:textColorHighlight="@color/design_default_color_background" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="-10dp"
+                android:layout_marginRight="25dp"
+                android:background="@color/design_default_color_secondary_variant"
+                android:backgroundTint="@color/design_default_color_secondary_variant" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteY="425dp">
+
+        <Button
+            android:id="@+id/SaveNewProductBotton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#7dc002"
+            android:padding="15dp"
+            android:text="Añadir"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="-4dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1068936739441",
+    "firebase_url": "https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "easystore-beb89",
+    "storage_bucket": "easystore-beb89.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068936739441:android:856d90b375c9623eed39d0",
+        "android_client_info": {
+          "package_name": "com.example.easystore2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068936739441-8bq2rn0bq4h8mi9stlqolmjp54f844ve.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.easystore2",
+            "certificate_hash": "836f2ef1ccd853cd4f77ddf9071311da7d3e2066"
+          }
+        },
+        {
+          "client_id": "1068936739441-1t62b7dbobcn9ak8h2ci7eslt947d5od.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB4fPhwr1ikTwV2aKjaUiUjiVebLffbWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068936739441-1t62b7dbobcn9ak8h2ci7eslt947d5od.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
