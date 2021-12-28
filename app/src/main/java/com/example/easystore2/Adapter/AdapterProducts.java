@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,14 +20,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.easystore2.ContinueWithActivity;
 import com.example.easystore2.CreateProduct;
 import com.example.easystore2.Entities.ProductRV;
+import com.example.easystore2.Filters.SearchFilter;
 import com.example.easystore2.HomeStore;
 import com.example.easystore2.R;
 
 import java.util.ArrayList;
 
-public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements View.OnClickListener {
+public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements View.OnClickListener, Filterable {
     LayoutInflater inflater;
-    ArrayList<ProductRV> model;
+    public ArrayList<ProductRV> model, filterList;
+    SearchFilter searchFilter;
     private Button dropdownBtn;
     private ConstraintLayout productListItemLayout;
     private TextView expiredDateTV, categoryTV, descriptionTV;
@@ -37,6 +41,7 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
         this.inflater = LayoutInflater.from(context);
         this.model = model;
         this.context = context;
+        this.filterList = model;
     }
 
     @NonNull
@@ -114,4 +119,11 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
         }
     }
 
+    @Override
+    public Filter getFilter() {
+        if(searchFilter == null) {
+            searchFilter = new SearchFilter(filterList, this);
+        }
+        return  searchFilter;
+    }
 }

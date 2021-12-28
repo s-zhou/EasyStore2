@@ -36,7 +36,7 @@
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_activity_main.xml" value="0.176" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_content_main.xml" value="0.13541666666666666" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_drawer_header.xml" value="0.21693840579710144" />
-        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_drawer_toolbar.xml" value="0.176" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_drawer_toolbar.xml" value="0.1" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_list_fragment.xml" value="0.21693840579710144" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_logout.xml" value="0.2" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/nav_bar_toolbar_home.xml" value="0.21693840579710144" />
@@ -47,6 +47,7 @@
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/layout/toolbar_home.xml" value="0.2" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/menu/drawer_menu.xml" value="0.1" />
         <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/menu/nav_bar_drawer_menu.xml" value="0.264" />
+        <entry key="..\:/Users/usuario/AndroidStudioProjects/EasyStore2/app/src/main/res/menu/search_menu.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,12 +14,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.easystore2.Adapter.AdapterProducts;
 import com.example.easystore2.Fragments.ListFragment;
 import com.example.easystore2.Fragments.MainFragment;
 import com.firebase.ui.auth.AuthUI;
@@ -32,10 +37,12 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
 
     DrawerLayout drawerLayout;
     private FirebaseAuth mAuth;
+    MainFragment mainFragment= new MainFragment();
     private TextView emailTextView;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     NavigationView navigationView;
+    AdapterProducts adapter;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -73,7 +80,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         //load main fragment
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.container, new MainFragment());
+        fragmentTransaction.add(R.id.container, mainFragment);
         fragmentTransaction.commit();
 
     }
@@ -91,7 +98,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         if(item.getItemId() == R.id.home){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container, new MainFragment());
+            fragmentTransaction.replace(R.id.container, mainFragment);
             toolbar.setTitle("Inventario");
             fragmentTransaction.commit();
         }else if(item.getItemId() == R.id.list){
@@ -117,4 +124,25 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         return false;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.search_menu,menu);
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView =(SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mainFragment.adapterProducts.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mainFragment.adapterProducts.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
 }
