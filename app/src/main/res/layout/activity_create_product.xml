@@ -11,6 +11,7 @@
     tools:context=".CreateProduct">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -226,8 +227,7 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+      <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteY="425dp">
@@ -239,10 +239,41 @@
             android:backgroundTint="#7dc002"
             android:padding="15dp"
             android:text="Añadir"
-
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="-4dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:paddingTop="10dp"
+              android:id="@+id/deleteEditBtn"
+              android:weightSum="2"
+              android:visibility="visible"
+              app:layout_constraintBottom_toBottomOf="parent"
+              tools:ignore="MissingConstraints">
+
+              <Button
+                  android:id="@+id/deleteBtn"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:backgroundTint="#F5ED1E0E"
+                  android:text="Eliminar"
+                  android:textColor="#000000" />
+
+              <Button
+                  android:id="@+id/SaveBtn"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:backgroundTint="#6FB627"
+                  android:text="Guardar"
+                  android:textColor="#000000" />
+          </LinearLayout>
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
