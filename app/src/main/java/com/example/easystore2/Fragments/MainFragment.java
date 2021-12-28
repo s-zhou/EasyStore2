@@ -98,6 +98,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         String description = prod.child("description").getValue().toString();
                         listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit));
                     }
+
                     showListItems();
                 }
             }
