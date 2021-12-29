@@ -1,6 +1,7 @@
 package com.example.easystore2;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,15 +12,22 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +38,17 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.common.net.InternetDomainName;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivityNavBar extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,6 +56,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     private FirebaseAuth mAuth;
     MainFragment mainFragment= new MainFragment();
     private TextView emailTextView;
+    private ArrayList<String> categoryList = new ArrayList<String>();
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     NavigationView navigationView;
@@ -129,6 +147,14 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.search_menu,menu);
         MenuItem item = menu.findItem(R.id.search);
+        MenuItem filterItem = menu.findItem(R.id.filterItem);
+        filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mostrarDialogoPersonalizado();
+                return false;
+            }
+        });
         SearchView searchView =(SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -145,4 +171,75 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         });
         return super.onCreateOptionsMenu(menu);
     }
+    private void mostrarDialogoPersonalizado() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityNavBar.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_filter, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Spinner categorySpinner = view.findViewById(R.id.categorySpinner);
+        RadioButton nameRB = view.findViewById(R.id.nameRadioButton);
+        RadioButton expiredDataRB = view.findViewById(R.id.expiredDataRB);
+        categorySelectorSpinner(categorySpinner);
+
+        Button btnFilter = view.findViewById(R.id.FilterBtn);
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                String orderBy="";
+                if(nameRB.isChecked()) orderBy ="name";
+                if(expiredDataRB.isChecked()) orderBy="data";
+                mainFragment.orderBy(orderBy);
+                dialog.dismiss();
+            }
+        });
+        Button btnCancel = view.findViewById(R.id.cancelBtn);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void categorySelectorSpinner(Spinner categorySpinner){
+        setCategoriesSpinner();
+        ArrayAdapter adapterColor = new ArrayAdapter(
+                this,
+                R.layout.category_spinner_style,
+                categoryList
+        );
+        adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
+        categorySpinner.setAdapter(adapterColor);
+        categorySpinner.setSelection(0);
+    }
+
+    private void setCategoriesSpinner() {
+        categoryList.clear();
+        categoryList.add("Todo");
+        categoryList.add("Sin categorizar");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        databaseReference.child("User").child(user.getUid()).child("Categories").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for (DataSnapshot cat : snapshot.getChildren()) {
+                        categoryList.add(cat.getValue().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
 }

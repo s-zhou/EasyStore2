@@ -36,7 +36,7 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
     public ArrayList<ProductRV> model, filterList;
     SearchFilter searchFilter;
     RelativeLayout comItem;
-    SimpleDateFormat dateFormat = new SimpleDateFormat ("dd/MM/yyyy");
+    SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
     private Button dropdownBtn;
     private ConstraintLayout productListItemLayout;
     private TextView expiredDateTV, categoryTV, descriptionTV;
@@ -117,13 +117,13 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
             final Calendar c2 = Calendar.getInstance();
             final Calendar c1 = Calendar.getInstance();
             c2.setTime(expiredDate);
-            c2.add(Calendar.DAY_OF_YEAR, -2);
+            c2.add(Calendar.DAY_OF_YEAR, -1);
 
             Date aboutToExpiredData2 = dateFormat.parse(setDataFormat(c2));
             Date currentDate = dateFormat.parse(setDataFormat(c1));
 
 
-            if((currentDate.before(expiredDate) && currentDate.after(aboutToExpiredData2))||(currentDate.equals(expiredDate))){
+            if((currentDate.before(expiredDate) && currentDate.after(aboutToExpiredData2))||(currentDate.equals(expiredDate))||(currentDate.equals(aboutToExpiredData2))){
                 comItem.setBackgroundColor(0xFFF6B95E);
             }
         } catch (ParseException e) {
@@ -133,14 +133,13 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
 
     private String setDataFormat(Calendar c) {
         int day = c.get(Calendar.DAY_OF_MONTH);
-        int dayBefore1 =  c.get(Calendar.DAY_OF_MONTH);
         int month = c.get(Calendar.MONTH)+1;
         String d = String.valueOf(day);
         String m = String.valueOf(month);
         String y = String.valueOf(c.get(Calendar.YEAR));
         if(day<10) d ="0" + d;
         if(month<10) y = "0" + y;
-        return (d + "/" + m + "/" + y);
+        return (y + "-" + m + "-" + d);
     }
 
     private void setExpiredProductColour(String dataExpired) {

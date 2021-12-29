@@ -143,7 +143,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compCancel = (Button) findViewById(R.id.Cancel);
         addCategory= (Button) findViewById(R.id.addCategoryBtn);
         comSaveProduct= (Button) findViewById(R.id.SaveBtn);
-        comDeleteProduct= (Button) findViewById(R.id.deleteBtn);
+        comDeleteProduct= (Button) findViewById(R.id.cancelBtn);
         comDeleteEditBtn = (LinearLayout) findViewById(R.id.deleteEditBtn);
     }
 
@@ -152,12 +152,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         dayExpired = c.get(Calendar.DAY_OF_MONTH);
         monthExpired = c.get(Calendar.MONTH);
         yearExpired = c.get(Calendar.YEAR);
-        String data ="";
+        String data =yearExpired+ "-";
         if(first){
-            if(dayExpired<10) data = data+ "0"+(dayExpired+1) + "/";
-            else  data = data + (dayExpired+1) + "/";
-            if(monthExpired<10) data = data + "0" + (monthExpired + 1) + "/" + yearExpired;
-            else data = data + (monthExpired + 1) + "/" + yearExpired;
+            if(monthExpired<10) data = data + "0" + (monthExpired + 1) + "-";
+            else data = data + (monthExpired + 1) + "-";
+            if(dayExpired<10) data = data+ "0"+(dayExpired+1);
+            else  data = data + (dayExpired+1);
+
             compExpiredDate.setText(data);
             first=false;
         }
@@ -194,12 +195,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    compExpiredDate.setText(dayOfMonth + "/" + (month+1) + "/" + year);
-                    String data="";
-                    if(dayOfMonth<10) data = data+ "0"+(dayOfMonth) + "/";
-                    else  data = data + (dayOfMonth) + "/";
-                    if(month<10) data = data + "0" + (month + 1) + "/" + year;
-                    else data = data + (month + 1) + "/" + year;
+                    //compExpiredDate.setText(year+ "-" + (month+1) + "-" + dayOfMonth );
+                    String data = year +"-";
+                    if(month<10) data = data + "0" + (month + 1) + "-" ;
+                    else data = data + (month + 1) + "-" ;
+                    if(dayOfMonth<10) data = data+ "0"+(dayOfMonth);
+                    else  data = data + (dayOfMonth);
+
                     compExpiredDate.setText(data);
                     dayExpired=dayOfMonth;
                     monthExpired = month+1;
@@ -298,7 +300,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
                 dialog.dismiss();
             }
         });
-        Button Cancel = view.findViewById(R.id.deleteBtn);
+        Button Cancel = view.findViewById(R.id.cancelBtn);
         Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

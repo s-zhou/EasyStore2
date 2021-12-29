@@ -1,6 +1,7 @@
 package com.example.easystore2.Fragments;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MainFragment extends Fragment implements View.OnClickListener{
@@ -35,6 +38,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     RecyclerView productRecyclerView;
     ArrayList<ProductRV> listProductRV;
     private String uid;
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat ("dd/MM/yyyy");
 
     private FirebaseUser user;
     private Button creatProductBtn;
@@ -71,12 +76,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                 intent.putExtra("category",p.getProductCategory());
                 intent.putExtra("description",p.getProductDescription());
                 startActivity(intent);
-            }
-
-            private int categoryToInt(String productCategory) {
-                if(productCategory == "Nevera") return 1;
-                if(productCategory == "Armario") return 2;
-                return 0;
             }
         });
     }
@@ -129,6 +128,19 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         if(v ==creatProductBtn){
             startActivity(new Intent( getActivity(), CreateProduct.class));
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void orderBy(String orderBy){
+        if(orderBy =="name") {
+            listProductRV.sort((d1, d2) -> (d1.getProductName()).compareTo(d2.getProductName()));
+        }
+        else if(orderBy =="data"){
+
+            listProductRV.sort((d1, d2) -> (d1.getProductExpiredDate()).compareTo(d2.getProductExpiredDate()));
+        }
+        adapterProducts = new AdapterProducts(getContext(), listProductRV);
+        productRecyclerView.setAdapter(adapterProducts);
     }
 
 
