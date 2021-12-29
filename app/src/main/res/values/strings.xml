@@ -14,11 +14,11 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string-array name="SprintItemsUnit">
-        <item>L</item>
-        <item>mL</item>
+        <item>unidades</item>
         <item>g</item>
         <item>kg</item>
-        <item>unidades</item>
+        <item>L</item>
+        <item>mL</item>
     </string-array>
 
 </resources>

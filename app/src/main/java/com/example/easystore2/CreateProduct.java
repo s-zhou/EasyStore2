@@ -132,7 +132,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void associateComponents() {
         compProductNameText = (EditText) findViewById(R.id.productName);
         compQuantityText =(EditText) findViewById(R.id.quantityEditText);
-        compQuantityText.setText("0");
+        compQuantityText.setText("1");
         compQuantitySpinner = (Spinner) findViewById(R.id.selectUnitSpinner);
         compExpiredDate =(EditText) findViewById(R.id.ExpiredTextDate);
         compCategoriSelectorSpinner = (Spinner) findViewById(R.id.categorySelectorSpinner);
@@ -152,8 +152,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         dayExpired = c.get(Calendar.DAY_OF_MONTH);
         monthExpired = c.get(Calendar.MONTH);
         yearExpired = c.get(Calendar.YEAR);
+        String data ="";
         if(first){
-            compExpiredDate.setText((dayExpired+1) + "/" + (monthExpired + 1) + "/" + yearExpired);
+            if(dayExpired<10) data = data+ "0"+(dayExpired+1) + "/";
+            else  data = data + (dayExpired+1) + "/";
+            if(monthExpired<10) data = data + "0" + (monthExpired + 1) + "/" + yearExpired;
+            else data = data + (monthExpired + 1) + "/" + yearExpired;
+            compExpiredDate.setText(data);
             first=false;
         }
         compExpiredDate.setOnClickListener(this);
@@ -190,6 +195,12 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     compExpiredDate.setText(dayOfMonth + "/" + (month+1) + "/" + year);
+                    String data="";
+                    if(dayOfMonth<10) data = data+ "0"+(dayOfMonth) + "/";
+                    else  data = data + (dayOfMonth) + "/";
+                    if(month<10) data = data + "0" + (month + 1) + "/" + year;
+                    else data = data + (month + 1) + "/" + year;
+                    compExpiredDate.setText(data);
                     dayExpired=dayOfMonth;
                     monthExpired = month+1;
                     yearExpired = year;
