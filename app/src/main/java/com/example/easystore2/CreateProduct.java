@@ -6,21 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.easystore2.Entities.ProductRV;
 import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,10 +35,11 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
     private Products product;
     private Context context;
+    private LinearLayout comDeleteEditBtn;
     private ArrayList<String> newCategories = new ArrayList<String>();
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-    private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory;
+    private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory, comSaveProduct, comDeleteProduct;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
     private boolean first = true;
     private int dayExpired, monthExpired, yearExpired;
@@ -60,6 +58,8 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compLessQuantity.setOnClickListener(this);
         compCancel.setOnClickListener(this);
         addCategory.setOnClickListener(this);
+        comSaveProduct.setOnClickListener(this);
+        comDeleteProduct.setOnClickListener(this);
     }
 
     private void initializeComponentValues() {
@@ -71,7 +71,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             compQuantityText.setText(parameters.getString("quantity"));
             compExpiredDate.setText(parameters.getString("expiredDate"));
             compDescriptionText.setText(parameters.getString("description"));
-            compSaveNewProduct.setText("Editar");
+            compSaveNewProduct.setVisibility(View.GONE);
+            comDeleteEditBtn.setVisibility(View.VISIBLE);
+
+        }
+        else{
+            compSaveNewProduct.setVisibility(View.VISIBLE);
+            comDeleteEditBtn.setVisibility(View.GONE);
         }
         setCategoriesSpinner(productCat);
     }
@@ -126,7 +132,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void associateComponents() {
         compProductNameText = (EditText) findViewById(R.id.productName);
         compQuantityText =(EditText) findViewById(R.id.quantityEditText);
-        compQuantityText.setText("0");
+        compQuantityText.setText("1");
         compQuantitySpinner = (Spinner) findViewById(R.id.selectUnitSpinner);
         compExpiredDate =(EditText) findViewById(R.id.ExpiredTextDate);
         compCategoriSelectorSpinner = (Spinner) findViewById(R.id.categorySelectorSpinner);
@@ -136,6 +142,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compLessQuantity = (Button) findViewById(R.id.lessButton);
         compCancel = (Button) findViewById(R.id.Cancel);
         addCategory= (Button) findViewById(R.id.addCategoryBtn);
+        comSaveProduct= (Button) findViewById(R.id.SaveBtn);
+        comDeleteProduct= (Button) findViewById(R.id.deleteBtn);
+        comDeleteEditBtn = (LinearLayout) findViewById(R.id.deleteEditBtn);
     }
 
     private void expiredCalendar() {
@@ -143,8 +152,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         dayExpired = c.get(Calendar.DAY_OF_MONTH);
         monthExpired = c.get(Calendar.MONTH);
         yearExpired = c.get(Calendar.YEAR);
+        String data ="";
         if(first){
-            compExpiredDate.setText((dayExpired+1) + "/" + (monthExpired + 1) + "/" + yearExpired);
+            if(dayExpired<10) data = data+ "0"+(dayExpired+1) + "/";
+            else  data = data + (dayExpired+1) + "/";
+            if(monthExpired<10) data = data + "0" + (monthExpired + 1) + "/" + yearExpired;
+            else data = data + (monthExpired + 1) + "/" + yearExpired;
+            compExpiredDate.setText(data);
             first=false;
         }
         compExpiredDate.setOnClickListener(this);
@@ -181,6 +195,12 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     compExpiredDate.setText(dayOfMonth + "/" + (month+1) + "/" + year);
+                    String data="";
+                    if(dayOfMonth<10) data = data+ "0"+(dayOfMonth) + "/";
+                    else  data = data + (dayOfMonth) + "/";
+                    if(month<10) data = data + "0" + (month + 1) + "/" + year;
+                    else data = data + (month + 1) + "/" + year;
+                    compExpiredDate.setText(data);
                     dayExpired=dayOfMonth;
                     monthExpired = month+1;
                     yearExpired = year;
@@ -188,7 +208,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             },yearExpired,monthExpired,dayExpired);
             datePickerDialog.show();
         }
-        else if(v == compSaveNewProduct){
+        else if(v == compSaveNewProduct || comSaveProduct ==v){
             if(this.validation()){
                 pushDB();
                 startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
@@ -208,6 +228,21 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else if(v == addCategory) {
             mostrarDialogoPersonalizado();
         }
+        else if(comDeleteProduct == v){
+            deleteProduct();
+            Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
+            finish();
+        }
+    }
+
+    private void deleteProduct() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        databaseReference.child("User").child(user.getUid()).child("Products").child(compProductNameText.getText().toString()).removeValue();
+
+
     }
 
     private void pushDB() {
@@ -228,6 +263,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         if(this.getIntent().getExtras()==null)Toast.makeText(this, "Creado", Toast.LENGTH_LONG).show();
         else Toast.makeText(this, "Modificado", Toast.LENGTH_LONG).show();
     }
+
 
     private void plusLess(int num) {
         String quantity = compQuantityText.getText().toString();
@@ -262,7 +298,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
                 dialog.dismiss();
             }
         });
-        Button Cancel = view.findViewById(R.id.CancelBtn);
+        Button Cancel = view.findViewById(R.id.deleteBtn);
         Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
