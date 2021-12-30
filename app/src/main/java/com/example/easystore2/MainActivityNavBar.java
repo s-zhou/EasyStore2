@@ -16,7 +16,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -38,8 +36,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.google.common.net.InternetDomainName;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -191,7 +187,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             expiredDataRB.setChecked(true);
             nameRB.setChecked(false);
         }
-        Button btnFilter = view.findViewById(R.id.FilterBtn);
+        Button btnFilter = view.findViewById(R.id.siBtn);
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -208,7 +204,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                 dialog.dismiss();
             }
         });
-        Button btnCancel = view.findViewById(R.id.cancelBtn);
+        Button btnCancel = view.findViewById(R.id.noBtn);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

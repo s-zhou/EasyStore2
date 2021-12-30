@@ -143,7 +143,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compCancel = (Button) findViewById(R.id.Cancel);
         addCategory= (Button) findViewById(R.id.addCategoryBtn);
         comSaveProduct= (Button) findViewById(R.id.SaveBtn);
-        comDeleteProduct= (Button) findViewById(R.id.cancelBtn);
+        comDeleteProduct= (Button) findViewById(R.id.noBtn);
         comDeleteEditBtn = (LinearLayout) findViewById(R.id.deleteEditBtn);
     }
 
@@ -231,11 +231,36 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             mostrarDialogoPersonalizado();
         }
         else if(comDeleteProduct == v){
-            deleteProduct();
-            Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-            finish();
+            confiMenssage();
+
         }
+    }
+
+    private void confiMenssage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.delete_confirmation, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button siBtn = view.findViewById(R.id.siBtn);
+        siBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteProduct();
+                Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
+                finish();
+            }
+        });
+        Button noBtn = view.findViewById(R.id.noBtn);
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     private void deleteProduct() {
@@ -300,7 +325,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
                 dialog.dismiss();
             }
         });
-        Button Cancel = view.findViewById(R.id.cancelBtn);
+        Button Cancel = view.findViewById(R.id.noBtn);
         Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

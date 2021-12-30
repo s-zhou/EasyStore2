@@ -4,8 +4,9 @@
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="20dp"
-    android:orientation="vertical">
+    android:paddingTop="20dp">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -13,43 +14,44 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:gravity="center"
-        android:padding="10dp"
-        android:text="Introduce el nombre de la nueva categoria"
-        android:textColor="#000000" />
+        android:paddingBottom="10dp"
+        android:text="Confirmación"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/newCategoryEditTxt"
+    <TextView
+        android:id="@+id/orderByTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#BABABA"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:padding="10dp"
-        android:textColor="#050505"
-        android:textColorHint="#000000" />
+        android:text="¿Desea eliminar el  producto?"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
 
     <LinearLayout
-        android:layout_height="match_parent"
         android:layout_width="fill_parent"
-        android:weightSum="2"
-        android:paddingTop="10dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:weightSum="2">
 
         <Button
             android:id="@+id/noBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancelar" />
+            android:text="No" />
 
         <Button
-            android:id="@+id/SaveBtn"
+            android:id="@+id/siBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#6FB627"
-            android:text="Guardar"
+            android:text="Si"
             android:textColor="#000000" />
+
     </LinearLayout>
 
 </LinearLayout>
