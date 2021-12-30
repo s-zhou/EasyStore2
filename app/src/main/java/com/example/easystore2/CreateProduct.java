@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
@@ -45,6 +43,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory, comSaveProduct, comDeleteProduct;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
     TextView toolbarTitle;
+    String iniProduct="";
     private boolean first = true;
     private int dayExpired, monthExpired, yearExpired;
     public ArrayList<String> categoryList= new ArrayList<String>();
@@ -71,7 +70,8 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         String productCat = "Sin categorizar";
         if(parameters != null){
             productCat =parameters.getString("category");
-            compProductNameText.setText(parameters.getString("name"));
+            iniProduct=parameters.getString("name");
+            compProductNameText.setText(iniProduct);
             compQuantityText.setText(parameters.getString("quantity"));
             compExpiredDate.setText(parameters.getString("expiredDate"));
             compDescriptionText.setText(parameters.getString("description"));
@@ -259,7 +259,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         siBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteProduct();
+                deleteProduct(compProductNameText.getText().toString());
                 Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
                 finish();
@@ -274,16 +274,19 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void deleteProduct() {
+    private void deleteProduct(String iniProduct) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-        databaseReference.child("User").child(user.getUid()).child("Products").child(compProductNameText.getText().toString()).removeValue();
+        databaseReference.child("User").child(user.getUid()).child("Products").child(iniProduct).removeValue();
 
 
     }
 
     private void pushDB() {
+        if(!iniProduct.equals("")){
+            deleteProduct(iniProduct);
+        }
         product = new Products();
         product.setProductName(compProductNameText.getText().toString());
         product.setQuantity(compQuantityText.getText().toString());
