@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.easystore2.Adapter.AdapterProducts;
 import com.example.easystore2.CreateProduct;
 import com.example.easystore2.Entities.ProductRV;
+import com.example.easystore2.MainActivityNavBar;
 import com.example.easystore2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -115,7 +116,9 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if(v ==creatProductBtn){
-            startActivity(new Intent( getActivity(), CreateProduct.class));
+            Intent intent = new Intent(getActivity(), CreateProduct.class);
+           // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
 

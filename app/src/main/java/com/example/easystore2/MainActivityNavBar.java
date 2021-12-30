@@ -130,8 +130,10 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                 @Override
                 public void onComplete(@NonNull Task<Void> task){
                     Toast.makeText(MainActivityNavBar.this, "Sesion cerrada", Toast.LENGTH_SHORT).show();
-                    finish();
+// set the new task and clear flags
                     Intent intent = new Intent(getApplicationContext(), ContinueWithActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
                     startActivity(intent);
                     finish();
                 }

@@ -228,20 +228,24 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         else if(v == compSaveNewProduct){
             if(this.validation()){
                 pushDB();
-                startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-                finish();
+                Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         }else if(comSaveProduct ==v){
             if(this.validation()){
                 deleteProduct(iniProduct);
                 pushDB();
-                startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-                finish();
+                Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
             }
         }
         else if(v == compCancel){
-            startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-            finish();
+            Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
 
         }
         else if(v == compPlusQuantity){
@@ -273,8 +277,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             public void onClick(View v) {
                 deleteProduct(compProductNameText.getText().toString());
                 Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-                finish();
+                Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
         Button noBtn = view.findViewById(R.id.noBtn);

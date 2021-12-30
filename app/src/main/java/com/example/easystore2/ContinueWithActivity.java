@@ -29,7 +29,7 @@ public class ContinueWithActivity extends AppCompatActivity {
                 if (user != null) {
                     Toast.makeText(ContinueWithActivity.this, "Se ha iniciado sesion", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ContinueWithActivity.this, MainActivityNavBar.class));
-
+                    finish();
 
                 }
             }
@@ -38,7 +38,7 @@ public class ContinueWithActivity extends AppCompatActivity {
 
     public void loginBotton(View view){
         startActivity(new Intent(ContinueWithActivity.this, LoginWithGoogleActivity.class));
-
+        finish();
     }
     @Override
     protected void onResume(){

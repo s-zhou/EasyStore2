@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(getApplicationContext(), ContinueWithActivity.class);
                 startActivity(intent);
+                finish();
                 handler.removeCallbacks(null);
             }
         }, tiempoEntrda );//define el tiempo.
