@@ -3,10 +3,7 @@ package com.example.easystore2.Fragments;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -56,19 +53,18 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         //LOAD LIST
         loadList();
 
-        //SHOW LIST
-        showListItems();
+
         return view;
     }
 
-    private void showListItems() {
+    private void showListItems(ArrayList<ProductRV> tempList) {
         productRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapterProducts = new AdapterProducts(getContext(), listProductRV);
+        adapterProducts = new AdapterProducts(getContext(), tempList);
         productRecyclerView.setAdapter(adapterProducts);
         adapterProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProductRV p= listProductRV.get(productRecyclerView.getChildAdapterPosition(v));
+                ProductRV p= tempList.get(productRecyclerView.getChildAdapterPosition(v));
                 Intent intent = new Intent( getActivity(), CreateProduct.class);
                 intent.putExtra("name",p.getProductName());
                 intent.putExtra("quantity",p.getProductQuantity());
@@ -99,15 +95,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         String description = prod.child("description").getValue().toString();
                         listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit));
                     }
-
-                    showListItems();
+                    showListItems(listProductRV);
                 }
-            }
-
-            private String getCategoryToSting(int category) {
-                if(category == 1) return "Nevera";
-                if(category == 2) return "Armario";
-                return "Sin categorizar";
             }
 
             @Override
@@ -139,9 +128,22 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
             listProductRV.sort((d1, d2) -> (d1.getProductExpiredDate()).compareTo(d2.getProductExpiredDate()));
         }
-        adapterProducts = new AdapterProducts(getContext(), listProductRV);
-        productRecyclerView.setAdapter(adapterProducts);
+
     }
 
 
+    public void showCategory(String category) {
+        ArrayList<ProductRV> tempList = new ArrayList<>();
+        if(category.equals("") || category.equals("Todo")) tempList = listProductRV;
+        else{
+            for(int i= 0; i < listProductRV.size();++i){
+                if (listProductRV.get(i).getProductCategory().equals(category)) {
+                    tempList.add(listProductRV.get(i));
+                }
+            }
+        }
+        adapterProducts = new AdapterProducts(getContext(), tempList);
+        productRecyclerView.setAdapter(adapterProducts);
+        showListItems(tempList);
+    }
 }

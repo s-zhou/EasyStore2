@@ -59,6 +59,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     private ArrayList<String> categoryList = new ArrayList<String>();
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
+    String orderBy="";
+    String categorSelected;
     NavigationView navigationView;
     AdapterProducts adapter;
 
@@ -182,16 +184,27 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         RadioButton nameRB = view.findViewById(R.id.nameRadioButton);
         RadioButton expiredDataRB = view.findViewById(R.id.expiredDataRB);
         categorySelectorSpinner(categorySpinner);
+        nameRB.setChecked(true);
+        expiredDataRB.setChecked(false);
 
+        if(orderBy.equals("data")){
+            expiredDataRB.setChecked(true);
+            nameRB.setChecked(false);
+        }
         Button btnFilter = view.findViewById(R.id.FilterBtn);
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                String orderBy="";
-                if(nameRB.isChecked()) orderBy ="name";
-                if(expiredDataRB.isChecked()) orderBy="data";
+                if(nameRB.isChecked()){
+                    orderBy ="name";
+                }
+                else if(expiredDataRB.isChecked()){
+                    orderBy="data";
+                }
                 mainFragment.orderBy(orderBy);
+                categorSelected = categorySpinner.getSelectedItem().toString();
+                mainFragment.showCategory(categorSelected);
                 dialog.dismiss();
             }
         });
@@ -205,7 +218,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     }
 
     private void categorySelectorSpinner(Spinner categorySpinner){
-        setCategoriesSpinner();
+        setCategoriesSpinner(categorySpinner);
         ArrayAdapter adapterColor = new ArrayAdapter(
                 this,
                 R.layout.category_spinner_style,
@@ -213,10 +226,10 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         );
         adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
         categorySpinner.setAdapter(adapterColor);
-        categorySpinner.setSelection(0);
+
     }
 
-    private void setCategoriesSpinner() {
+    private void setCategoriesSpinner(Spinner categorySpinner) {
         categoryList.clear();
         categoryList.add("Todo");
         categoryList.add("Sin categorizar");
@@ -230,6 +243,9 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                     for (DataSnapshot cat : snapshot.getChildren()) {
                         categoryList.add(cat.getValue().toString());
                     }
+                    int pos = categoryList.indexOf(categorSelected);
+                    if(pos != -1)categorySpinner.setSelection(pos);
+                    else categorySpinner.setSelection(0);
                 }
             }
 
