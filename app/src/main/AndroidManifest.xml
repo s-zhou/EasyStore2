@@ -20,13 +20,7 @@
             android:name=".CreateProduct"
             android:exported="false" />
         <activity
-            android:name=".HomeStore"
-            android:exported="false" />
-        <activity
             android:name=".LoginWithGoogleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Borrador"
             android:exported="false" />
         <activity
             android:name=".ContinueWithActivity"

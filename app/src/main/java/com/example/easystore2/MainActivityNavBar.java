@@ -68,7 +68,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
-        setContentView(R.layout.nav_bar_activity_main);
+        setContentView(R.layout.nav_bar_activity);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -172,7 +172,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     private void mostrarDialogoPersonalizado() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityNavBar.this);
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_filter, null);
+        View view = inflater.inflate(R.layout.store_filter_dialog, null);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
@@ -220,7 +220,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                 R.layout.category_spinner_style,
                 categoryList
         );
-        adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
+        adapterColor.setDropDownViewResource(R.layout.create_product_unit_spinner_style);
         categorySpinner.setAdapter(adapterColor);
 
     }

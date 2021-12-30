@@ -51,7 +51,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=this;
-        setContentView(R.layout.activity_create_product);
+        setContentView(R.layout.create_product_activity);
         associateComponents();
         initializeFirebase();
         unitSelectorSpinner();
@@ -184,9 +184,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         ArrayAdapter adapterColor = ArrayAdapter.createFromResource(
                 this,
                 R.array.SprintItemsUnit,
-                R.layout.color_spinner_layout
+                R.layout.spinner_general_style
         );
-        adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
+        adapterColor.setDropDownViewResource(R.layout.create_product_unit_spinner_style);
         compQuantitySpinner.setAdapter(adapterColor);
 
     }
@@ -194,10 +194,10 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void categorySelectorSpinner(int catPos){
         ArrayAdapter adapterColor = new ArrayAdapter(
                 this,
-                R.layout.color_spinner_layout,
+                R.layout.spinner_general_style,
                 categoryList
         );
-        adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
+        adapterColor.setDropDownViewResource(R.layout.create_product_unit_spinner_style);
         compCategoriSelectorSpinner.setAdapter(adapterColor);
         compCategoriSelectorSpinner.setSelection(catPos);
 
@@ -225,13 +225,21 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             },yearExpired,monthExpired,dayExpired);
             datePickerDialog.show();
         }
-        else if(v == compSaveNewProduct || comSaveProduct ==v){
+        else if(v == compSaveNewProduct){
             if(this.validation()){
                 pushDB();
                 startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
                 finish();
             }
-        }else if(v == compCancel){
+        }else if(comSaveProduct ==v){
+            if(this.validation()){
+                deleteProduct(iniProduct);
+                pushDB();
+                startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
+                finish();
+            }
+        }
+        else if(v == compCancel){
             startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
             finish();
 
@@ -254,7 +262,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void confiMenssage() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.delete_confirmation, null);
+        View view = inflater.inflate(R.layout.create_product_confi_delete_dialog, null);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
@@ -285,9 +293,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     }
 
     private void pushDB() {
-        if(!iniProduct.equals("")){
-            deleteProduct(iniProduct);
-        }
         product = new Products();
         product.setProductName(compProductNameText.getText().toString());
         product.setQuantity(compQuantityText.getText().toString());
@@ -318,7 +323,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void mostrarDialogoPersonalizado() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.custom_dialog, null);
+        View view = inflater.inflate(R.layout.create_product_add_category_dialog, null);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();

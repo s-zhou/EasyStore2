@@ -21,7 +21,7 @@ public class LoginWithGoogleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_with_google);
+        setContentView(R.layout.login1_activity);
         mfirebaseAutH = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override

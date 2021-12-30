@@ -2,8 +2,6 @@ package com.example.easystore2.Adapter;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.easystore2.ContinueWithActivity;
-import com.example.easystore2.CreateProduct;
 import com.example.easystore2.Entities.ProductRV;
 import com.example.easystore2.Filters.SearchFilter;
-import com.example.easystore2.HomeStore;
 import com.example.easystore2.R;
 
 import java.text.ParseException;
@@ -54,7 +49,7 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.product_list_item, parent, false);
+        View view = inflater.inflate(R.layout.store_product_list_item, parent, false);
 
         productListItemLayout = view.findViewById(R.id.productListItemLayout);
         comItem = view.findViewById(R.id.productListItemRL);
