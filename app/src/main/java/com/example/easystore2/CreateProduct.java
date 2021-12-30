@@ -36,10 +36,10 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
     private Products product;
     private Context context;
+
     private LinearLayout comDeleteEditBtn;
-    private ArrayList<String> newCategories = new ArrayList<String>();
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+    FirebaseUser user;
+    DatabaseReference databaseReference;
     private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory, comSaveProduct, comDeleteProduct;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
     TextView toolbarTitle;
@@ -53,6 +53,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         context=this;
         setContentView(R.layout.activity_create_product);
         associateComponents();
+        initializeFirebase();
         unitSelectorSpinner();
         expiredCalendar();
         initializeComponentValues();
@@ -63,6 +64,12 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         addCategory.setOnClickListener(this);
         comSaveProduct.setOnClickListener(this);
         comDeleteProduct.setOnClickListener(this);
+    }
+
+    private void initializeFirebase() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+
     }
 
     private void initializeComponentValues() {
@@ -90,9 +97,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     }
 
     private void setCategoriesSpinner(String category) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
         databaseReference.child("User").child(user.getUid()).child("Categories").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -275,9 +279,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     }
 
     private void deleteProduct(String iniProduct) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
         databaseReference.child("User").child(user.getUid()).child("Products").child(iniProduct).removeValue();
 
 
@@ -295,10 +296,8 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         String category=compCategoriSelectorSpinner.getSelectedItem().toString();
         product.setCategory(category);
         product.setDescription(compDescriptionText.getText().toString());
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         FirebaseApp.initializeApp(this);
-        firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference.child("User").child(uid).child("Products").child(product.getProductName()).setValue(product);
 
         if(this.getIntent().getExtras()==null)Toast.makeText(this, "Creado", Toast.LENGTH_LONG).show();
@@ -329,10 +328,8 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = user.getUid();
                 FirebaseApp.initializeApp(context);
-                firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference.child("User").child(uid).child("Categories").child(txt.getText().toString()).setValue(txt.getText().toString());
                 setCategoriesSpinner(txt.getText().toString());
                 Toast.makeText(getApplicationContext(), "Nueva categoria guardado", Toast.LENGTH_SHORT).show();
