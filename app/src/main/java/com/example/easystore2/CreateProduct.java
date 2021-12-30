@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,7 +17,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
@@ -41,6 +44,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
     private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory, comSaveProduct, comDeleteProduct;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
+    TextView toolbarTitle;
     private boolean first = true;
     private int dayExpired, monthExpired, yearExpired;
     public ArrayList<String> categoryList= new ArrayList<String>();
@@ -73,11 +77,14 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             compDescriptionText.setText(parameters.getString("description"));
             compSaveNewProduct.setVisibility(View.GONE);
             comDeleteEditBtn.setVisibility(View.VISIBLE);
+            toolbarTitle.setText("Editar producto");
 
         }
         else{
             compSaveNewProduct.setVisibility(View.VISIBLE);
             comDeleteEditBtn.setVisibility(View.GONE);
+            toolbarTitle.setText("Añadir producto");
+
         }
         setCategoriesSpinner(productCat);
     }
@@ -144,7 +151,11 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         addCategory= (Button) findViewById(R.id.addCategoryBtn);
         comSaveProduct= (Button) findViewById(R.id.SaveBtn);
         comDeleteProduct= (Button) findViewById(R.id.noBtn);
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         comDeleteEditBtn = (LinearLayout) findViewById(R.id.deleteEditBtn);
+        //MenuItem item = menu.findItem(R.id.search);
+
+
     }
 
     private void expiredCalendar() {
