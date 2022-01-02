@@ -1,12 +1,11 @@
-package com.example.easystore2.Filters;
+package com.example.easystore2.ProductList.Filters;
 
 import android.widget.Filter;
 
-import com.example.easystore2.Adapter.AdapterProducts;
-import com.example.easystore2.Entities.ProductRV;
+import com.example.easystore2.ProductList.Adapter.AdapterProducts;
+import com.example.easystore2.ProductList.Entities.ProductRV;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class SearchFilter extends Filter {
     ArrayList<ProductRV> filterList;

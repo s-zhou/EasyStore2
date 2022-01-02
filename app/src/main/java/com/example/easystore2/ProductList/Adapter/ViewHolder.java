@@ -1,4 +1,4 @@
-package com.example.easystore2.Adapter;
+package com.example.easystore2.ProductList.Adapter;
 
 import android.view.View;
 import android.widget.TextView;

@@ -1,4 +1,4 @@
-package com.example.easystore2.Fragments;
+package com.example.easystore2.ProductList.Fragments;
 
 import android.content.Intent;
 import android.os.Build;
@@ -15,10 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.easystore2.Adapter.AdapterProducts;
+import com.example.easystore2.ProductList.Adapter.AdapterProducts;
 import com.example.easystore2.CreateProduct;
-import com.example.easystore2.Entities.ProductRV;
-import com.example.easystore2.MainActivityNavBar;
+import com.example.easystore2.ProductList.Entities.ProductRV;
 import com.example.easystore2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,8 +27,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
@@ -94,7 +96,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         String category = prod.child("category").getValue().toString();
                         String unit = prod.child("unit").getValue().toString();
                         String description = prod.child("description").getValue().toString();
-                        listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit));
+                        String s = getState(expiredDate);
+                        listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit, s));
                     }
                     showListItems(listProductRV);
                 }
@@ -106,6 +109,41 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             }
         });
 
+    }
+    public static String getState(String dataExpired) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+            Date expiredDate = dateFormat.parse(dataExpired);
+            final Calendar c2 = Calendar.getInstance();
+            c2.setTime(expiredDate);
+            c2.add(Calendar.DAY_OF_YEAR, -1);
+
+            Date currentDate = dateFormat.parse(setDataFormat(Calendar.getInstance()));
+
+            Date aboutToExpiredData2 = dateFormat.parse(setDataFormat(c2));
+            if((currentDate.before(expiredDate) && currentDate.after(aboutToExpiredData2))||(currentDate.equals(expiredDate))||(currentDate.equals(aboutToExpiredData2))){
+                return "about";
+            }
+            else if(expiredDate.before(currentDate)){
+                return "expired";
+            }
+            else return "ok";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "ok";
+    }
+
+
+    private static String setDataFormat(Calendar c) {
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH)+1;
+        String d = String.valueOf(day);
+        String m = String.valueOf(month);
+        String y = String.valueOf(c.get(Calendar.YEAR));
+        if(day<10) d ="0" + d;
+        if(month<10) y = "0" + y;
+        return (y + "-" + m + "-" + d);
     }
 
     /**
@@ -148,5 +186,19 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         adapterProducts = new AdapterProducts(getContext(), tempList);
         productRecyclerView.setAdapter(adapterProducts);
         showListItems(tempList);
+    }
+
+    public void search(String query) {
+        ArrayList<ProductRV> tempAr = new ArrayList<>();
+        if(query.length()>0){
+            tempAr = listProductRV;
+        }
+        else{
+            for (ProductRV c : listProductRV) {
+                if (c.getProductName().toLowerCase().contains(query.toLowerCase())) {
+                    tempAr.add(c);
+                }
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
@@ -29,9 +30,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.easystore2.Adapter.AdapterProducts;
-import com.example.easystore2.Fragments.ListFragment;
-import com.example.easystore2.Fragments.MainFragment;
+import com.example.easystore2.ProductList.Adapter.AdapterProducts;
+import com.example.easystore2.Recipe.RecipeFragment;
+import com.example.easystore2.ProductList.Fragments.MainFragment;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -59,6 +60,9 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     String categorSelected;
     NavigationView navigationView;
     AdapterProducts adapter;
+    MenuItem item;
+    MenuItem filterItem ;
+
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -116,12 +120,20 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, mainFragment);
             toolbar.setTitle("Inventario");
+            ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
+            ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
+            i1.setVisibility(View.VISIBLE);
+            i2.setVisibility(View.VISIBLE);
             fragmentTransaction.commit();
         }else if(item.getItemId() == R.id.list){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container, new ListFragment());
-            toolbar.setTitle("Lista");
+            fragmentTransaction.replace(R.id.container, new RecipeFragment());
+            toolbar.setTitle("Recetas");
+            ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
+            ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
+            i1.setVisibility(View.GONE);
+            i2.setVisibility(View.GONE);
             fragmentTransaction.commit();
 
         }else if(item.getItemId() == R.id.close){
@@ -146,8 +158,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.search_menu,menu);
-        MenuItem item = menu.findItem(R.id.search);
-        MenuItem filterItem = menu.findItem(R.id.filterItem);
+        item = menu.findItem(R.id.search);
+        filterItem = menu.findItem(R.id.filterItem);
         filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -159,7 +171,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mainFragment.adapterProducts.getFilter().filter(query);
+                //mainFragment.adapterProducts.getFilter().filter(query);
+                mainFragment.search(query);
                 return false;
             }
 

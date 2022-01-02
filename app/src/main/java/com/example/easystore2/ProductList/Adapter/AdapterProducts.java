@@ -1,4 +1,4 @@
-package com.example.easystore2.Adapter;
+package com.example.easystore2.ProductList.Adapter;
 
 
 import android.content.Context;
@@ -16,15 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.easystore2.Entities.ProductRV;
-import com.example.easystore2.Filters.SearchFilter;
+import com.example.easystore2.ProductList.Entities.ProductRV;
+import com.example.easystore2.ProductList.Filters.SearchFilter;
 import com.example.easystore2.R;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements View.OnClickListener, Filterable {
     LayoutInflater inflater;
@@ -93,8 +90,6 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
         String quantity = model.get(position).getProductQuantity();
         String unit = model.get(position).getUnit();
         String dataExpired = model.get(position).getProductExpiredDate();
-        setExpiredProductColour(dataExpired);
-        setAboutToExpiredProductColour(dataExpired);
         String category = model.get(position).getProductCategory();
         String description = model.get(position).getProductDescription();
         holder.productName.setText(name);
@@ -104,51 +99,8 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
         holder.unit.setText(unit);
         if(description.equals("")) description =" -";
         holder.productDescrition.setText(description);
-    }
-
-    private void setAboutToExpiredProductColour(String dataExpired) {
-        try {
-            Date expiredDate = dateFormat.parse(dataExpired);
-            final Calendar c2 = Calendar.getInstance();
-            final Calendar c1 = Calendar.getInstance();
-            c2.setTime(expiredDate);
-            c2.add(Calendar.DAY_OF_YEAR, -1);
-
-            Date aboutToExpiredData2 = dateFormat.parse(setDataFormat(c2));
-            Date currentDate = dateFormat.parse(setDataFormat(c1));
-
-
-            if((currentDate.before(expiredDate) && currentDate.after(aboutToExpiredData2))||(currentDate.equals(expiredDate))||(currentDate.equals(aboutToExpiredData2))){
-                comItem.setBackgroundColor(0xFFF6B95E);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String setDataFormat(Calendar c) {
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int month = c.get(Calendar.MONTH)+1;
-        String d = String.valueOf(day);
-        String m = String.valueOf(month);
-        String y = String.valueOf(c.get(Calendar.YEAR));
-        if(day<10) d ="0" + d;
-        if(month<10) y = "0" + y;
-        return (y + "-" + m + "-" + d);
-    }
-
-    private void setExpiredProductColour(String dataExpired) {
-        try {
-            final Calendar c = Calendar.getInstance();
-            Date curretData = dateFormat.parse(setDataFormat(c));
-            Date expiredData = dateFormat.parse(dataExpired);
-
-            if(expiredData.before(curretData)){
-                comItem.setBackgroundColor(0xE4FA8C84);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        if(model.get(position).getState().equals("expired")) comItem.setBackgroundColor(0xE4FA8C84);
+        else if(model.get(position).getState().equals("about")) comItem.setBackgroundColor(0xFFF6B95E);
     }
 
 
