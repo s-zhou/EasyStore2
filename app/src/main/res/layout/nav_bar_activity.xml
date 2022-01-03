@@ -9,7 +9,7 @@
   <include
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      layout="@layout/nav_bar_drawer_toolbar"
+      layout="@layout/store_action_bar"
       >
   </include>
   <include
@@ -24,7 +24,7 @@
       android:layout_height="match_parent"
       app:menu="@menu/nav_bar_drawer_menu"
       app:headerLayout="@layout/nav_bar_drawer_header"
-      app="@layout/nav_bar_logout"
+      app="@layout/nav_bar_logout_item"
       android:layout_gravity="start"
       android:fitsSystemWindows="true"
       />

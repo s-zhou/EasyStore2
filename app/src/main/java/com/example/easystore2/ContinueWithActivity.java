@@ -2,7 +2,6 @@ package com.example.easystore2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,7 +20,7 @@ public class ContinueWithActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_registro);
+        setContentView(R.layout.login_activity);
         mfirebaseAutH = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -30,7 +29,7 @@ public class ContinueWithActivity extends AppCompatActivity {
                 if (user != null) {
                     Toast.makeText(ContinueWithActivity.this, "Se ha iniciado sesion", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ContinueWithActivity.this, MainActivityNavBar.class));
-
+                    finish();
 
                 }
             }
@@ -39,7 +38,7 @@ public class ContinueWithActivity extends AppCompatActivity {
 
     public void loginBotton(View view){
         startActivity(new Intent(ContinueWithActivity.this, LoginWithGoogleActivity.class));
-
+        finish();
     }
     @Override
     protected void onResume(){

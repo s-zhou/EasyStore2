@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easystore2.data.model.Products;
@@ -35,12 +36,14 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
     private Products product;
     private Context context;
+
     private LinearLayout comDeleteEditBtn;
-    private ArrayList<String> newCategories = new ArrayList<String>();
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+    FirebaseUser user;
+    DatabaseReference databaseReference;
     private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory, comSaveProduct, comDeleteProduct;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
+    TextView toolbarTitle;
+    String iniProduct="";
     private boolean first = true;
     private int dayExpired, monthExpired, yearExpired;
     public ArrayList<String> categoryList= new ArrayList<String>();
@@ -48,8 +51,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=this;
-        setContentView(R.layout.activity_create_product);
+        setContentView(R.layout.create_product_activity);
         associateComponents();
+        initializeFirebase();
         unitSelectorSpinner();
         expiredCalendar();
         initializeComponentValues();
@@ -62,30 +66,37 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         comDeleteProduct.setOnClickListener(this);
     }
 
+    private void initializeFirebase() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+
+    }
+
     private void initializeComponentValues() {
         Bundle parameters = this.getIntent().getExtras();
         String productCat = "Sin categorizar";
         if(parameters != null){
             productCat =parameters.getString("category");
-            compProductNameText.setText(parameters.getString("name"));
+            iniProduct=parameters.getString("name");
+            compProductNameText.setText(iniProduct);
             compQuantityText.setText(parameters.getString("quantity"));
             compExpiredDate.setText(parameters.getString("expiredDate"));
             compDescriptionText.setText(parameters.getString("description"));
             compSaveNewProduct.setVisibility(View.GONE);
             comDeleteEditBtn.setVisibility(View.VISIBLE);
+            toolbarTitle.setText("Editar producto");
 
         }
         else{
             compSaveNewProduct.setVisibility(View.VISIBLE);
             comDeleteEditBtn.setVisibility(View.GONE);
+            toolbarTitle.setText("Añadir producto");
+
         }
         setCategoriesSpinner(productCat);
     }
 
     private void setCategoriesSpinner(String category) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
         databaseReference.child("User").child(user.getUid()).child("Categories").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -143,8 +154,12 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compCancel = (Button) findViewById(R.id.Cancel);
         addCategory= (Button) findViewById(R.id.addCategoryBtn);
         comSaveProduct= (Button) findViewById(R.id.SaveBtn);
-        comDeleteProduct= (Button) findViewById(R.id.deleteBtn);
+        comDeleteProduct= (Button) findViewById(R.id.noBtn);
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         comDeleteEditBtn = (LinearLayout) findViewById(R.id.deleteEditBtn);
+        //MenuItem item = menu.findItem(R.id.search);
+
+
     }
 
     private void expiredCalendar() {
@@ -152,12 +167,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         dayExpired = c.get(Calendar.DAY_OF_MONTH);
         monthExpired = c.get(Calendar.MONTH);
         yearExpired = c.get(Calendar.YEAR);
-        String data ="";
+        String data =yearExpired+ "-";
         if(first){
-            if(dayExpired<10) data = data+ "0"+(dayExpired+1) + "/";
-            else  data = data + (dayExpired+1) + "/";
-            if(monthExpired<10) data = data + "0" + (monthExpired + 1) + "/" + yearExpired;
-            else data = data + (monthExpired + 1) + "/" + yearExpired;
+            if(monthExpired<10) data = data + "0" + (monthExpired + 1) + "-";
+            else data = data + (monthExpired + 1) + "-";
+            if(dayExpired<10) data = data+ "0"+(dayExpired+1);
+            else  data = data + (dayExpired+1);
+
             compExpiredDate.setText(data);
             first=false;
         }
@@ -168,9 +184,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         ArrayAdapter adapterColor = ArrayAdapter.createFromResource(
                 this,
                 R.array.SprintItemsUnit,
-                R.layout.color_spinner_layout
+                R.layout.spinner_general_style
         );
-        adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
+        adapterColor.setDropDownViewResource(R.layout.create_product_unit_spinner_style);
         compQuantitySpinner.setAdapter(adapterColor);
 
     }
@@ -178,10 +194,10 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void categorySelectorSpinner(int catPos){
         ArrayAdapter adapterColor = new ArrayAdapter(
                 this,
-                R.layout.color_spinner_layout,
+                R.layout.spinner_general_style,
                 categoryList
         );
-        adapterColor.setDropDownViewResource(R.layout.spinner_dropdown_unit_layout);
+        adapterColor.setDropDownViewResource(R.layout.create_product_unit_spinner_style);
         compCategoriSelectorSpinner.setAdapter(adapterColor);
         compCategoriSelectorSpinner.setSelection(catPos);
 
@@ -194,12 +210,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    compExpiredDate.setText(dayOfMonth + "/" + (month+1) + "/" + year);
-                    String data="";
-                    if(dayOfMonth<10) data = data+ "0"+(dayOfMonth) + "/";
-                    else  data = data + (dayOfMonth) + "/";
-                    if(month<10) data = data + "0" + (month + 1) + "/" + year;
-                    else data = data + (month + 1) + "/" + year;
+                    //compExpiredDate.setText(year+ "-" + (month+1) + "-" + dayOfMonth );
+                    String data = year +"-";
+                    if(month<10) data = data + "0" + (month + 1) + "-" ;
+                    else data = data + (month + 1) + "-" ;
+                    if(dayOfMonth<10) data = data+ "0"+(dayOfMonth);
+                    else  data = data + (dayOfMonth);
+
                     compExpiredDate.setText(data);
                     dayExpired=dayOfMonth;
                     monthExpired = month+1;
@@ -208,15 +225,27 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             },yearExpired,monthExpired,dayExpired);
             datePickerDialog.show();
         }
-        else if(v == compSaveNewProduct || comSaveProduct ==v){
+        else if(v == compSaveNewProduct){
             if(this.validation()){
                 pushDB();
-                startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-                finish();
+                Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
-        }else if(v == compCancel){
-            startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-            finish();
+        }else if(comSaveProduct ==v){
+            if(this.validation()){
+                deleteProduct(iniProduct);
+                pushDB();
+                Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+            }
+        }
+        else if(v == compCancel){
+            Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
 
         }
         else if(v == compPlusQuantity){
@@ -229,18 +258,41 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             mostrarDialogoPersonalizado();
         }
         else if(comDeleteProduct == v){
-            deleteProduct();
-            Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(CreateProduct.this, MainActivityNavBar.class));
-            finish();
+            confiMenssage();
+
         }
     }
 
-    private void deleteProduct() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-        databaseReference.child("User").child(user.getUid()).child("Products").child(compProductNameText.getText().toString()).removeValue();
+    private void confiMenssage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.create_product_confi_delete_dialog, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button siBtn = view.findViewById(R.id.siBtn);
+        siBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteProduct(compProductNameText.getText().toString());
+                Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+        Button noBtn = view.findViewById(R.id.noBtn);
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void deleteProduct(String iniProduct) {
+        databaseReference.child("User").child(user.getUid()).child("Products").child(iniProduct).removeValue();
 
 
     }
@@ -254,10 +306,8 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         String category=compCategoriSelectorSpinner.getSelectedItem().toString();
         product.setCategory(category);
         product.setDescription(compDescriptionText.getText().toString());
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         FirebaseApp.initializeApp(this);
-        firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference.child("User").child(uid).child("Products").child(product.getProductName()).setValue(product);
 
         if(this.getIntent().getExtras()==null)Toast.makeText(this, "Creado", Toast.LENGTH_LONG).show();
@@ -278,7 +328,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void mostrarDialogoPersonalizado() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateProduct.this);
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.custom_dialog, null);
+        View view = inflater.inflate(R.layout.create_product_add_category_dialog, null);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
@@ -288,17 +338,15 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = user.getUid();
                 FirebaseApp.initializeApp(context);
-                firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference.child("User").child(uid).child("Categories").child(txt.getText().toString()).setValue(txt.getText().toString());
                 setCategoriesSpinner(txt.getText().toString());
                 Toast.makeText(getApplicationContext(), "Nueva categoria guardado", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
-        Button Cancel = view.findViewById(R.id.deleteBtn);
+        Button Cancel = view.findViewById(R.id.noBtn);
         Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

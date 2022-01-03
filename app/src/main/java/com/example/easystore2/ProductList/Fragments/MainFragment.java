@@ -1,24 +1,23 @@
-package com.example.easystore2.Fragments;
+package com.example.easystore2.ProductList.Fragments;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.easystore2.Adapter.AdapterProducts;
+import com.example.easystore2.ProductList.Adapter.AdapterProducts;
 import com.example.easystore2.CreateProduct;
-import com.example.easystore2.Entities.ProductRV;
+import com.example.easystore2.ProductList.Entities.ProductRV;
 import com.example.easystore2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,13 +27,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
     ArrayList<ProductRV> listProductRV;
     private String uid;
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat ("dd/MM/yyyy");
 
     private FirebaseUser user;
     private Button creatProductBtn;
@@ -43,7 +48,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main_fragment_product_list,container, false);
+        View view = inflater.inflate(R.layout.store_sub_activity,container, false);
         creatProductBtn = view.findViewById(R.id.createProductBtn);
         creatProductBtn.setOnClickListener(this);
         productRecyclerView = view.findViewById(R.id.storeRecyclerView);
@@ -51,19 +56,18 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         //LOAD LIST
         loadList();
 
-        //SHOW LIST
-        showListItems();
+
         return view;
     }
 
-    private void showListItems() {
+    private void showListItems(ArrayList<ProductRV> tempList) {
         productRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapterProducts = new AdapterProducts(getContext(), listProductRV);
+        adapterProducts = new AdapterProducts(getContext(), tempList);
         productRecyclerView.setAdapter(adapterProducts);
         adapterProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProductRV p= listProductRV.get(productRecyclerView.getChildAdapterPosition(v));
+                ProductRV p= tempList.get(productRecyclerView.getChildAdapterPosition(v));
                 Intent intent = new Intent( getActivity(), CreateProduct.class);
                 intent.putExtra("name",p.getProductName());
                 intent.putExtra("quantity",p.getProductQuantity());
@@ -71,12 +75,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                 intent.putExtra("category",p.getProductCategory());
                 intent.putExtra("description",p.getProductDescription());
                 startActivity(intent);
-            }
-
-            private int categoryToInt(String productCategory) {
-                if(productCategory == "Nevera") return 1;
-                if(productCategory == "Armario") return 2;
-                return 0;
             }
         });
     }
@@ -98,17 +96,11 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         String category = prod.child("category").getValue().toString();
                         String unit = prod.child("unit").getValue().toString();
                         String description = prod.child("description").getValue().toString();
-                        listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit));
+                        String s = getState(expiredDate);
+                        listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit, s));
                     }
-
-                    showListItems();
+                    showListItems(listProductRV);
                 }
-            }
-
-            private String getCategoryToSting(int category) {
-                if(category == 1) return "Nevera";
-                if(category == 2) return "Armario";
-                return "Sin categorizar";
             }
 
             @Override
@@ -117,6 +109,41 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             }
         });
 
+    }
+    public static String getState(String dataExpired) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
+            Date expiredDate = dateFormat.parse(dataExpired);
+            final Calendar c2 = Calendar.getInstance();
+            c2.setTime(expiredDate);
+            c2.add(Calendar.DAY_OF_YEAR, -1);
+
+            Date currentDate = dateFormat.parse(setDataFormat(Calendar.getInstance()));
+
+            Date aboutToExpiredData2 = dateFormat.parse(setDataFormat(c2));
+            if((currentDate.before(expiredDate) && currentDate.after(aboutToExpiredData2))||(currentDate.equals(expiredDate))||(currentDate.equals(aboutToExpiredData2))){
+                return "about";
+            }
+            else if(expiredDate.before(currentDate)){
+                return "expired";
+            }
+            else return "ok";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "ok";
+    }
+
+
+    private static String setDataFormat(Calendar c) {
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH)+1;
+        String d = String.valueOf(day);
+        String m = String.valueOf(month);
+        String y = String.valueOf(c.get(Calendar.YEAR));
+        if(day<10) d ="0" + d;
+        if(month<10) y = "0" + y;
+        return (y + "-" + m + "-" + d);
     }
 
     /**
@@ -127,9 +154,51 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if(v ==creatProductBtn){
-            startActivity(new Intent( getActivity(), CreateProduct.class));
+            Intent intent = new Intent(getActivity(), CreateProduct.class);
+           // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void orderBy(String orderBy){
+        if(orderBy =="name") {
+            listProductRV.sort((d1, d2) -> (d1.getProductName()).compareTo(d2.getProductName()));
+        }
+        else if(orderBy =="data"){
 
+            listProductRV.sort((d1, d2) -> (d1.getProductExpiredDate()).compareTo(d2.getProductExpiredDate()));
+        }
+
+    }
+
+
+    public void showCategory(String category) {
+        ArrayList<ProductRV> tempList = new ArrayList<>();
+        if(category.equals("") || category.equals("Todo")) tempList = listProductRV;
+        else{
+            for(int i= 0; i < listProductRV.size();++i){
+                if (listProductRV.get(i).getProductCategory().equals(category)) {
+                    tempList.add(listProductRV.get(i));
+                }
+            }
+        }
+        adapterProducts = new AdapterProducts(getContext(), tempList);
+        productRecyclerView.setAdapter(adapterProducts);
+        showListItems(tempList);
+    }
+
+    public void search(String query) {
+        ArrayList<ProductRV> tempAr = new ArrayList<>();
+        if(query.length()>0){
+            tempAr = listProductRV;
+        }
+        else{
+            for (ProductRV c : listProductRV) {
+                if (c.getProductName().toLowerCase().contains(query.toLowerCase())) {
+                    tempAr.add(c);
+                }
+            }
+        }
+    }
 }
