@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.easystore2.ProductList.Adapter.AdapterProducts;
 import com.example.easystore2.CreateProduct;
 import com.example.easystore2.ProductList.Entities.ProductRV;
+import com.example.easystore2.ProductList.Filters.SearchFilter;
 import com.example.easystore2.R;
+import com.example.easystore2.productList;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +40,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
     ArrayList<ProductRV> listProductRV;
+    ArrayList<ProductRV> listProductRVFix;
+
     private String uid;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat ("dd/MM/yyyy");
@@ -86,6 +91,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
 
         databaseReference.child("User").child(uid).child("Products").addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -99,6 +105,9 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         String s = getState(expiredDate);
                         listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit, s));
                     }
+                     productList p =new productList();
+                     listProductRV = p.orderBy("name",listProductRV);
+                     listProductRVFix =listProductRV;
                     showListItems(listProductRV);
                 }
             }
@@ -162,35 +171,23 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void orderBy(String orderBy){
-        if(orderBy =="name") {
-            listProductRV.sort((d1, d2) -> (d1.getProductName()).compareTo(d2.getProductName()));
-        }
-        else if(orderBy =="data"){
-
-            listProductRV.sort((d1, d2) -> (d1.getProductExpiredDate()).compareTo(d2.getProductExpiredDate()));
-        }
-
+        productList  p = new productList();
+        listProductRV = p.orderBy(orderBy,listProductRV);
     }
 
 
     public void showCategory(String category) {
-        ArrayList<ProductRV> tempList = new ArrayList<>();
-        if(category.equals("") || category.equals("Todo")) tempList = listProductRV;
-        else{
-            for(int i= 0; i < listProductRV.size();++i){
-                if (listProductRV.get(i).getProductCategory().equals(category)) {
-                    tempList.add(listProductRV.get(i));
-                }
-            }
-        }
+        productList  p = new productList();
+        ArrayList<ProductRV> tempList = p.showCategory(category,listProductRV);
         adapterProducts = new AdapterProducts(getContext(), tempList);
         productRecyclerView.setAdapter(adapterProducts);
         showListItems(tempList);
     }
 
+
     public void search(String query) {
         ArrayList<ProductRV> tempAr = new ArrayList<>();
-        if(query.length()>0){
+        if(query.length()==0){
             tempAr = listProductRV;
         }
         else{
@@ -200,5 +197,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                 }
             }
         }
+        adapterProducts = new AdapterProducts(getContext(), tempAr);
+        productRecyclerView.setAdapter(adapterProducts);
+        showListItems(tempAr);
     }
 }

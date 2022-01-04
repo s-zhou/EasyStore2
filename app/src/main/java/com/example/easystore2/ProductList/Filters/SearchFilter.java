@@ -15,7 +15,9 @@ public class SearchFilter extends Filter {
         this.adapter = adapter;
     }
 
-
+    public ArrayList<ProductRV> getFilterList(){
+        return filterList;
+    }
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults results = new FilterResults();
@@ -40,6 +42,7 @@ public class SearchFilter extends Filter {
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
             adapter.model = (ArrayList<ProductRV>) results.values;
+            this.filterList = (ArrayList<ProductRV>) results.values;
             adapter.notifyDataSetChanged();
     }
 }

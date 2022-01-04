@@ -27,6 +27,7 @@ import org.json.JSONObject;
 public class RecipeFragment extends Fragment {
     TextView t;
     private RequestQueue mQueue;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,19 +39,20 @@ public class RecipeFragment extends Fragment {
     }
 
     private void readRecipeHTTP(){
-        String q ="chicken";
+        String q ="nlkj";
+        final Boolean[] find = {false};
         String app_id ="15bb7a50";
         String app_key ="5a48c559463777d72f3873c346768262";
-        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q=" + q;//String url = "https://api.edamam.com/search?q=chicken&app_id=${15bb7a50}&app_key=${03700791f5b4cf31d2ffbd4cd98de498}&from=0&to=3&calories=591-722&health=alcohol-free";
+        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q=" + q;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
             new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     JSONArray jsonArray = response.getJSONArray("hits");
+                    find[0] = true;
                     for(int i = 0; i< jsonArray.length();++i){
                         JSONObject recipe = jsonArray.getJSONObject(i).getJSONObject("recipe");
-
                         String name = recipe.getString("label");
                         t.setText(name);
                     }
@@ -65,6 +67,8 @@ public class RecipeFragment extends Fragment {
                 error.printStackTrace();
             }
         });
+        if(find[0])
         mQueue.add(request);
+        else t.setText("Sin receta");
     }
 }

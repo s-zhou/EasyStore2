@@ -122,7 +122,7 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
     }
 
     @Override
-    public Filter getFilter() {
+    public SearchFilter getFilter() {
         if(searchFilter == null) {
             searchFilter = new SearchFilter(filterList, this);
         }
