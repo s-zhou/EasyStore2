@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class ContinueWithActivity extends AppCompatActivity {
     FirebaseAuth mfirebaseAutH;
     FirebaseAuth.AuthStateListener mAuthListener;
-    public static final int REQUEST_CODE = 76986;
     AuthUI.IdpConfig provider = new AuthUI.IdpConfig.GoogleBuilder().build();
     @Override
     protected void onCreate(Bundle savedInstanceState) {

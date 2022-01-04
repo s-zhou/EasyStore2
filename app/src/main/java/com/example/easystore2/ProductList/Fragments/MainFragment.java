@@ -100,7 +100,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit, s));
                     }
                      productListOperation p =new productListOperation();
-                     listProductRV = p.orderBy("name",listProductRV);
+                     listProductRV = p.orderByName(listProductRV);
                      listProductRVFix =listProductRV;
                     showListItems(listProductRV);
                 }
@@ -132,7 +132,11 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void orderBy(String orderBy){
         productListOperation p = new productListOperation();
-        listProductRV = p.orderBy(orderBy,listProductRV);
+        if(orderBy.equals("name"))
+            listProductRV = p.orderByName(listProductRV);
+
+        else if(orderBy.equals("data"))
+            listProductRV = p.orderByData(listProductRV);
     }
 
 

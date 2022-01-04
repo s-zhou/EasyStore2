@@ -63,8 +63,6 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-
-    private Button searchBtn;
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle saveInstanceState){
