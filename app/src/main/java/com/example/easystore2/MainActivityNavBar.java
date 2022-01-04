@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easystore2.Login.ContinueWithActivity;
-import com.example.easystore2.ProductList.Adapter.AdapterProducts;
 import com.example.easystore2.Recipe.RecipeFragment;
 import com.example.easystore2.ProductList.Fragments.MainFragment;
 import com.firebase.ui.auth.AuthUI;
@@ -59,8 +58,6 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     String categorySelected;
     MenuItem item;
     MenuItem filterItem ;
-
-
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     @SuppressLint("WrongViewCast")
