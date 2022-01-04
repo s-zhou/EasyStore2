@@ -36,6 +36,9 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
     ArrayList<ProductRV> listProductRV;
+    productListOperation pLO = new productListOperation();
+    ArrayList<ProductRV> tempList;
+    ArrayList<String> allProductName;
     private String uid;
     private FirebaseUser user;
     private Button creatProductBtn;
@@ -48,27 +51,30 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         creatProductBtn.setOnClickListener(this);
         productRecyclerView = view.findViewById(R.id.storeRecyclerView);
         listProductRV = new ArrayList<>();
+        tempList = new ArrayList<>();
+        allProductName = new ArrayList<>();
         //LOAD LIST
         loadList();
-
+        tempList = listProductRV;
 
         return view;
     }
 
-    private void showListItems(ArrayList<ProductRV> tempList) {
+    private void showListItems(ArrayList<ProductRV> list) {
         productRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapterProducts = new AdapterProducts(getContext(), tempList);
+        adapterProducts = new AdapterProducts(getContext(), list);
         productRecyclerView.setAdapter(adapterProducts);
         adapterProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProductRV p= tempList.get(productRecyclerView.getChildAdapterPosition(v));
+                ProductRV p= list.get(productRecyclerView.getChildAdapterPosition(v));
                 Intent intent = new Intent( getActivity(), CreateProduct.class);
                 intent.putExtra("name",p.getProductName());
                 intent.putExtra("quantity",p.getProductQuantity());
                 intent.putExtra("expiredDate",p.getProductExpiredDate());
                 intent.putExtra("category",p.getProductCategory());
                 intent.putExtra("description",p.getProductDescription());
+                intent.putExtra("allProductName",allProductName);
                 startActivity(intent);
             }
         });
@@ -92,10 +98,10 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         String description = prod.child("description").getValue().toString();
                         CalculateDate c = new CalculateDate();
                         String s = c.getState(expiredDate);
+                        allProductName.add(name);
                         listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit, s));
                     }
-                     productListOperation p =new productListOperation();
-                     listProductRV = p.orderByName(listProductRV);
+                     listProductRV = pLO.orderByName(listProductRV);
                     showListItems(listProductRV);
                 }
             }
@@ -118,34 +124,32 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v ==creatProductBtn){
             Intent intent = new Intent(getActivity(), CreateProduct.class);
-           // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("allProductName",allProductName);
+            intent.putExtra("name","");
+
             startActivity(intent);
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void orderBy(String orderBy){
-        productListOperation p = new productListOperation();
         if(orderBy.equals("name"))
-            listProductRV = p.orderByName(listProductRV);
+            listProductRV = pLO.orderByName(listProductRV);
 
         else if(orderBy.equals("data"))
-            listProductRV = p.orderByData(listProductRV);
+            listProductRV = pLO.orderByData(listProductRV);
     }
 
 
     public void showCategory(String category) {
-        productListOperation p = new productListOperation();
-        ArrayList<ProductRV> tempList = p.showCategory(category,listProductRV);
+        tempList = pLO.showCategory(category,listProductRV);
         adapterProducts = new AdapterProducts(getContext(), tempList);
         productRecyclerView.setAdapter(adapterProducts);
-        showListItems(tempList);
     }
 
 
     public void search(String query) {
-        productListOperation pLO = new productListOperation();
-        ArrayList<ProductRV> tempAr = pLO.search(query,listProductRV);
+        ArrayList<ProductRV> tempAr = pLO.search(query,tempList);
         adapterProducts = new AdapterProducts(getContext(), tempAr);
         productRecyclerView.setAdapter(adapterProducts);
     }
