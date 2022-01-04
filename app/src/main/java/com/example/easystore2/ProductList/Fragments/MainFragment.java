@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.easystore2.ProductList.Adapter.AdapterProducts;
 import com.example.easystore2.CreateProduct;
 import com.example.easystore2.ProductList.Entities.ProductRV;
-import com.example.easystore2.ProductList.Filters.SearchFilter;
 import com.example.easystore2.R;
 import com.example.easystore2.productList;
 import com.google.firebase.auth.FirebaseAuth;

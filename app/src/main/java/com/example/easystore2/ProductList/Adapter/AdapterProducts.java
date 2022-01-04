@@ -6,40 +6,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.easystore2.ProductList.Entities.ProductRV;
-import com.example.easystore2.ProductList.Filters.SearchFilter;
 import com.example.easystore2.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements View.OnClickListener, Filterable {
+public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements View.OnClickListener {
     LayoutInflater inflater;
     public ArrayList<ProductRV> model, filterList;
-    SearchFilter searchFilter;
     RelativeLayout comItem;
-    SimpleDateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");
     private Button dropdownBtn;
-    private ConstraintLayout productListItemLayout;
     private TextView expiredDateTV, categoryTV, descriptionTV;
     private View.OnClickListener listener;
-    private LinearLayout modifyProductText;
-    private Context context;
-    private ProductRV p;
+
     public AdapterProducts(Context context, ArrayList<ProductRV> model){
         this.inflater = LayoutInflater.from(context);
         this.model = model;
-        this.context = context;
         this.filterList = model;
     }
 
@@ -47,8 +35,6 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.store_product_list_item, parent, false);
-
-        productListItemLayout = view.findViewById(R.id.productListItemLayout);
         comItem = view.findViewById(R.id.productListItemRL);
         comItem.setBackgroundColor(0xffffffff);
         dropdownBtn = view.findViewById(R.id.productDropdown);
@@ -121,11 +107,5 @@ public class AdapterProducts extends RecyclerView.Adapter<ViewHolder> implements
         }
     }
 
-    @Override
-    public SearchFilter getFilter() {
-        if(searchFilter == null) {
-            searchFilter = new SearchFilter(filterList, this);
-        }
-        return  searchFilter;
-    }
+
 }
