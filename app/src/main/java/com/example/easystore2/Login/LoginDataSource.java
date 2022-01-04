@@ -1,5 +1,6 @@
-package com.example.easystore2.data;
+package com.example.easystore2.Login;
 
+import com.example.easystore2.data.Result;
 import com.example.easystore2.data.model.LoggedInUser;
 
 import java.io.IOException;

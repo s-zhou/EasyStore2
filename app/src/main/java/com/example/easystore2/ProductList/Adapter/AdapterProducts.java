@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.easystore2.ProductList.Entities.ProductRV;
+import com.example.easystore2.data.model.ProductRV;
 import com.example.easystore2.R;
 
 import java.util.ArrayList;

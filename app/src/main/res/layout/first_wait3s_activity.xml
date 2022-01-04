@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#16675E"
-    tools:context=".MainActivity">
+    tools:context=".Login.MainActivity">
 
     <ImageView
         android:layout_width="170dp"

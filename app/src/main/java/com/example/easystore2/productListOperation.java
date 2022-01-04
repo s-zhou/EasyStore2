@@ -4,12 +4,12 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.easystore2.ProductList.Entities.ProductRV;
+import com.example.easystore2.data.model.ProductRV;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class productList {
+public class productListOperation {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<ProductRV> orderBy(String orderBy,ArrayList<ProductRV> listProductRV){
@@ -20,7 +20,6 @@ public class productList {
             listProductRV.sort((d1, d2) -> (d1.getProductExpiredDate()).compareTo(d2.getProductExpiredDate()));
         }
         return listProductRV;
-
     }
     public ArrayList<ProductRV> showCategory(String category,ArrayList<ProductRV> listProductRV) {
         ArrayList<ProductRV> tempList = new ArrayList<>();

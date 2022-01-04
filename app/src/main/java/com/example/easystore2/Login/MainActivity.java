@@ -1,10 +1,13 @@
-package com.example.easystore2;
+package com.example.easystore2.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.example.easystore2.Login.ContinueWithActivity;
+import com.example.easystore2.R;
 
 public class MainActivity extends AppCompatActivity {
 

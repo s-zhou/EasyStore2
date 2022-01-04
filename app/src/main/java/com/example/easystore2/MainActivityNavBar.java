@@ -30,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.easystore2.Login.ContinueWithActivity;
 import com.example.easystore2.ProductList.Adapter.AdapterProducts;
 import com.example.easystore2.Recipe.RecipeFragment;
 import com.example.easystore2.ProductList.Fragments.MainFragment;
@@ -50,16 +51,12 @@ import java.util.ArrayList;
 public class MainActivityNavBar extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
-    private FirebaseAuth mAuth;
     MainFragment mainFragment= new MainFragment();
-    private TextView emailTextView;
     private ArrayList<String> categoryList = new ArrayList<String>();
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     String orderBy="";
-    String categorSelected;
-    NavigationView navigationView;
-    AdapterProducts adapter;
+    String categorySelected;
     MenuItem item;
     MenuItem filterItem ;
 
@@ -216,8 +213,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                     orderBy="data";
                 }
                 mainFragment.orderBy(orderBy);
-                categorSelected = categorySpinner.getSelectedItem().toString();
-                mainFragment.showCategory(categorSelected);
+                categorySelected = categorySpinner.getSelectedItem().toString();
+                mainFragment.showCategory(categorySelected);
                 dialog.dismiss();
             }
         });
@@ -256,7 +253,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                     for (DataSnapshot cat : snapshot.getChildren()) {
                         categoryList.add(cat.getValue().toString());
                     }
-                    int pos = categoryList.indexOf(categorSelected);
+                    int pos = categoryList.indexOf(categorySelected);
                     if(pos != -1)categorySpinner.setSelection(pos);
                     else categorySpinner.setSelection(0);
                 }

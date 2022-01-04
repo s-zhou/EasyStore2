@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     android:backgroundTint="#FFFFFF"
     android:foregroundTint="#FFFFFF"
-    tools:context=".CreateProduct">
+    tools:context=".ProductList.CreateProduct">
 
     <LinearLayout
         android:id="@+id/linearLayout"

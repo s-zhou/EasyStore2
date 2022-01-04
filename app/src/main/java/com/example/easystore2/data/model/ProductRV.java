@@ -1,4 +1,4 @@
-package com.example.easystore2.ProductList.Entities;
+package com.example.easystore2.data.model;
 
 import java.io.Serializable;
 

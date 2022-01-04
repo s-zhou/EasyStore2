@@ -1,4 +1,4 @@
-package com.example.easystore2;
+package com.example.easystore2.ProductList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.easystore2.MainActivityNavBar;
+import com.example.easystore2.R;
 import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
