@@ -1,4 +1,4 @@
-package com.example.easystore2;
+package com.example.easystore2.ProductList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.easystore2.MainActivityNavBar;
+import com.example.easystore2.R;
 import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,11 +44,13 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     DatabaseReference databaseReference;
     private Button compSaveNewProduct, compPlusQuantity, compLessQuantity, compCancel, addCategory, comSaveProduct, comDeleteProduct;
     Spinner compQuantitySpinner, compCategoriSelectorSpinner;
+
     TextView toolbarTitle;
     String iniProduct="";
     private boolean first = true;
     private int dayExpired, monthExpired, yearExpired;
     public ArrayList<String> categoryList= new ArrayList<String>();
+    ArrayList<String> allProductName= new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +79,8 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private void initializeComponentValues() {
         Bundle parameters = this.getIntent().getExtras();
         String productCat = "Sin categorizar";
-        if(parameters != null){
+        allProductName = parameters.getStringArrayList("allProductName");
+        if(!parameters.getString("name").equals("")){
             productCat =parameters.getString("category");
             iniProduct=parameters.getString("name");
             compProductNameText.setText(iniProduct);
@@ -85,7 +90,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             compSaveNewProduct.setVisibility(View.GONE);
             comDeleteEditBtn.setVisibility(View.VISIBLE);
             toolbarTitle.setText("Editar producto");
-
         }
         else{
             compSaveNewProduct.setVisibility(View.VISIBLE);
@@ -132,6 +136,10 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
 
         if(productName.equals("")){
             compProductNameText.setError("Campo obligatorio");
+            return false;
+        }
+        if(allProductName.contains(productName)){
+            compProductNameText.setError("Ya existe un producto con este nombre");
             return false;
         }
         if(quantity<=0){

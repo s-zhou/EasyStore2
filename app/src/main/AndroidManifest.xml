@@ -17,16 +17,16 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".CreateProduct"
+            android:name=".ProductList.CreateProduct"
             android:exported="false" />
         <activity
-            android:name=".LoginWithGoogleActivity"
+            android:name=".Login.LoginWithGoogleActivity"
             android:exported="false" />
         <activity
-            android:name=".ContinueWithActivity"
+            android:name=".Login.ContinueWithActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Login.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
