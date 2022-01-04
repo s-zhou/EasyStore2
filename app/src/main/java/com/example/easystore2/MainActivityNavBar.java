@@ -177,8 +177,10 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                mainFragment.adapterProducts.getFilter().filter(newText);
+            public boolean onQueryTextChange(String query) {
+               // mainFragment.adapterProducts.getFilter().filter(newText);
+                mainFragment.search(query);
+
                 return false;
             }
         });
