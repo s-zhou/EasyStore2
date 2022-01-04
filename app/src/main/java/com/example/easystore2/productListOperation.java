@@ -35,5 +35,18 @@ public class productListOperation {
         }
         return tempList;
     }
-
+    public ArrayList<ProductRV> search(String query, ArrayList<ProductRV> listProductRV) {
+        ArrayList<ProductRV> tempAr = new ArrayList<>();
+        if(query.length()==0){
+            tempAr = listProductRV;
+        }
+        else{
+            for (ProductRV c : listProductRV) {
+                if (c.getProductName().toLowerCase().contains(query.toLowerCase())) {
+                    tempAr.add(c);
+                }
+            }
+        }
+        return tempAr;
+    }
 }

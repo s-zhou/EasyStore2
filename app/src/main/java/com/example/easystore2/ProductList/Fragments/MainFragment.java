@@ -36,12 +36,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
     ArrayList<ProductRV> listProductRV;
-    ArrayList<ProductRV> listProductRVFix;
-
     private String uid;
-
-    SimpleDateFormat dateFormat = new SimpleDateFormat ("dd/MM/yyyy");
-
     private FirebaseUser user;
     private Button creatProductBtn;
 
@@ -101,7 +96,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                     }
                      productListOperation p =new productListOperation();
                      listProductRV = p.orderByName(listProductRV);
-                     listProductRVFix =listProductRV;
                     showListItems(listProductRV);
                 }
             }
@@ -150,19 +144,9 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
 
     public void search(String query) {
-        ArrayList<ProductRV> tempAr = new ArrayList<>();
-        if(query.length()==0){
-            tempAr = listProductRV;
-        }
-        else{
-            for (ProductRV c : listProductRV) {
-                if (c.getProductName().toLowerCase().contains(query.toLowerCase())) {
-                    tempAr.add(c);
-                }
-            }
-        }
+        productListOperation pLO = new productListOperation();
+        ArrayList<ProductRV> tempAr = pLO.search(query,listProductRV);
         adapterProducts = new AdapterProducts(getContext(), tempAr);
         productRecyclerView.setAdapter(adapterProducts);
-        showListItems(tempAr);
     }
 }
