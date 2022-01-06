@@ -34,6 +34,11 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
+
+    public ArrayList<ProductRV> getListProductRV() {
+        return listProductRV;
+    }
+
     ArrayList<ProductRV> listProductRV;
     productListOperation pLO = new productListOperation();
     ArrayList<ProductRV> tempList;

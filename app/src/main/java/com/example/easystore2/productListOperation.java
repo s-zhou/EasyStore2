@@ -7,9 +7,14 @@ import androidx.annotation.RequiresApi;
 import com.example.easystore2.data.model.ProductRV;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class productListOperation {
+    int repeatedData = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<ProductRV> orderByName(ArrayList<ProductRV> listProductRV){
@@ -48,5 +53,108 @@ public class productListOperation {
             }
         }
         return tempAr;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public ArrayList<ProductRV> orderByPreference(ArrayList<ProductRV> listProductRV) {
+        ArrayList<ProductRV> temp = orderByData(listProductRV);
+        temp = deleteExpiredProduct(temp);
+        listProductRV =temp;
+        List<ProductRV> result;
+        List<ProductRV> tempListP1, tempListP2;
+        if(repeatedData>2) {
+            tempListP1 = orderByQuantity(temp.subList(0, repeatedData));
+            if((repeatedData+1)<=temp.size()) {
+                tempListP2 = temp.subList(repeatedData, temp.size());
+                listProductRV = (ArrayList<ProductRV>) Stream.concat(tempListP1.stream(), tempListP2.stream()).collect(Collectors.toList());
+            }
+
+        }
+        return listProductRV;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<ProductRV> orderByQuantity(List<ProductRV> listProductRV) {
+        ArrayList<ProductRV> temp= new ArrayList<>();
+        boolean added=false;
+        temp.add(listProductRV.get(0));
+        for(int i=1; i<listProductRV.size(); ++i) {
+            ProductRV newProduct=listProductRV.get(i);
+            added=false;
+            for(int j=0; j<temp.size() && !added; ++j) {
+                ProductRV compProduct=temp.get(j);
+                String n=newProduct.getUnit();
+                double qn=conversion(newProduct.getProductQuantity(),newProduct.getUnit());
+                double qc = conversion(compProduct.getProductQuantity(),compProduct.getUnit());
+                if(qn >= qc){
+                    temp.add(j,newProduct);
+                    added=true;
+                }
+            }
+            if(!added)
+                temp.add(newProduct);
+        }
+        return  temp;
+    }
+
+    private List<ProductRV> listConversion(List<ProductRV> listProductRV, boolean NG) {
+        List<ProductRV> temp= new ArrayList<>();
+        for(ProductRV p : listProductRV){
+            String q =conversion(p.getProductQuantity(), p.getUnit(), NG);
+            p.setProductQuantity(q);
+            temp.add(p);
+        }
+        return temp;
+    }
+
+    private String conversion(String productQuantity, String unit, boolean N_G) {
+        double num = 1.0;
+        if(unit.equals("L")|| unit.equals("kg")){
+           if(N_G) num = 1000;
+           else num = 0.001;
+        }
+        else if(unit.equals("unidad")){
+            if(N_G) num= 250;
+            else num = 0.004;
+        }
+        return  Double.toString(Double.parseDouble(productQuantity) *num);
+    }
+    private Double conversion(String productQuantity, String unit) {
+        double num = 1.0;
+        if(unit.equals("L")|| unit.equals("kg")){
+           num = 1000;
+        }
+        else if(unit.equals("unidad")){
+            num= 250;
+        }
+        return (Double.parseDouble(productQuantity) *num);
+    }
+
+
+    private ArrayList<ProductRV> deleteExpiredProduct(ArrayList<ProductRV> productList) {
+        ArrayList<ProductRV> tempList= new ArrayList<>();
+        String data="";
+        for(ProductRV p: productList){
+            if(!p.getState().equals("expired")){
+                tempList.add(p);
+                //we can see how many products with the same about date
+                if(data.equals("") || data.equals(p.getProductExpiredDate())){
+                    ++repeatedData;
+                    data=p.getProductExpiredDate();
+                }
+            }
+        }
+        return tempList;
+    }
+
+    public ArrayList<String> getOnListName(ArrayList<ProductRV> productListOrdered) {
+        if(productListOrdered.size()>20) {
+            productListOrdered = (ArrayList<ProductRV>) productListOrdered.subList(0, 20);
+        }
+        ArrayList<String> nameList = new ArrayList<>();
+        for(ProductRV p : productListOrdered){
+            nameList.add(p.getProductName());
+        }
+        return nameList;
     }
 }

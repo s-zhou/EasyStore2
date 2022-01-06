@@ -14,7 +14,7 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string-array name="SprintItemsUnit">
-        <item>unidades</item>
+        <item>unidad</item>
         <item>g</item>
         <item>kg</item>
         <item>L</item>

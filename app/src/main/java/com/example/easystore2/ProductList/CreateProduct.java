@@ -38,6 +38,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
     private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
     private Products product;
     private Context context;
+    Boolean modify=false;
 
     private LinearLayout comDeleteEditBtn;
     FirebaseUser user;
@@ -81,6 +82,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         String productCat = "Sin categorizar";
         allProductName = parameters.getStringArrayList("allProductName");
         if(!parameters.getString("name").equals("")){
+            modify =true;
             productCat =parameters.getString("category");
             iniProduct=parameters.getString("name");
             compProductNameText.setText(iniProduct);
@@ -138,7 +140,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             compProductNameText.setError("Campo obligatorio");
             return false;
         }
-        if(allProductName.contains(productName)){
+        if(allProductName.contains(productName) && !modify){
             compProductNameText.setError("Ya existe un producto con este nombre");
             return false;
         }

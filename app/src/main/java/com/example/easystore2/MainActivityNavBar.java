@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.easystore2.Login.ContinueWithActivity;
 import com.example.easystore2.Recipe.RecipeFragment;
 import com.example.easystore2.ProductList.Fragments.MainFragment;
+import com.example.easystore2.data.model.ProductRV;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -95,6 +96,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         fragmentTransaction.add(R.id.container, mainFragment);
         fragmentTransaction.commit();
 
+
     }
 
 
@@ -104,6 +106,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
      * @param item The selected item
      * @return true to display the item as the selected item
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -122,6 +125,12 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, new RecipeFragment());
             toolbar.setTitle("Recetas");
+            Bundle bundle = new Bundle();
+            productListOperation p = new productListOperation();
+            ArrayList<ProductRV> productListOrdered = p.orderByPreference(mainFragment.getListProductRV());
+            ArrayList<String> productListName = p.getOnListName(productListOrdered);
+            bundle.putStringArrayList("productList", productListName);
+            fragmentManager.setFragmentResult("productList", bundle);
             ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
             ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
             i1.setVisibility(View.GONE);
