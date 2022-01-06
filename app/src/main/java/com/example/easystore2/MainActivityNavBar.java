@@ -126,7 +126,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             RecipeFragment rf= new RecipeFragment();
             productListOperation p = new productListOperation();
             ArrayList<ProductRV> productListOrdered = p.orderByPreference(mainFragment.getListProductRV());
-            rf.productNameList = p.getOnListName(productListOrdered);
+            rf.productNameList =  p.getOnlyListName(productListOrdered);
             fragmentTransaction.replace(R.id.container, rf);
             toolbar.setTitle("Recetas");
             ActionMenuItemView i1 = toolbar.findViewById(R.id.search);

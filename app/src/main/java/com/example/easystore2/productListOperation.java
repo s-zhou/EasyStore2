@@ -127,7 +127,7 @@ public class productListOperation {
         return tempList;
     }
 
-    public ArrayList<String> getOnListName(ArrayList<ProductRV> productListOrdered) {
+    public ArrayList<String> getOnlyListName(ArrayList<ProductRV> productListOrdered) {
         if(productListOrdered.size()>20) {
             productListOrdered = (ArrayList<ProductRV>) productListOrdered.subList(0, 20);
         }

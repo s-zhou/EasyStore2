@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +20,6 @@ import com.example.easystore2.R;
 import com.example.easystore2.data.model.ProductRV;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.mlkit.common.model.DownloadConditions;
 import com.google.mlkit.nl.translate.TranslateLanguage;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
@@ -36,9 +34,11 @@ import java.util.List;
 
 public class RecipeFragment extends Fragment {
     TextView t;
-    Translator spanishEnglishTranslator,englishGermanTranslator;
+    Translator spanishEnglishTranslator;
     private RequestQueue mQueue;
+    String translateWord;
     public List<String> productNameList= new ArrayList<>();
+    public ArrayList<String> nameListTranslate= new ArrayList<>();
 
     @Nullable
     @Override
@@ -48,7 +48,6 @@ public class RecipeFragment extends Fragment {
         mQueue = Volley.newRequestQueue(getContext());
         //readRecipeHTTP();
         prepareTranslateModel();
-        productNameList.clear();
         return view;
     }
 
@@ -97,7 +96,7 @@ public class RecipeFragment extends Fragment {
         spanishEnglishTranslator.downloadModelIfNeeded().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                translateLanguage();
+                translateLanguageList();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -108,19 +107,31 @@ public class RecipeFragment extends Fragment {
 
     }
 
-    private void translateLanguage() {
-        spanishEnglishTranslator.translate("hola, como estas").addOnSuccessListener(new OnSuccessListener<String>() {
+    private void translateLanguageList() {
+        nameListTranslate.clear();
+        for(String word: productNameList){
+            translateLanguage(word);
+        }
+    }
+
+    private void translateLanguage(String word) {
+        spanishEnglishTranslator.translate(word).addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String s) {
-                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-
+                nameListTranslate.add(s);
+                if(nameListTranslate.size()==productNameList.size())
+                    translateReady();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 //Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
-
+                translateWord = "error translation";
             }
         });
+    }
+
+    private void translateReady() {
+       ArrayList<String> p= nameListTranslate;
     }
 }
