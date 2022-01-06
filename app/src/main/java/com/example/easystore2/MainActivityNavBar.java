@@ -123,14 +123,12 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         }else if(item.getItemId() == R.id.list){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container, new RecipeFragment());
-            toolbar.setTitle("Recetas");
-            Bundle bundle = new Bundle();
+            RecipeFragment rf= new RecipeFragment();
             productListOperation p = new productListOperation();
             ArrayList<ProductRV> productListOrdered = p.orderByPreference(mainFragment.getListProductRV());
-            ArrayList<String> productListName = p.getOnListName(productListOrdered);
-            bundle.putStringArrayList("productList", productListName);
-            fragmentManager.setFragmentResult("productList", bundle);
+            rf.productNameList = p.getOnListName(productListOrdered);
+            fragmentTransaction.replace(R.id.container, rf);
+            toolbar.setTitle("Recetas");
             ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
             ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
             i1.setVisibility(View.GONE);

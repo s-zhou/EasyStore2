@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.easystore2.R;
+import com.example.easystore2.data.model.ProductRV;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.common.model.DownloadConditions;
@@ -30,10 +31,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecipeFragment extends Fragment {
     TextView t;
     Translator spanishEnglishTranslator,englishGermanTranslator;
     private RequestQueue mQueue;
+    public List<String> productNameList= new ArrayList<>();
 
     @Nullable
     @Override
@@ -43,6 +48,7 @@ public class RecipeFragment extends Fragment {
         mQueue = Volley.newRequestQueue(getContext());
         //readRecipeHTTP();
         prepareTranslateModel();
+        productNameList.clear();
         return view;
     }
 

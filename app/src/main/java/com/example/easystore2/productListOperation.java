@@ -97,28 +97,8 @@ public class productListOperation {
         return  temp;
     }
 
-    private List<ProductRV> listConversion(List<ProductRV> listProductRV, boolean NG) {
-        List<ProductRV> temp= new ArrayList<>();
-        for(ProductRV p : listProductRV){
-            String q =conversion(p.getProductQuantity(), p.getUnit(), NG);
-            p.setProductQuantity(q);
-            temp.add(p);
-        }
-        return temp;
-    }
 
-    private String conversion(String productQuantity, String unit, boolean N_G) {
-        double num = 1.0;
-        if(unit.equals("L")|| unit.equals("kg")){
-           if(N_G) num = 1000;
-           else num = 0.001;
-        }
-        else if(unit.equals("unidad")){
-            if(N_G) num= 250;
-            else num = 0.004;
-        }
-        return  Double.toString(Double.parseDouble(productQuantity) *num);
-    }
+
     private Double conversion(String productQuantity, String unit) {
         double num = 1.0;
         if(unit.equals("L")|| unit.equals("kg")){
