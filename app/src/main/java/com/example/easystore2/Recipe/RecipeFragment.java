@@ -46,43 +46,9 @@ public class RecipeFragment extends Fragment {
         View view = inflater.inflate(R.layout.list_sub_activity,container, false);
         t = view.findViewById(R.id.textView4);
         mQueue = Volley.newRequestQueue(getContext());
-        //readRecipeHTTP();
+        readRecipeHTTP("potatoes");
         prepareTranslateModel();
         return view;
-    }
-
-    private void readRecipeHTTP(){
-        String q ="nlkj";
-        final Boolean[] find = {false};
-        String app_id ="15bb7a50";
-        String app_key ="5a48c559463777d72f3873c346768262";
-        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q=" + q;
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("hits");
-                            find[0] = true;
-                            for(int i = 0; i< jsonArray.length();++i){
-                                JSONObject recipe = jsonArray.getJSONObject(i).getJSONObject("recipe");
-                                String name = recipe.getString("label");
-                                t.setText(name);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        if(find[0])
-            mQueue.add(request);
-        else t.setText("Sin receta");
     }
 
 
@@ -133,5 +99,39 @@ public class RecipeFragment extends Fragment {
 
     private void translateReady() {
        ArrayList<String> p= nameListTranslate;
+       readRecipeHTTP(nameListTranslate.get(0));
+    }
+
+    private void readRecipeHTTP(String q){
+        final Boolean[] find = {false};
+        String app_id ="a7a5da31";
+        String app_key ="dda7a804c66c252d00d168e99aff33da";
+        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q=" + q;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("hits");
+                            find[0] = true;
+                            for(int i = 0; i< jsonArray.length();++i){
+                                JSONObject recipe = jsonArray.getJSONObject(i).getJSONObject("recipe");
+                                String name = recipe.getString("label");
+                                t.setText(name);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        if(find[0])
+            mQueue.add(request);
+        else t.setText("Sin receta");
     }
 }
