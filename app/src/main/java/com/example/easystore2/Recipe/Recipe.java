@@ -8,16 +8,25 @@ public class Recipe {
     String name;
     String image;
     String url;
-    int point;
+    int numIngredientStore;
     ArrayList<String> ingredients=new ArrayList<>();
 
-    public Recipe(@NonNull String name, String image, String url, int point, ArrayList<String> ingredients) {
+    public Recipe(@NonNull String name, String image, String url, int numIngredientStore, ArrayList<String> ingredients) {
         this.name = name;
         this.image = image;
         this.url = url;
-        this.point = point;
+        this.numIngredientStore = numIngredientStore;
         this.ingredients = ingredients;
     }
+
+    public int getNumIngredientStore() {
+        return numIngredientStore;
+    }
+
+    public void setNumIngredientStore(int numIngredientStore) {
+        this.numIngredientStore = numIngredientStore;
+    }
+
 
     public String getName() {
         return name;
@@ -49,13 +58,5 @@ public class Recipe {
 
     public void setIngredients(ArrayList<String> ingredients) {
         this.ingredients = ingredients;
-    }
-
-    public int getPoint() {
-        return point;
-    }
-
-    public void setPoint(int point) {
-        this.point = point;
     }
 }

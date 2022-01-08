@@ -1,14 +1,15 @@
 package com.example.easystore2.Recipe;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -18,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.easystore2.R;
-import com.example.easystore2.data.model.ProductRV;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.nl.translate.TranslateLanguage;
@@ -31,8 +31,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class RecipeFragment extends Fragment {
     TextView t;
@@ -102,38 +104,41 @@ public class RecipeFragment extends Fragment {
 
     private void translateReady() {
        ArrayList<String> p= nameListTranslate;
-       readRecipeHTTP(nameListTranslate.get(0),0,10);
+       int size = nameListTranslate.size();
+       if(size>1) {
+           int sizeNum=7;
+           boolean end=false;
+           if(size<6) sizeNum =size;
+           for (int i = 0; i < 2; ++i) {
+               for (int j = i+1; j < sizeNum; ++j) {
+                   if(i == 1 && j == (sizeNum-1)) end=true;
+                   readRecipeHTTP(nameListTranslate.get(i),nameListTranslate.get(j),0,5, end);
+               }
+           }
+       }
+       else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0),0,5, true);
+       else{
+          // t.setText("Sin receta");
+       }
+
     }
 
-    private void readRecipeHTTP(String q, int from, int to){
-        final Boolean[] find = {false};
+    private void readRecipeHTTP(String s, String q, int from, int to, boolean end){
         String app_id ="a7a5da31";
         String app_key ="dda7a804c66c252d00d168e99aff33da";
-        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +"&from=" + String.valueOf(from) +"&to="+ String.valueOf(to);
+        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=" + String.valueOf(from) +"&to="+ String.valueOf(to);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
                 new Response.Listener<JSONObject>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray jsonArray = response.getJSONArray("hits");
-                            find[0] = true;
-                            int size=10;
-                            if(jsonArray.length()<10)size=jsonArray.length();
-                            for(int i = 0; i< size;++i){
+                            for(int i = 0; i< jsonArray.length();++i){
                                 JSONObject r=jsonArray.getJSONObject(i).getJSONObject("recipe");
-                                addRecepe(r);
+                                if(i == (jsonArray.length()-1) && end) {addRecepe(r,true);}
+                                else addRecepe(r,false);
                             }
-                            if(to<200 && jsonArray.length()>0) {
-                                if (recipes.size() < 1) {
-                                    readRecipeHTTP(q, from + 10, to + 10);
-                                } else {
-                                    Toast.makeText(getContext(), "se ha encotrado las recetas", Toast.LENGTH_LONG).show();
-
-                                }
-                            }
-                            else Toast.makeText(getContext(), "Sin recetas", Toast.LENGTH_LONG).show();
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -145,48 +150,45 @@ public class RecipeFragment extends Fragment {
                 error.printStackTrace();
             }
         });
-            mQueue.add(request);
-        if(find[0]) t.setText("Sin receta");
+        mQueue.add(request);
     }
 
-    private void addRecepe(JSONObject recipe) throws JSONException {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void addRecepe(JSONObject recipe, boolean b) throws JSONException {
         String ing=recipe.getJSONArray("ingredientLines").toString();
-        ArrayList<Integer> numPoint= scoreRecipe(ing);
-        int numP=numPoint.get(0);
-        if(numPoint.get(0)>numIngredints){
-            recipes.add(generateRecipe(recipe, numPoint.get(1)));
+        recipes.add(generateRecipe(recipe, scoreRecipe(ing)));
+        if(b){
+            recipes.sort((d1, d2) -> (new Integer(d2.getNumIngredientStore())).compareTo(new Integer(d1.getNumIngredientStore())));
         }
 
     }
 
-    private Recipe generateRecipe(JSONObject recipe, Integer p) throws JSONException {
+
+    private Recipe generateRecipe(JSONObject recipe, Integer n) throws JSONException {
         String name = recipe.getString("label");
         String image = recipe.getString("image");
         String url = recipe.getString("url");
-        int point = p;
         ArrayList<String> ingredients = new ArrayList<>();
         JSONArray listIngJSON = recipe.getJSONArray("ingredientLines");
         for(int i =0; i<listIngJSON.length(); ++i){
             ingredients.add(listIngJSON.get(i).toString());
         }
-        return new Recipe(name, image, url, point, ingredients);
+        return new Recipe(name, image, url, n, ingredients);
     }
 
 
 
-    private ArrayList<Integer> scoreRecipe(String ingredientList) {
+    private int scoreRecipe(String ingredientList) {
         int size=nameListTranslate.size();
-        ArrayList<Integer> numPoint= new ArrayList<Integer>();
-        numPoint.add(0);//num ingredientes
-        numPoint.add(0);//puntuacion receta
+        int numIngredients=0;
         for(int i=0; i < size; ++i){
             if(ingredientList.contains(nameListTranslate.get(i))){
-                numPoint.set(1,numPoint.get(1)+size-i);
-                numPoint.set(0,numPoint.get(0)+1);
+                ++numIngredients;
             }
         }
-        return numPoint;
+        return numIngredients;
     }
+
 
 
 }
