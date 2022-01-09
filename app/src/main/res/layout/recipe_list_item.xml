@@ -40,10 +40,12 @@
                     android:id="@+id/recipeName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     android:gravity="center_vertical"
+
+                    android:paddingLeft="10dp"
                     android:text="TextView"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

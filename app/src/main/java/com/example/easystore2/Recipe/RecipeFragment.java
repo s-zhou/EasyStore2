@@ -47,8 +47,6 @@ public class RecipeFragment extends Fragment {
     public List<String> productNameList= new ArrayList<>();
     public ArrayList<String> nameListTranslate= new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
-    int k=0;
-    int numIngredints=1;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -117,7 +115,6 @@ public class RecipeFragment extends Fragment {
            for (int i = 0; i < 2; ++i) {
                for (int j = i+1; j < sizeNum; ++j) {
                    if(i == 1 && j == (sizeNum-1)) end=true;
-                   ++k;
                    readRecipeHTTP(nameListTranslate.get(i),nameListTranslate.get(j), end);
                }
            }
@@ -151,16 +148,19 @@ public class RecipeFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onResponse(JSONObject response) {
+                        boolean lastOne=true;
                         try {
                             JSONArray jsonArray = response.getJSONArray("hits");
                             for(int i = 0; i< jsonArray.length();++i){
+                                lastOne= false;
                                 JSONObject r=jsonArray.getJSONObject(i).getJSONObject("recipe");
-                                if(i == (jsonArray.length()-1) && end) {addRecepe(r,true, q, s);}
-                                else addRecepe(r,false,q,s);
+                                if(i == (jsonArray.length()-1) && end) lastOne= true;
+                                addRecepe(r);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        if(end && lastOne)loadRV();
 
                     }
                 }, new Response.ErrorListener() {
@@ -173,16 +173,14 @@ public class RecipeFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void addRecepe(JSONObject recipe, boolean b, String q, String s) throws JSONException {
+    private void loadRV() {
+        recipes.sort((d1, d2) -> (new Integer(d2.getNumIngredientStore())).compareTo(new Integer(d1.getNumIngredientStore())));
+        showListItems(recipes);
+    }
+
+    private void addRecepe(JSONObject recipe) throws JSONException {
         String ing=recipe.getJSONArray("ingredientLines").toString();
         recipes.add(generateRecipe(recipe, scoreRecipe(ing)));
-        int kk=k;
-        String qq=q, ss=s;
-        recipes.sort((d1, d2) -> (new Integer(d2.getNumIngredientStore())).compareTo(new Integer(d1.getNumIngredientStore())));
-        if(b){
-            showListItems(recipes);
-        }
-
     }
 
 
