@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +43,7 @@ public class RecipeFragment extends Fragment {
     Translator spanishEnglishTranslator;
     private RequestQueue mQueue;
     String translateWord;
+    ConstraintLayout loadConstrait;
     RecyclerView recipeRecyclerView;
     AdapterRecipe adapterRecipe;
     public List<String> productNameList= new ArrayList<>();
@@ -52,6 +54,8 @@ public class RecipeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_sub_activity,container, false);
         t = view.findViewById(R.id.textView4);
+        loadConstrait = view.findViewById(R.id.loadConstrant);
+        loadConstrait.setVisibility(View.VISIBLE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
 
         mQueue = Volley.newRequestQueue(getContext());
@@ -126,9 +130,12 @@ public class RecipeFragment extends Fragment {
 
     }
     private void showListItems(ArrayList<Recipe> list) {
+        loadConstrait.setVisibility(View.GONE);
+
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapterRecipe = new AdapterRecipe(getContext(), list);
         recipeRecyclerView.setAdapter(adapterRecipe);
+
         adapterRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

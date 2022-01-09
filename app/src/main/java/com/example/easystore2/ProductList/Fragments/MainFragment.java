@@ -11,6 +11,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     public ArrayList<ProductRV> getListProductRV() {
         return listProductRV;
     }
-
+    ConstraintLayout load;
     ArrayList<ProductRV> listProductRV;
     productListOperation pLO = new productListOperation();
     ArrayList<ProductRV> tempList;
@@ -51,6 +52,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.store_sub_activity,container, false);
+        load = view.findViewById(R.id.productLoadConstraint);
+        load.setVisibility(View.VISIBLE);
         creatProductBtn = view.findViewById(R.id.createProductBtn);
         creatProductBtn.setOnClickListener(this);
         productRecyclerView = view.findViewById(R.id.storeRecyclerView);
@@ -65,6 +68,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     }
 
     private void showListItems(ArrayList<ProductRV> list) {
+        load.setVisibility(View.GONE);
         productRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapterProducts = new AdapterProducts(getContext(), list);
         productRecyclerView.setAdapter(adapterProducts);
