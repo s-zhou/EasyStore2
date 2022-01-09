@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.easystore2.R;
+import com.example.easystore2.Recipe.Adapter.AdapterRecipe;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.nl.translate.TranslateLanguage;
@@ -31,8 +34,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,16 +42,20 @@ public class RecipeFragment extends Fragment {
     Translator spanishEnglishTranslator;
     private RequestQueue mQueue;
     String translateWord;
-
+    RecyclerView recipeRecyclerView;
+    AdapterRecipe adapterRecipe;
     public List<String> productNameList= new ArrayList<>();
     public ArrayList<String> nameListTranslate= new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
+    int k=0;
     int numIngredints=1;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_sub_activity,container, false);
+        View view = inflater.inflate(R.layout.recipe_sub_activity,container, false);
         t = view.findViewById(R.id.textView4);
+        recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
+
         mQueue = Volley.newRequestQueue(getContext());
         prepareTranslateModel();
         return view;
@@ -112,21 +117,35 @@ public class RecipeFragment extends Fragment {
            for (int i = 0; i < 2; ++i) {
                for (int j = i+1; j < sizeNum; ++j) {
                    if(i == 1 && j == (sizeNum-1)) end=true;
-                   readRecipeHTTP(nameListTranslate.get(i),nameListTranslate.get(j),0,5, end);
+                   ++k;
+                   readRecipeHTTP(nameListTranslate.get(i),nameListTranslate.get(j), end);
                }
            }
        }
-       else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0),0,5, true);
+       else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0), true);
        else{
           // t.setText("Sin receta");
        }
 
     }
+    private void showListItems(ArrayList<Recipe> list) {
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapterRecipe = new AdapterRecipe(getContext(), list);
+        recipeRecyclerView.setAdapter(adapterRecipe);
+        adapterRecipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ProductRV p= list.get(recipeRecyclerView.getChildAdapterPosition(v));
+               // Intent intent = new Intent( getActivity(), CreateProduct.class);
+               // startActivity(intent);
+            }
+        });
+    }
 
-    private void readRecipeHTTP(String s, String q, int from, int to, boolean end){
+    private void readRecipeHTTP(String s, String q, boolean end){
         String app_id ="a7a5da31";
         String app_key ="dda7a804c66c252d00d168e99aff33da";
-        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=" + String.valueOf(from) +"&to="+ String.valueOf(to);
+        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=0&to=5";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -136,8 +155,8 @@ public class RecipeFragment extends Fragment {
                             JSONArray jsonArray = response.getJSONArray("hits");
                             for(int i = 0; i< jsonArray.length();++i){
                                 JSONObject r=jsonArray.getJSONObject(i).getJSONObject("recipe");
-                                if(i == (jsonArray.length()-1) && end) {addRecepe(r,true);}
-                                else addRecepe(r,false);
+                                if(i == (jsonArray.length()-1) && end) {addRecepe(r,true, q, s);}
+                                else addRecepe(r,false,q,s);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -154,11 +173,14 @@ public class RecipeFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void addRecepe(JSONObject recipe, boolean b) throws JSONException {
+    private void addRecepe(JSONObject recipe, boolean b, String q, String s) throws JSONException {
         String ing=recipe.getJSONArray("ingredientLines").toString();
         recipes.add(generateRecipe(recipe, scoreRecipe(ing)));
+        int kk=k;
+        String qq=q, ss=s;
+        recipes.sort((d1, d2) -> (new Integer(d2.getNumIngredientStore())).compareTo(new Integer(d1.getNumIngredientStore())));
         if(b){
-            recipes.sort((d1, d2) -> (new Integer(d2.getNumIngredientStore())).compareTo(new Integer(d1.getNumIngredientStore())));
+            showListItems(recipes);
         }
 
     }
@@ -182,7 +204,7 @@ public class RecipeFragment extends Fragment {
         int size=nameListTranslate.size();
         int numIngredients=0;
         for(int i=0; i < size; ++i){
-            if(ingredientList.contains(nameListTranslate.get(i))){
+            if(ingredientList.toUpperCase(Locale.ROOT).contains(nameListTranslate.get(i).toUpperCase(Locale.ROOT))){
                 ++numIngredients;
             }
         }
