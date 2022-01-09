@@ -13,6 +13,9 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Recipe.RecipeDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivityNavBar"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

@@ -1,5 +1,6 @@
 package com.example.easystore2.Recipe;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,6 +50,7 @@ public class RecipeFragment extends Fragment {
     ConstraintLayout loadConstrait;
     RecyclerView recipeRecyclerView;
     AdapterRecipe adapterRecipe;
+
     public List<String> productNameList= new ArrayList<>();
     public ArrayList<String> nameListTranslate= new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
@@ -125,7 +130,7 @@ public class RecipeFragment extends Fragment {
        }
        else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0), true);
        else{
-          // t.setText("Sin receta");
+          t.setText("Sin receta");
        }
 
     }
@@ -139,9 +144,13 @@ public class RecipeFragment extends Fragment {
         adapterRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ProductRV p= list.get(recipeRecyclerView.getChildAdapterPosition(v));
-               // Intent intent = new Intent( getActivity(), CreateProduct.class);
-               // startActivity(intent);
+                Recipe r= list.get(recipeRecyclerView.getChildAdapterPosition(v));
+                Intent intent = new Intent( getActivity(), RecipeDetailActivity.class);
+                intent.putExtra("name",r.getName());
+                intent.putExtra("image",r.getImage());
+                intent.putExtra("instructions",r.getIngredients());
+                intent.putExtra("url",r.getUrl());
+                startActivity(intent);
             }
         });
     }
@@ -165,7 +174,7 @@ public class RecipeFragment extends Fragment {
                                 addRecepe(r);
                             }
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            t.setText("Sin receta");
                         }
                         if(end && lastOne)loadRV();
 
@@ -173,7 +182,7 @@ public class RecipeFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+                t.setText("Sin receta");
             }
         });
         mQueue.add(request);
