@@ -27,6 +27,7 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
     public ArrayList<Recipe> model;
     private View.OnClickListener listener;
     RequestQueue request;
+
     public AdapterRecipe(Context context, ArrayList<Recipe> model){
         this.inflater = LayoutInflater.from(context);
         this.model = model;
@@ -51,7 +52,6 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
         //String url = model.get(position).getUrl();
         //String ingredients = model.get(position).getIngredients().toString();
         request = Volley.newRequestQueue(inflater.getContext());
-
         holder.name.setText(name);
         ImageRequest imageRequest = new ImageRequest(image, new Response.Listener<Bitmap>() {
             @Override
