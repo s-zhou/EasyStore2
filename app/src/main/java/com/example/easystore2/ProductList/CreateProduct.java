@@ -253,9 +253,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v == compCancel){
-            Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            finish();
 
         }
         else if(v == compPlusQuantity){

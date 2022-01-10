@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarAdd"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        <Button
+            android:id="@+id/recipeBackBtn"
+            android:layout_marginTop="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:rotation="90"
+            android:background="@drawable/cicle_down_24" />
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:id="@+id/recipeFavoriteBtn"
+            android:layout_width="40dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:layout_height="40dp"
+            android:background="@drawable/favorite_unselect_24" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+</LinearLayout>
