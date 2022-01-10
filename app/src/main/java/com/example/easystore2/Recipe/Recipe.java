@@ -7,16 +7,34 @@ import java.util.ArrayList;
 public class Recipe {
     String name;
     String image;
-    String url;
-    int numIngredientStore;
-    ArrayList<String> ingredients=new ArrayList<>();
 
+    public Recipe(String name, String image, String url, boolean favorite, int numIngredientStore, ArrayList<String> ingredients) {
+        this.name = name;
+        this.image = image;
+        this.url = url;
+        this.favorite = favorite;
+        this.numIngredientStore = numIngredientStore;
+        this.ingredients = ingredients;
+    }
+
+    String url;
+    boolean favorite = false;
+    int numIngredientStore;
+
+    ArrayList<String> ingredients=new ArrayList<>();
     public Recipe(@NonNull String name, String image, String url, int numIngredientStore, ArrayList<String> ingredients) {
         this.name = name;
         this.image = image;
         this.url = url;
         this.numIngredientStore = numIngredientStore;
         this.ingredients = ingredients;
+    }
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public int getNumIngredientStore() {

@@ -25,10 +25,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.easystore2.CalculateDate;
 import com.example.easystore2.R;
 import com.example.easystore2.Recipe.Adapter.AdapterRecipe;
+import com.example.easystore2.data.model.ProductRV;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.mlkit.nl.translate.TranslateLanguage;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
@@ -38,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -50,10 +60,13 @@ public class RecipeFragment extends Fragment {
     ConstraintLayout loadConstrait;
     RecyclerView recipeRecyclerView;
     AdapterRecipe adapterRecipe;
+    String allRecipeName="";
 
     public List<String> productNameList= new ArrayList<>();
     public ArrayList<String> nameListTranslate= new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
+    String allFavoriteName="";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,10 +77,34 @@ public class RecipeFragment extends Fragment {
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
 
         mQueue = Volley.newRequestQueue(getContext());
-        prepareTranslateModel();
+        loadFavoriteRecipeName();
         return view;
     }
+    private void loadFavoriteRecipeName() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        databaseReference.child("User").child(uid).child("FavoriteRecipe").addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for (DataSnapshot prod : snapshot.getChildren()) {
+                        String name = prod.child("name").getValue().toString();
+                        allFavoriteName+= " "+name;
+                    }
+                }
+                prepareTranslateModel();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
 
     private void prepareTranslateModel() {
         TranslatorOptions options =
@@ -150,6 +187,7 @@ public class RecipeFragment extends Fragment {
                 intent.putExtra("image",r.getImage());
                 intent.putExtra("instructions",r.getIngredients());
                 intent.putExtra("url",r.getUrl());
+                intent.putExtra("favorite",r.isFavorite());//mirar
                 startActivity(intent);
             }
         });
@@ -194,6 +232,8 @@ public class RecipeFragment extends Fragment {
         showListItems(recipes);
     }
 
+
+
     private void addRecepe(JSONObject recipe) throws JSONException {
         String ing=recipe.getJSONArray("ingredientLines").toString();
         recipes.add(generateRecipe(recipe, scoreRecipe(ing)));
@@ -209,7 +249,10 @@ public class RecipeFragment extends Fragment {
         for(int i =0; i<listIngJSON.length(); ++i){
             ingredients.add(listIngJSON.get(i).toString());
         }
-        return new Recipe(name, image, url, n, ingredients);
+        Boolean favorite= false;
+        if(allFavoriteName.toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)))
+            favorite=true;
+        return new Recipe(name, image, url, favorite,n, ingredients);
     }
 
 

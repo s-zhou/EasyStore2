@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -17,9 +16,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.easystore2.MainActivityNavBar;
-import com.example.easystore2.ProductList.CreateProduct;
 import com.example.easystore2.R;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -27,10 +29,12 @@ import java.util.ArrayList;
 public class RecipeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView nameComp, ingredientsComp;
     Button goUrlComp, backComp,favoriteComp;
+    boolean favorite;
     ImageView imageComp;
-
+    ArrayList<String> ingredientsLines = new ArrayList<>();
+    String name, ingredients, url, image;
     RequestQueue request;
-
+    Recipe recipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         loadInfo();
 
         backComp.setOnClickListener(this);
+        favoriteComp.setOnClickListener(this);
     }
 
     private void associateComponents() {
@@ -48,17 +53,18 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         imageComp = findViewById(R.id.recipeImageView);
         backComp =findViewById(R.id.recipeBackBtn);
         favoriteComp =findViewById(R.id.recipeFavoriteBtn);
+
     }
 
     private void loadInfo() {
         Bundle parameters = this.getIntent().getExtras();
-        String name =parameters.getString("name");
+        name =parameters.getString("name");
         nameComp.setText(name);
-        
-        String ingredients =  loadListIngredients(parameters.getStringArrayList("instructions"));
+        ingredientsLines =parameters.getStringArrayList("instructions");
+        ingredients =  loadListIngredients(ingredientsLines);
         ingredientsComp.setText(ingredients);
 
-        String url = parameters.getString("url");
+        url = parameters.getString("url");
         goUrlComp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +74,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        String image = parameters.getString("image");
+        image = parameters.getString("image");
         request = Volley.newRequestQueue(this);
         ImageRequest imageRequest = new ImageRequest(image, new Response.Listener<Bitmap>() {
             @Override
@@ -81,10 +87,12 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
             }
         });
         request.add(imageRequest);
-        
 
+        favorite =parameters.getBoolean("favorite");
+        if(favorite) favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
+        else favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
 
-
+        recipe = new Recipe(name,image,url,favorite,0,ingredientsLines);
     }
 
     private String loadListIngredients(ArrayList<String> ingredientLines) {
@@ -102,6 +110,35 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         if(v==backComp){
             finish();
         }
-        else if(v==favoriteComp){}
+        else if(v==favoriteComp){
+            if(recipe.isFavorite()){
+                recipe.setFavorite(false);
+                delateDB();
+                favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
+
+            }
+            else {
+                recipe.setFavorite(true);
+                pushDB();
+                favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
+            }
+        }
     }
+
+    private void delateDB() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName()).removeValue();
+
+    }
+
+    private void pushDB() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+
+        String uid = user.getUid();
+        FirebaseApp.initializeApp(this);
+        databaseReference.child("User").child(uid).child("FavoriteRecipe").child(recipe.getName()).setValue(recipe);
+    }
+
 }
