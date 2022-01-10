@@ -53,14 +53,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class RecipeFragment extends Fragment {
-    TextView t;
     Translator spanishEnglishTranslator;
     private RequestQueue mQueue;
     String translateWord;
     ConstraintLayout loadConstrait;
     RecyclerView recipeRecyclerView;
     AdapterRecipe adapterRecipe;
-    String allRecipeName="";
 
     public List<String> productNameList= new ArrayList<>();
     public ArrayList<String> nameListTranslate= new ArrayList<>();
@@ -71,7 +69,6 @@ public class RecipeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_sub_activity,container, false);
-        t = view.findViewById(R.id.textView4);
         loadConstrait = view.findViewById(R.id.loadConstrant);
         loadConstrait.setVisibility(View.VISIBLE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
@@ -167,7 +164,7 @@ public class RecipeFragment extends Fragment {
        }
        else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0), true);
        else{
-          t.setText("Sin receta");
+           //si no ha encontrado ninguna receta
        }
 
     }
@@ -212,7 +209,7 @@ public class RecipeFragment extends Fragment {
                                 addRecepe(r);
                             }
                         } catch (JSONException e) {
-                            t.setText("Sin receta");
+                            //si no ha encontrado ninguna receta
                         }
                         if(end && lastOne)loadRV();
 
@@ -220,7 +217,7 @@ public class RecipeFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                t.setText("Sin receta");
+                //si no ha encontrado ninguna receta
             }
         });
         mQueue.add(request);

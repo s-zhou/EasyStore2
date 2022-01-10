@@ -120,7 +120,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             i1.setVisibility(View.VISIBLE);
             i2.setVisibility(View.VISIBLE);
             fragmentTransaction.commit();
-        }else if(item.getItemId() == R.id.list){
+        }else if(item.getItemId() == R.id.recipe){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             RecipeFragment rf= new RecipeFragment();
