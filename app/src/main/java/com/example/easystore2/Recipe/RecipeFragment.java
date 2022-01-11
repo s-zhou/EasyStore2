@@ -133,7 +133,7 @@ public class RecipeFragment extends Fragment {
        if(size>1) {
            int sizeNum=7;
            boolean end=false;
-           if(size<6) sizeNum =size;
+           if(size<=6) sizeNum =size;
            for (int i = 0; i < 2; ++i) {
                for (int j = i+1; j < sizeNum; ++j) {
                    if(i == 1 && j == (sizeNum-1)) end=true;
@@ -184,9 +184,9 @@ public class RecipeFragment extends Fragment {
     }
 
     private void readRecipeHTTP(String s, String q, boolean end){
-        String app_id ="a7a5da31";
-        String app_key ="dda7a804c66c252d00d168e99aff33da";
-        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=0&to=5";
+        String app_id ="ad891f96";
+        String app_key ="d34ff43a54bde1b829d15e49b1a7b403";
+        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=0&to=3";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
