@@ -35,11 +35,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateProduct extends AppCompatActivity implements View.OnClickListener {
-    private EditText compExpiredDate, compProductNameText, compQuantityText, compDescriptionText;
+    private EditText compProductNameText, compQuantityText, compDescriptionText;
     private Products product;
     private Context context;
     Boolean modify=false;
-
+    private Button compExpiredDate;
     private LinearLayout comDeleteEditBtn;
     FirebaseUser user;
     DatabaseReference databaseReference;
@@ -155,7 +155,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         compQuantityText =(EditText) findViewById(R.id.quantityEditText);
         compQuantityText.setText("1");
         compQuantitySpinner = (Spinner) findViewById(R.id.selectUnitSpinner);
-        compExpiredDate =(EditText) findViewById(R.id.ExpiredTextDate);
+        compExpiredDate =(Button) findViewById(R.id.ExpiredDateBtn);
         compCategoriSelectorSpinner = (Spinner) findViewById(R.id.categorySelectorSpinner);
         compSaveNewProduct =(Button) findViewById(R.id.SaveNewProductBotton);
         compDescriptionText = (EditText) findViewById(R.id.descriptionTextMultiLine);
