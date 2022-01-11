@@ -21,7 +21,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/orderByTxt"
+        android:id="@+id/dietTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="¿Desea eliminar el  producto?"
@@ -44,7 +44,7 @@
             android:text="No" />
 
         <Button
-            android:id="@+id/siBtn"
+            android:id="@+id/ricpeFilterSaveBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -156,6 +156,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         tempList = pLO.showCategory(category,listProductRV);
         adapterProducts = new AdapterProducts(getContext(), tempList);
         productRecyclerView.setAdapter(adapterProducts);
+        //para poder acceder a cada uno de los componentes
+        showListItems(tempList);
     }
 
 
@@ -163,5 +165,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         ArrayList<ProductRV> tempAr = pLO.search(query,tempList);
         adapterProducts = new AdapterProducts(getContext(), tempAr);
         productRecyclerView.setAdapter(adapterProducts);
+        showListItems(tempAr);
     }
 }

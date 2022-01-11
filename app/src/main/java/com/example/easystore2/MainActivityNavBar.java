@@ -60,6 +60,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     String orderBy="";
     String categorySelected;
     MenuItem item;
+    String currentInstance="store";
     MenuItem filterItem ;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -117,15 +118,15 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
         ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
         i1.setVisibility(View.GONE);
-        i2.setVisibility(View.GONE);
 
         if(item.getItemId() == R.id.home){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, mainFragment);
             toolbar.setTitle("Inventario");
+            currentInstance="store";
             i1.setVisibility(View.VISIBLE);
-            i2.setVisibility(View.VISIBLE);
+            //i2.setVisibility(View.VISIBLE);
             fragmentTransaction.commit();
         } else if(item.getItemId() == R.id.recipe){
             fragmentManager = getSupportFragmentManager();
@@ -135,6 +136,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             rf.productNameList = loadProductNameList();
             fragmentTransaction.replace(R.id.container, rf);
             toolbar.setTitle("Recetas");
+            currentInstance="recipe";
             fragmentTransaction.commit();
 
         }else if(item.getItemId() == R.id.favoriteRecipe){
@@ -142,6 +144,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, new RecipeFavoriteFragment());
             toolbar.setTitle("Recetas favoritas");
+            currentInstance="favoriteRecipe";
+            i2.setVisibility(View.GONE);
             fragmentTransaction.commit();
        }else if(item.getItemId() == R.id.close){
             //logout
@@ -182,7 +186,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mostrarDialogoPersonalizado();
+                if(currentInstance.equals("store"))mostrarDialogoPersonalizado();
+                else if(currentInstance.equals("recipe"))mostrarDialogoPersonalizado();
                 return false;
             }
         });

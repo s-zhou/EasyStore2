@@ -13,7 +13,95 @@
     <string name="v"> v </string>
     <string name="recipe"> Recetas </string>
     <string name="favoriteRecipes"> Recetas favoritas</string>
-
+    <string name="recipeOption">Opciones de recetas</string>
+    <string name="diet">Tipo de dieta</string>
+    <string-array name="dietEnum">
+        <item>balanced</item>
+        <item>high-fiber</item>
+        <item>high-protein</item>
+        <item>low-carb</item>
+        <item>low-fat</item>
+        <item>low-sodium</item>
+    </string-array>
+    <string name="health">Intolerancia o preferencia</string>
+    <string-array name="healthEnum">
+        <item>alcohol-cocktail</item>
+        <item>alcohol-free</item>
+        <item>celery-free</item>
+        <item>crustacean-free</item>
+        <item>dairy-free</item>
+        <item>DASH</item>
+        <item>egg-free</item>
+        <item>fish-free</item>
+        <item>fodmap-free</item>
+        <item>gluten-free</item>
+        <item>immuno-supportive</item>
+        <item>keto-friendly</item>
+        <item>kidney-friendly</item>
+        <item>kosher</item>
+        <item>low-fat-abs</item>
+        <item>low-potassium</item>
+        <item>low-sugar</item>
+        <item>lupine-free</item>
+        <item>Mediterranean</item>
+        <item>mollusk-free</item>
+        <item>mustard-free</item>
+        <item>no-oil-added</item>
+        <item>paleo</item>
+        <item>peanut-free</item>
+        <item>pescatarian</item>
+        <item>pork-free</item>
+        <item>red-meat-free</item>
+        <item>sesame-free</item>
+        <item>shellfish-free</item>
+        <item>soy-free</item>
+        <item>sugar-conscious</item>
+        <item>sulfite-free</item>
+        <item>tree-nut-free</item>
+        <item>vegan</item>
+        <item>vegetarian</item>
+        <item>wheat-free</item>
+    </string-array>
+    <string name="cuisineType">Tipo de cocina</string>
+    <string-array name="cuisineTypeEnum">
+        <item>American</item>
+        <item>Asian</item>
+        <item>British</item>
+        <item>Caribbean</item>
+        <item>Central Europe</item>
+        <item>Chinese</item>
+        <item>Eastern Europe</item>
+        <item>French</item>
+        <item>Indian</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Kosher</item>
+        <item>Mediterranean</item>
+        <item>Mexican</item>
+        <item>Middle Eastern</item>
+        <item>Nordic</item>
+        <item>South American</item>
+        <item>South East Asian</item>
+    </string-array>
+    <string name="mealType">Tipo de comida</string>
+    <string-array name="mealType">
+        <item>Breakfast</item>
+        <item>Dinner</item>
+        <item>Lunch</item>
+        <item>Snack</item>
+        <item>Teatime</item>
+    </string-array>
+    <string name="time">Tiempo de preparacion</string>
+    <string-array name="timeEnum">
+        <item>Breakfast</item>
+        <item>Dinner</item>
+        <item>Lunch</item>
+        <item>Snack</item>
+        <item>Teatime</item>
+    </string-array>
+    <string name="excluded">Ingrediente excluido</string>
+    <string name="filter">Filtrar</string>
+    <string name="cancel">Cancelar</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="ingredients">Ingredientes</string>
