@@ -29,7 +29,6 @@ import java.util.ArrayList;
 public class RecipeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView nameComp, ingredientsComp;
     Button goUrlComp, backComp,favoriteComp;
-    boolean favorite;
     ImageView imageComp;
     ArrayList<String> ingredientsLines = new ArrayList<>();
     String name, ingredients, url, image;
@@ -88,11 +87,11 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         });
         request.add(imageRequest);
 
-        favorite =parameters.getBoolean("favorite");
-        if(favorite) favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
+        boolean like =parameters.getBoolean("like");
+        if(like)favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
         else favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
 
-        recipe = new Recipe(name,image,url,favorite,0,ingredientsLines);
+        recipe = new Recipe(name,image,url,like,0,ingredientsLines);
     }
 
     private String loadListIngredients(ArrayList<String> ingredientLines) {
@@ -111,34 +110,20 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
             finish();
         }
         else if(v==favoriteComp){
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+            DatabaseReference ref = databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName());
             if(recipe.isFavorite()){
-                recipe.setFavorite(false);
-                delateDB();
                 favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
-
+                recipe.setFavorite(false);
+                ref.removeValue();
             }
             else {
-                recipe.setFavorite(true);
-                pushDB();
                 favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
+                recipe.setFavorite(true);
+                ref.setValue(recipe);
             }
         }
-    }
-
-    private void delateDB() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-        databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName()).removeValue();
-
-    }
-
-    private void pushDB() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-
-        String uid = user.getUid();
-        FirebaseApp.initializeApp(this);
-        databaseReference.child("User").child(uid).child("FavoriteRecipe").child(recipe.getName()).setValue(recipe);
     }
 
 }

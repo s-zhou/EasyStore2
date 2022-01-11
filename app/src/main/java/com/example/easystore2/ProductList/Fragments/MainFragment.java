@@ -36,9 +36,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
     RecyclerView productRecyclerView;
 
-    public ArrayList<ProductRV> getListProductRV() {
-        return listProductRV;
-    }
     ConstraintLayout load;
     ArrayList<ProductRV> listProductRV;
     productListOperation pLO = new productListOperation();
@@ -47,14 +44,14 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     private String uid;
     private FirebaseUser user;
     private Button creatProductBtn;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.store_sub_activity,container, false);
         load = view.findViewById(R.id.productLoadConstraint);
-        load.setVisibility(View.VISIBLE);
+        load.setVisibility(View.GONE);
         creatProductBtn = view.findViewById(R.id.createProductBtn);
+        creatProductBtn.setVisibility(View.GONE);
         creatProductBtn.setOnClickListener(this);
         productRecyclerView = view.findViewById(R.id.storeRecyclerView);
         listProductRV = new ArrayList<>();
@@ -67,8 +64,13 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
+    public ArrayList<ProductRV> getListProductRV() {
+        return listProductRV;
+    }
+
     private void showListItems(ArrayList<ProductRV> list) {
         load.setVisibility(View.GONE);
+        creatProductBtn.setVisibility(View.VISIBLE);
         productRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapterProducts = new AdapterProducts(getContext(), list);
         productRecyclerView.setAdapter(adapterProducts);
@@ -88,7 +90,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         });
     }
 
-    private void loadList() {
+    public void loadList() {
+        load.setVisibility(View.VISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();

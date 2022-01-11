@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easystore2.Login.ContinueWithActivity;
+import com.example.easystore2.Recipe.RecipeFavoriteFragment;
 import com.example.easystore2.Recipe.RecipeFragment;
 import com.example.easystore2.ProductList.Fragments.MainFragment;
 import com.example.easystore2.data.model.ProductRV;
@@ -47,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivityNavBar extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -110,32 +112,38 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawer(GravityCompat.START);
+
+
+        ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
+        ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
+        i1.setVisibility(View.GONE);
+        i2.setVisibility(View.GONE);
+
         if(item.getItemId() == R.id.home){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, mainFragment);
             toolbar.setTitle("Inventario");
-            ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
-            ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
             i1.setVisibility(View.VISIBLE);
             i2.setVisibility(View.VISIBLE);
             fragmentTransaction.commit();
-        }else if(item.getItemId() == R.id.recipe){
+        } else if(item.getItemId() == R.id.recipe){
             fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStack();
             fragmentTransaction = fragmentManager.beginTransaction();
-            RecipeFragment rf= new RecipeFragment();
-            productListOperation p = new productListOperation();
-            ArrayList<ProductRV> productListOrdered = p.orderByPreference(mainFragment.getListProductRV());
-            rf.productNameList =  p.getOnlyListName(productListOrdered);
+            RecipeFragment rf = new RecipeFragment();
+            rf.productNameList = loadProductNameList();
             fragmentTransaction.replace(R.id.container, rf);
             toolbar.setTitle("Recetas");
-            ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
-            ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
-            i1.setVisibility(View.GONE);
-            i2.setVisibility(View.GONE);
             fragmentTransaction.commit();
 
-        }else if(item.getItemId() == R.id.close){
+        }else if(item.getItemId() == R.id.favoriteRecipe){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, new RecipeFavoriteFragment());
+            toolbar.setTitle("Recetas favoritas");
+            fragmentTransaction.commit();
+       }else if(item.getItemId() == R.id.close){
             //logout
             AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>(){
                 @Override
@@ -151,6 +159,18 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             });
         }
         return false;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<String> loadProductNameList() {
+        ArrayList<ProductRV> ProductRVList= mainFragment.getListProductRV();
+        if(ProductRVList.isEmpty()){
+            mainFragment.loadList();
+            ProductRVList= mainFragment.getListProductRV();
+        }
+        productListOperation p = new productListOperation();
+        ArrayList<ProductRV> productListOrdered = p.orderByPreference(ProductRVList);
+        return p.getOnlyListName(productListOrdered);
     }
 
     @Override

@@ -301,8 +301,6 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
 
     private void deleteProduct(String iniProduct) {
         databaseReference.child("User").child(user.getUid()).child("Products").child(iniProduct).removeValue();
-
-
     }
 
     private void pushDB() {

@@ -20,20 +20,19 @@ import com.example.easystore2.R;
 import com.example.easystore2.Recipe.Recipe;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implements View.OnClickListener {
+public class AdapterRecipeFavorite extends RecyclerView.Adapter<RecipeViewHolder> implements View.OnClickListener {
     LayoutInflater inflater;
     public ArrayList<Recipe> model;
     private View.OnClickListener listener;
     RequestQueue request;
 
-    public AdapterRecipe(Context context, ArrayList<Recipe> model){
+    public AdapterRecipeFavorite(Context context, ArrayList<Recipe> model){
         this.inflater = LayoutInflater.from(context);
         this.model = model;
     }
-    public AdapterRecipe(){};
-
+    public AdapterRecipeFavorite(){
+    }
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,8 +49,6 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         String name = model.get(position).getName();
         String image = model.get(position).getImage();
-        //String url = model.get(position).getUrl();
-        //String ingredients = model.get(position).getIngredients().toString();
         request = Volley.newRequestQueue(inflater.getContext());
         holder.name.setText(name);
         ImageRequest imageRequest = new ImageRequest(image, new Response.Listener<Bitmap>() {
@@ -62,13 +59,9 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
         }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-               // holder.image.
             }
         });
         request.add(imageRequest);
-        //holder.image.setImageURI();
-        //holder.url.setText(url);
-        //holder.ingredients.setText(ingredients);
     }
 
 

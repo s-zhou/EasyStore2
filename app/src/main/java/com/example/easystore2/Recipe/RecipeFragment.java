@@ -70,40 +70,19 @@ public class RecipeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recipe_sub_activity,container, false);
         loadConstrait = view.findViewById(R.id.loadConstrant);
-        loadConstrait.setVisibility(View.VISIBLE);
+        loadConstrait.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
 
         mQueue = Volley.newRequestQueue(getContext());
-        loadFavoriteRecipeName();
+        prepareTranslateModel();
+
         return view;
     }
-    private void loadFavoriteRecipeName() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-        databaseReference.child("User").child(uid).child("FavoriteRecipe").addValueEventListener(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for (DataSnapshot prod : snapshot.getChildren()) {
-                        String name = prod.child("name").getValue().toString();
-                        allFavoriteName+= " "+name;
-                    }
-                }
-                prepareTranslateModel();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
 
     private void prepareTranslateModel() {
+        loadConstrait.setVisibility(View.VISIBLE);
+
         TranslatorOptions options =
                 new TranslatorOptions.Builder()
                         .setSourceLanguage(TranslateLanguage.SPANISH)
@@ -164,30 +143,44 @@ public class RecipeFragment extends Fragment {
        }
        else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0), true);
        else{
-           //si no ha encontrado ninguna receta
+           //si no ha encontrado ninguna receta, mostrar un mensaje x pantalla
        }
 
     }
     private void showListItems(ArrayList<Recipe> list) {
         loadConstrait.setVisibility(View.GONE);
-
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapterRecipe = new AdapterRecipe(getContext(), list);
         recipeRecyclerView.setAdapter(adapterRecipe);
-
         adapterRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Recipe r= list.get(recipeRecyclerView.getChildAdapterPosition(v));
-                Intent intent = new Intent( getActivity(), RecipeDetailActivity.class);
-                intent.putExtra("name",r.getName());
-                intent.putExtra("image",r.getImage());
-                intent.putExtra("instructions",r.getIngredients());
-                intent.putExtra("url",r.getUrl());
-                intent.putExtra("favorite",r.isFavorite());//mirar
-                startActivity(intent);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = user.getUid();
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+                databaseReference.child("User").child(uid).child("FavoriteRecipe").child(r.getName()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        startNewActivity(r,snapshot.exists());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
+    }
+    private void startNewActivity(Recipe r, boolean exists){
+        Intent intent = new Intent( getActivity(), RecipeDetailActivity.class);
+        intent.putExtra("name",r.getName());
+        intent.putExtra("image",r.getImage());
+        intent.putExtra("instructions",r.getIngredients());
+        intent.putExtra("url",r.getUrl());
+        intent.putExtra("like",exists);//mirar
+        startActivity(intent);
     }
 
     private void readRecipeHTTP(String s, String q, boolean end){
@@ -246,10 +239,7 @@ public class RecipeFragment extends Fragment {
         for(int i =0; i<listIngJSON.length(); ++i){
             ingredients.add(listIngJSON.get(i).toString());
         }
-        Boolean favorite= false;
-        if(allFavoriteName.toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)))
-            favorite=true;
-        return new Recipe(name, image, url, favorite,n, ingredients);
+        return new Recipe(name, image, url, false,n, ingredients);
     }
 
 
