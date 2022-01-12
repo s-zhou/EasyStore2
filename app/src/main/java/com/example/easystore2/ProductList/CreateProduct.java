@@ -283,6 +283,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         siBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                removeDayRecipe();
                 deleteProduct(compProductNameText.getText().toString());
                 Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
@@ -303,7 +304,9 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         databaseReference.child("User").child(user.getUid()).child("Products").child(iniProduct).removeValue();
     }
 
+
     private void pushDB() {
+        removeDayRecipe();
         product = new Products();
         product.setProductName(compProductNameText.getText().toString());
         product.setQuantity(compQuantityText.getText().toString());
@@ -318,6 +321,11 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
 
         if(this.getIntent().getExtras()==null)Toast.makeText(this, "Creado", Toast.LENGTH_LONG).show();
         else Toast.makeText(this, "Modificado", Toast.LENGTH_LONG).show();
+    }
+
+    private void removeDayRecipe() {
+        DatabaseReference deleteDayRecipe = databaseReference.child("User").child(user.getUid()).child("DayRecipe");
+        deleteDayRecipe.removeValue();
     }
 
 

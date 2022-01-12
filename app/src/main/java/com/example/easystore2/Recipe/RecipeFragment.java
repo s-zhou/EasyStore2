@@ -47,8 +47,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,9 +75,45 @@ public class RecipeFragment extends Fragment {
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
 
         mQueue = Volley.newRequestQueue(getContext());
-        prepareTranslateModel("");
+        loadDBRecipe();
+
 
         return view;
+    }
+
+    private void loadDBRecipe() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        DatabaseReference ref = databaseReference.child("User").child(user.getUid()).child("DayRecipe");
+        ref.child(new SimpleDateFormat("dd-MM-yyyy").format(new Date())).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot prod : snapshot.getChildren()) {
+                        String name = prod.child("name").getValue().toString();
+                        String image = prod.child("image").getValue().toString();
+                        String url = prod.child("url").getValue().toString();
+                        Iterable<DataSnapshot> ingredientsDS = prod.child("ingredients").getChildren();
+                        ArrayList<String> ingredients = new ArrayList<>();
+                        for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
+                        boolean fav = prod.child("favorite").getValue().toString().equals("true");
+                        Recipe r = new Recipe(name, image, url, fav, 0, ingredients);
+                        recipes.add(r);
+                    }
+                    showListItems(recipes);
+                }
+                else {
+                    ref.removeValue();
+                    prepareTranslateModel("");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 
@@ -132,9 +170,9 @@ public class RecipeFragment extends Fragment {
        recipes.clear();
        int size = nameListTranslate.size();
        if(size>1) {
-           int sizeNum=3;
+           int sizeNum=4;
            boolean end=false;
-           if(size<=2) sizeNum =size;
+           if(size<=3) sizeNum =size;
            for (int i = 0; i < 2; ++i) {
                for (int j = i+1; j < sizeNum; ++j) {
                    if(i == 1 && j == (sizeNum-1)) end=true;
@@ -193,7 +231,7 @@ public class RecipeFragment extends Fragment {
     private void readRecipeHTTP(String s, String q, boolean end, String filter){
         String app_id ="03a82397";
         String app_key ="f68990b12dd09471ab9754d0b4f40bbb";
-        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=0&to=2"+filter;
+        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=0&to=3"+filter;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -229,9 +267,19 @@ public class RecipeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadRV() {
         recipes.sort((d1, d2) -> (new Integer(d2.getNumIngredientStore())).compareTo(new Integer(d1.getNumIngredientStore())));
+        saveDB(recipes);
         showListItems(recipes);
     }
 
+    private void saveDB(ArrayList<Recipe> recipes) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        DatabaseReference ref = databaseReference.child("User").child(user.getUid()).child("DayRecipe").child(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
+        for(Recipe r: this.recipes){
+
+            ref.child(r.getName()).setValue(r);
+        }
+    }
 
 
     private void addRecepe(JSONObject recipe) throws JSONException {
