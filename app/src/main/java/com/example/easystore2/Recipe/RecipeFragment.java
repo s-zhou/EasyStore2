@@ -275,7 +275,7 @@ public class RecipeFragment extends Fragment {
         if(!health.equals("None")) filter += "&health=" + health;
         if(!cuisineType.equals("None")) filter += "&cuisineType=" + cuisineType;
         if(!mealType.equals("None")) filter += "&mealType=" + mealType;
-        if(!max.equals("999") || !min.equals("1")) filter += "&time=" + min+"-"+max;
+        if(!max.equals("99") || !min.equals("01")) filter += "&time=" + min+"-"+max;
         prepareTranslateModel(filter);
     }
 }

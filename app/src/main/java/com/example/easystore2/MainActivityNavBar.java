@@ -244,10 +244,12 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         mealTypeSpinner.setAdapter(selectorSpinner("mealType"));
         TextView maxTime = view.findViewById(R.id.maxTimeTV);
         TextView minTime = view.findViewById(R.id.minTimiTV);
+        TextView minutes = view.findViewById(R.id.timeView10);
+        minutes.setError(null);
+
+
         maxTime.setText("99");
-        minTime.setText("1");
-        int max = Integer.parseInt(maxTime.getText().toString());
-        int min = Integer.parseInt(minTime.getText().toString());
+        minTime.setText("01");
         Button btnFilter = view.findViewById(R.id.recipeFilterBtn);
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -257,11 +259,13 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
                 String health = healthSpinner.getSelectedItem().toString();
                 String cuisineType = cuisineTypeSpinner.getSelectedItem().toString();
                 String mealType = mealTypeSpinner.getSelectedItem().toString();
-                if(max>min) {
+                String max =maxTime.getText().toString();
+                String min = minTime.getText().toString();
+                if(Integer.parseInt(max)>= Integer.parseInt(min)) {
                     rf.filter(diet, health, cuisineType, mealType,minTime.getText().toString(), maxTime.getText().toString());
                     dialog.dismiss();
                 }
-                else maxTime.setError("Tiempo maximo debe ser major que el minimo");
+                else minutes.setError("Tiempo maximo - Tiempo minimo");
             }
         });
         Button btnCancel = view.findViewById(R.id.noBtn);

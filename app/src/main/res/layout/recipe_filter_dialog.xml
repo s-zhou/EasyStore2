@@ -87,7 +87,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/timeView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10sp"
@@ -96,56 +96,66 @@
         android:textSize="12sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/timeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/minTimiTV"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
-            android:ems="10"
-            android:inputType="number"
-            android:textColor="#000000"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView11"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <TextView
-            android:id="@+id/textView11"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timeLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="-"
-            android:textColor="#000000"
-            android:textSize="34sp"
-            app:layout_constraintStart_toEndOf="@+id/minTimiTV"
-            tools:layout_editor_absoluteY="2dp" />
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/maxTimeTV"
-            android:layout_width="51dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintStart_toEndOf="@+id/textView11"
-            tools:ignore="SpeakableTextPresentCheck"
-            tools:layout_editor_absoluteY="0dp" />
+            <EditText
+                android:id="@+id/minTimiTV"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:ems="10"
+                android:inputType="number"
+                android:textColor="#000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView11"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="-"
+                android:textColor="#000000"
+                android:textSize="34sp"
+                app:layout_constraintStart_toEndOf="@+id/minTimiTV"
+                tools:layout_editor_absoluteY="2dp" />
+
+            <EditText
+                android:id="@+id/maxTimeTV"
+                android:layout_width="51dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:ems="10"
+                android:inputType="number"
+                android:text="99"
+                app:layout_constraintStart_toEndOf="@+id/textView11"
+                tools:ignore="SpeakableTextPresentCheck"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
-        android:paddingTop="20dp"
         android:weightSum="2">
 
         <Button

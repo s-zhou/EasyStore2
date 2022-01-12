@@ -6,6 +6,8 @@
     <string name="AddProduct">Añadir producto</string>
     <string name="ProductName"> Nombre del producto</string>
     <string name="Quantity">Cantidad</string>
+    <string name="minuts">minutos</string>
+
     <string name="Category">Categoria</string>
     <string name="Description">Descripción</string>
     <string name="ExpirationDate">Data de caducidad</string>
@@ -96,7 +98,7 @@
         <item>Snack</item>
         <item>Teatime</item>
     </string-array>
-    <string name="time">Tiempo de preparacion</string>
+    <string name="time">Tiempo de preparacion (min - max minutos)</string>
     <string-array name="timeEnum">
         <item>None</item>
         <item>Breakfast</item>
