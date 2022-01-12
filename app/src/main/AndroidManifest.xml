@@ -3,6 +3,7 @@
     package="com.example.easystore2">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MyRecipeFragment"
+            android:exported="false" />
+        <activity
+            android:name=".CreateRecipeActivity"
+            android:exported="false" />
         <activity
             android:name=".Recipe.RecipeDetailActivity"
             android:exported="false" />

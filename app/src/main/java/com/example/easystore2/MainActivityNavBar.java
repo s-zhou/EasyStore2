@@ -149,6 +149,14 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             currentInstance="favoriteRecipe";
             i2.setVisibility(View.GONE);
             fragmentTransaction.commit();
+       }else if(item.getItemId() == R.id.myRecipe){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, new MyRecipeFragment());
+            toolbar.setTitle("Mis recetas");
+            currentInstance="myRecipe";
+            i2.setVisibility(View.GONE);
+            fragmentTransaction.commit();
        }else if(item.getItemId() == R.id.close){
             //logout
             AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>(){

@@ -20,6 +20,10 @@
             android:id="@+id/favoriteRecipe"
             android:icon="@drawable/ic_baseline_favorite_24"
             android:title="@string/favoriteRecipes"></item>
+        <item
+            android:id="@+id/myRecipe"
+            android:icon="@drawable/ic_baseline_favorite_24"
+            android:title="@string/myRecipes"></item>
     </menu>
 </item><item android:title="@string/sistem">
     <menu>

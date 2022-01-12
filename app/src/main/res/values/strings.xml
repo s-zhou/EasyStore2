@@ -7,7 +7,8 @@
     <string name="ProductName"> Nombre del producto</string>
     <string name="Quantity">Cantidad</string>
     <string name="minuts">minutos</string>
-
+    <string name="create">Crear</string>
+    <string name="delete">Eliminar</string>
     <string name="Category">Categoria</string>
     <string name="Description">Descripción</string>
     <string name="ExpirationDate">Data de caducidad</string>
@@ -20,6 +21,7 @@
     <string name="recipeNone"> Sin recetas </string>
     <string name="store"> Inventario </string>
     <string name="favoriteRecipes"> Recetas favoritas</string>
+    <string name="myRecipes"> Mis recetas</string>
     <string name="recipeOption">Opciones de recetas</string>
     <string name="diet">Tipo de dieta</string>
     <string-array name="dietEnum">
