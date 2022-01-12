@@ -58,6 +58,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     String orderBy="";
+    RecipeFragment rf;
     String categorySelected;
     MenuItem item;
     String currentInstance="store";
@@ -126,16 +127,17 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             toolbar.setTitle("Inventario");
             currentInstance="store";
             i1.setVisibility(View.VISIBLE);
-            //i2.setVisibility(View.VISIBLE);
+            i2.setVisibility(View.VISIBLE);
             fragmentTransaction.commit();
         } else if(item.getItemId() == R.id.recipe){
             fragmentManager = getSupportFragmentManager();
             fragmentManager.popBackStack();
             fragmentTransaction = fragmentManager.beginTransaction();
-            RecipeFragment rf = new RecipeFragment();
+            rf = new RecipeFragment();
             rf.productNameList = loadProductNameList();
             fragmentTransaction.replace(R.id.container, rf);
             toolbar.setTitle("Recetas");
+            i2.setVisibility(View.VISIBLE);
             currentInstance="recipe";
             fragmentTransaction.commit();
 
@@ -186,8 +188,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         filterItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if(currentInstance.equals("store"))mostrarDialogoPersonalizado();
-                else if(currentInstance.equals("recipe"))mostrarDialogoPersonalizado();
+                if(currentInstance.equals("store")) showStoreFilterDialog();
+                else if(currentInstance.equals("recipe"))showRecipeFilterDialog();
                 return false;
             }
         });
@@ -210,7 +212,68 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         });
         return super.onCreateOptionsMenu(menu);
     }
-    private void mostrarDialogoPersonalizado() {
+    private ArrayAdapter selectorSpinner(String tipySpinner){
+        int content = R.array.dietEnum;
+        if(tipySpinner=="diet")content = R.array.dietEnum;
+        else if(tipySpinner=="health")content = R.array.healthEnum;
+        else if(tipySpinner=="cuisineType")content = R.array.cuisineTypeEnum;
+        else if(tipySpinner=="mealType")content = R.array.mealType;
+        ArrayAdapter adapterColor = ArrayAdapter.createFromResource(
+                this,
+                content,
+                R.layout.category_spinner_style
+        );
+        adapterColor.setDropDownViewResource(R.layout.create_product_unit_spinner_style);
+        return adapterColor;
+    }
+
+    private void showRecipeFilterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityNavBar.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.recipe_filter_dialog, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Spinner dietSpinner = view.findViewById(R.id.dietSpinner);
+        Spinner healthSpinner = view.findViewById(R.id.healthSpinner);
+        Spinner cuisineTypeSpinner = view.findViewById(R.id.cuisineTypeSpinner);
+        Spinner mealTypeSpinner = view.findViewById(R.id.mealTypeSpinner);
+        dietSpinner.setAdapter(selectorSpinner("diet"));
+        healthSpinner.setAdapter(selectorSpinner("health"));
+        cuisineTypeSpinner.setAdapter(selectorSpinner("cuisineType"));
+        mealTypeSpinner.setAdapter(selectorSpinner("mealType"));
+        TextView maxTime = view.findViewById(R.id.maxTimeTV);
+        TextView minTime = view.findViewById(R.id.minTimiTV);
+        maxTime.setText("99");
+        minTime.setText("1");
+        int max = Integer.parseInt(maxTime.getText().toString());
+        int min = Integer.parseInt(minTime.getText().toString());
+        Button btnFilter = view.findViewById(R.id.recipeFilterBtn);
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                String diet = dietSpinner.getSelectedItem().toString();
+                String health = healthSpinner.getSelectedItem().toString();
+                String cuisineType = cuisineTypeSpinner.getSelectedItem().toString();
+                String mealType = mealTypeSpinner.getSelectedItem().toString();
+                if(max>min) {
+                    rf.filter(diet, health, cuisineType, mealType,minTime.getText().toString(), maxTime.getText().toString());
+                    dialog.dismiss();
+                }
+                else maxTime.setError("Tiempo maximo debe ser major que el minimo");
+            }
+        });
+        Button btnCancel = view.findViewById(R.id.noBtn);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void showStoreFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityNavBar.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.store_filter_dialog, null);

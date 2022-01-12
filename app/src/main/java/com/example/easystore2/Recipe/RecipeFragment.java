@@ -59,30 +59,30 @@ public class RecipeFragment extends Fragment {
     ConstraintLayout loadConstrait;
     RecyclerView recipeRecyclerView;
     AdapterRecipe adapterRecipe;
-
+    View view;
     public List<String> productNameList= new ArrayList<>();
     public ArrayList<String> nameListTranslate= new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
-    String allFavoriteName="";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.recipe_sub_activity,container, false);
+        view = inflater.inflate(R.layout.recipe_sub_activity,container, false);
         loadConstrait = view.findViewById(R.id.loadConstrant);
         loadConstrait.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
 
         mQueue = Volley.newRequestQueue(getContext());
-        prepareTranslateModel();
+        prepareTranslateModel("");
 
         return view;
     }
 
 
-    private void prepareTranslateModel() {
+    private void prepareTranslateModel(String filter) {
         loadConstrait.setVisibility(View.VISIBLE);
-
+        TextView noneRecipe = view.findViewById(R.id.recipeNoneTV);
+        noneRecipe.setVisibility(View.GONE);
         TranslatorOptions options =
                 new TranslatorOptions.Builder()
                         .setSourceLanguage(TranslateLanguage.SPANISH)
@@ -92,7 +92,7 @@ public class RecipeFragment extends Fragment {
         spanishEnglishTranslator.downloadModelIfNeeded().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                translateLanguageList();
+                translateLanguageList(filter);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -103,20 +103,20 @@ public class RecipeFragment extends Fragment {
 
     }
 
-    private void translateLanguageList() {
+    private void translateLanguageList(String filter) {
         nameListTranslate.clear();
         for(String word: productNameList){
-            translateLanguage(word);
+            translateLanguage(word,filter);
         }
     }
 
-    private void translateLanguage(String word) {
+    private void translateLanguage(String word,String filter) {
         spanishEnglishTranslator.translate(word).addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String s) {
                 nameListTranslate.add(s);
                 if(nameListTranslate.size()==productNameList.size())
-                    translateReady();
+                    translateReady(filter);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -127,22 +127,27 @@ public class RecipeFragment extends Fragment {
         });
     }
 
-    private void translateReady() {
+    private void translateReady(String filter) {
        ArrayList<String> p= nameListTranslate;
+       recipes.clear();
        int size = nameListTranslate.size();
        if(size>1) {
-           int sizeNum=7;
+           int sizeNum=3;
            boolean end=false;
-           if(size<=6) sizeNum =size;
+           if(size<=2) sizeNum =size;
            for (int i = 0; i < 2; ++i) {
                for (int j = i+1; j < sizeNum; ++j) {
                    if(i == 1 && j == (sizeNum-1)) end=true;
-                   readRecipeHTTP(nameListTranslate.get(i),nameListTranslate.get(j), end);
+                   readRecipeHTTP(nameListTranslate.get(i),nameListTranslate.get(j), end,filter);
                }
            }
        }
-       else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0), true);
+       else if(nameListTranslate.size()==1) readRecipeHTTP(nameListTranslate.get(0), nameListTranslate.get(0), true,filter);
        else{
+           TextView noneRecipe = view.findViewById(R.id.recipeNoneTV);
+           noneRecipe.setVisibility(View.VISIBLE);
+           loadConstrait.setVisibility(View.GONE);
+
            //si no ha encontrado ninguna receta, mostrar un mensaje x pantalla
        }
 
@@ -155,21 +160,23 @@ public class RecipeFragment extends Fragment {
         adapterRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Recipe r= list.get(recipeRecyclerView.getChildAdapterPosition(v));
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String uid = user.getUid();
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-                databaseReference.child("User").child(uid).child("FavoriteRecipe").child(r.getName()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        startNewActivity(r,snapshot.exists());
-                    }
+                if(!list.isEmpty()) {
+                    Recipe r = list.get(recipeRecyclerView.getChildAdapterPosition(v));
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String uid = user.getUid();
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+                    databaseReference.child("User").child(uid).child("FavoriteRecipe").child(r.getName()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            startNewActivity(r, snapshot.exists());
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
     }
@@ -183,10 +190,10 @@ public class RecipeFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void readRecipeHTTP(String s, String q, boolean end){
-        String app_id ="ad891f96";
-        String app_key ="d34ff43a54bde1b829d15e49b1a7b403";
-        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=0&to=3";
+    private void readRecipeHTTP(String s, String q, boolean end, String filter){
+        String app_id ="03a82397";
+        String app_key ="f68990b12dd09471ab9754d0b4f40bbb";
+        String url = "https://api.edamam.com/search?app_id=" + app_id + "&app_key=" + app_key + "&q="+q +" "+ s +"&from=0&to=2"+filter;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,null,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -211,6 +218,9 @@ public class RecipeFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //si no ha encontrado ninguna receta
+                TextView noneRecipe = view.findViewById(R.id.recipeNoneTV);
+                noneRecipe.setVisibility(View.VISIBLE);
+                loadConstrait.setVisibility(View.GONE);
             }
         });
         mQueue.add(request);
@@ -256,5 +266,16 @@ public class RecipeFragment extends Fragment {
     }
 
 
+    public void filter(String diet, String health, String cuisineType, String mealType, String min, String max) {
+        String filter ="";
+        recipes.clear();
+        //cadapterRecipe.notifyDataSetChanged();
 
+        if(!diet.equals("None")) filter += "&diet=" + diet;
+        if(!health.equals("None")) filter += "&health=" + health;
+        if(!cuisineType.equals("None")) filter += "&cuisineType=" + cuisineType;
+        if(!mealType.equals("None")) filter += "&mealType=" + mealType;
+        if(!max.equals("999") || !min.equals("1")) filter += "&time=" + min+"-"+max;
+        prepareTranslateModel(filter);
+    }
 }

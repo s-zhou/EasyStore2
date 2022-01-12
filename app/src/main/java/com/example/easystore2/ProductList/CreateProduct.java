@@ -279,7 +279,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-        Button siBtn = view.findViewById(R.id.ricpeFilterSaveBtn);
+        Button siBtn = view.findViewById(R.id.recipeFilterBtn);
         siBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

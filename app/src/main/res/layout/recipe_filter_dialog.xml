@@ -64,7 +64,7 @@
         android:textSize="12sp" />
 
     <Spinner
-        android:id="@+id/categorySpinner3"
+        android:id="@+id/cuisineTypeSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
@@ -80,7 +80,7 @@
         android:textSize="12sp" />
 
     <Spinner
-        android:id="@+id/categorySpinner5"
+        android:id="@+id/mealTypeSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
@@ -102,7 +102,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/editTextNumber2"
+            android:id="@+id/minTimiTV"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -126,11 +126,11 @@
             android:text="-"
             android:textColor="#000000"
             android:textSize="34sp"
-            app:layout_constraintStart_toEndOf="@+id/editTextNumber2"
+            app:layout_constraintStart_toEndOf="@+id/minTimiTV"
             tools:layout_editor_absoluteY="2dp" />
 
         <EditText
-            android:id="@+id/editTextNumber3"
+            android:id="@+id/maxTimeTV"
             android:layout_width="51dp"
             android:layout_height="match_parent"
             android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
@@ -156,7 +156,7 @@
             android:text="@string/cancel" />
 
         <Button
-            android:id="@+id/ricpeFilterSaveBtn"
+            android:id="@+id/recipeFilterBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

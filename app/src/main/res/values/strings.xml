@@ -12,10 +12,12 @@
     <string name="unitSelectorSpinner"> </string>
     <string name="v"> v </string>
     <string name="recipe"> Recetas </string>
+    <string name="recipeNone"> Sin recetas </string>
     <string name="favoriteRecipes"> Recetas favoritas</string>
     <string name="recipeOption">Opciones de recetas</string>
     <string name="diet">Tipo de dieta</string>
     <string-array name="dietEnum">
+        <item>None</item>
         <item>balanced</item>
         <item>high-fiber</item>
         <item>high-protein</item>
@@ -25,6 +27,7 @@
     </string-array>
     <string name="health">Intolerancia o preferencia</string>
     <string-array name="healthEnum">
+        <item>None</item>
         <item>alcohol-cocktail</item>
         <item>alcohol-free</item>
         <item>celery-free</item>
@@ -64,6 +67,7 @@
     </string-array>
     <string name="cuisineType">Tipo de cocina</string>
     <string-array name="cuisineTypeEnum">
+        <item>None</item>
         <item>American</item>
         <item>Asian</item>
         <item>British</item>
@@ -85,6 +89,7 @@
     </string-array>
     <string name="mealType">Tipo de comida</string>
     <string-array name="mealType">
+        <item>None</item>
         <item>Breakfast</item>
         <item>Dinner</item>
         <item>Lunch</item>
@@ -93,6 +98,7 @@
     </string-array>
     <string name="time">Tiempo de preparacion</string>
     <string-array name="timeEnum">
+        <item>None</item>
         <item>Breakfast</item>
         <item>Dinner</item>
         <item>Lunch</item>
