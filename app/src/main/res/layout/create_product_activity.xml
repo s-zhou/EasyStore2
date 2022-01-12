@@ -63,10 +63,11 @@
                         android:id="@+id/plusButton"
                         android:layout_width="34dp"
                         android:layout_height="34dp"
+                        android:layout_marginStart="2dp"
                         android:layout_weight="1"
                         android:background="@drawable/ic_baseline_add_box_24"
                         android:shadowColor="#BF9C9C"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/quantityEditText"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
@@ -74,6 +75,7 @@
                         android:id="@+id/quantityEditText"
                         android:layout_width="82dp"
                         android:layout_height="34dp"
+                        android:layout_marginStart="2dp"
                         android:backgroundTint="#D6C6C6"
                         android:inputType="numberDecimal"
                         android:minHeight="48dp"
@@ -83,7 +85,7 @@
                         android:textColor="#000000"
                         android:textColorHint="#979797"
                         app:backgroundTint="#FC22978A"
-                        app:layout_constraintStart_toEndOf="@+id/plusButton"
+                        app:layout_constraintStart_toEndOf="@+id/lessButton"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
@@ -91,11 +93,10 @@
                         android:id="@+id/lessButton"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:layout_marginStart="2dp"
                         android:layout_marginTop="1dp"
                         android:layout_weight="1"
                         android:background="@drawable/less_box"
-                        app:layout_constraintStart_toEndOf="@+id/quantityEditText"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
@@ -103,11 +104,11 @@
                         android:id="@+id/selectUnitSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="24dp"
-                        android:layout_marginStart="4dp"
                         android:entries="@array/SprintItemsUnit"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/lessButton"
+                        app:layout_constraintStart_toEndOf="@+id/plusButton"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.454"
                         tools:ignore="TouchTargetSizeCheck" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:title="Principal">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:title="@string/main">
     <menu>
         <item
             android:id="@+id/home"
             android:icon="@drawable/ic_home"
-            android:title="home"
+            android:title="@string/store"
             ></item>
+
+    </menu>
+</item><item android:title="@string/recipe">
+    <menu>
         <item
             android:id="@+id/recipe"
             android:icon="@drawable/ic_list"
-            android:title="@string/recipe"></item>
+            android:title="@string/recipeDay"></item>
         <item
             android:id="@+id/favoriteRecipe"
             android:icon="@drawable/ic_baseline_favorite_24"
             android:title="@string/favoriteRecipes"></item>
-
+    </menu>
+</item><item android:title="@string/sistem">
+    <menu>
         <item
             android:id="@+id/close"
             android:icon="@drawable/ic_baseline_power_settings_new_24"
-
             android:title="cerrar sesion"
             ></item>
 

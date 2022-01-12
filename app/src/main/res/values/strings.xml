@@ -13,8 +13,12 @@
     <string name="ExpirationDate">Data de caducidad</string>
     <string name="unitSelectorSpinner"> </string>
     <string name="v"> v </string>
+    <string name="main"> Principal </string>
+    <string name="sistem"> Sistema </string>
     <string name="recipe"> Recetas </string>
+    <string name="recipeDay"> Recetas del dia</string>
     <string name="recipeNone"> Sin recetas </string>
+    <string name="store"> Inventario </string>
     <string name="favoriteRecipes"> Recetas favoritas</string>
     <string name="recipeOption">Opciones de recetas</string>
     <string name="diet">Tipo de dieta</string>
