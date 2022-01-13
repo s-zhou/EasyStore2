@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easystore2.Login.ContinueWithActivity;
+import com.example.easystore2.Recipe.MyRecipeFragment;
 import com.example.easystore2.Recipe.RecipeFavoriteFragment;
 import com.example.easystore2.Recipe.RecipeFragment;
 import com.example.easystore2.ProductList.Fragments.MainFragment;

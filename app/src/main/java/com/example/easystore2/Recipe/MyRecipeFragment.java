@@ -1,4 +1,4 @@
-package com.example.easystore2;
+package com.example.easystore2.Recipe;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.easystore2.CreateRecipeActivity;
+import com.example.easystore2.R;
 import com.example.easystore2.Recipe.RecipeDetailActivity;
 
 import java.util.ArrayList;
