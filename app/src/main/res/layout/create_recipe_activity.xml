@@ -21,7 +21,7 @@
 
             <include
                 android:id="@+id/createRecipeToolbar"
-                layout="@layout/create_product_drawer_toolbar"
+                layout="@layout/create_recipe_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -64,35 +64,129 @@
 
 
             <LinearLayout
-                android:id="@+id/deleteEditBtn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:visibility="visible"
-                android:weightSum="2"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="MissingConstraints">
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/noBtn"
-                    android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/recipeName2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#F5B5B5B5"
-                    android:text="@string/cancel"
-                    android:textColor="#000000" />
+                    android:backgroundTint="#D6C6C6"
+                    android:hint="@string/RecipeName"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:shadowColor="#C83B3B"
+                    android:textColor="#000000"
+                    android:textColorHint="#FF9C9C9C"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FC22978A" />
 
-                <Button
-                    android:id="@+id/SaveBtn"
-                    android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/descriptionName3"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#6FB627"
-                    android:text="Guardar"
-                    android:textColor="#000000" />
+                    android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                    android:backgroundTint="#EDECEC"
+                    android:hint="@string/ProductName"
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
+                    android:paddingStart="10dp"
+                    android:shadowColor="#C83B3B"
+
+                    android:textColor="#000000"
+                    android:textColorHint="#FF9C9C9C"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/ingredients"
+                    android:textColor="#1E5A54"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/ingredientesTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                    android:backgroundTint="#EDECEC"
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
+                    android:paddingStart="10dp"
+                    android:shadowColor="#C83B3B"
+                    android:textColor="#000000"
+                    android:textColorHint="#FF9C9C9C"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/preparation"
+                    android:textColor="#1E5A54"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/ingredientesTV2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                    android:backgroundTint="#EDECEC"
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
+                    android:paddingStart="10dp"
+                    android:shadowColor="#C83B3B"
+
+                    android:textColor="#000000"
+                    android:textColorHint="#FF9C9C9C"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/deleteEditBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:visibility="visible"
+                    android:weightSum="2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="MissingConstraints">
+
+                    <Button
+                        android:id="@+id/noBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#F5B5B5B5"
+                        android:text="@string/cancel"
+                        android:textColor="#000000" />
+
+                    <Button
+                        android:id="@+id/SaveBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#6FB627"
+                        android:text="Guardar"
+                        android:textColor="#000000" />
+                </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

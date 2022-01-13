@@ -20,18 +20,24 @@ import java.util.UUID;
 public class CreateRecipeActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView image;
     TextView compAddImageMsn;
-    Button compDeleteBtn;
+    Button compDeleteBtn, cancelBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_recipe_activity);
-        image=findViewById(R.id.recipeImageIV);
-        compAddImageMsn=findViewById(R.id.addImageTextView);
-        compDeleteBtn=findViewById(R.id.deleteBtn);
+        linkComponents();
         compDeleteBtn.setVisibility(View.GONE);
         compDeleteBtn.setOnClickListener(this);
         image.setOnClickListener(this);
+        cancelBtn.setOnClickListener(this);
 
+    }
+
+    private void linkComponents() {
+        image=findViewById(R.id.recipeImageIV);
+        compAddImageMsn=findViewById(R.id.addImageTextView);
+        compDeleteBtn=findViewById(R.id.deleteBtn);
+        cancelBtn = findViewById(R.id.createRecipeToolbar).findViewById(R.id.Cancel);
     }
 
     @Override
@@ -66,6 +72,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             compDeleteBtn.setVisibility(View.GONE);
             compAddImageMsn.setVisibility(View.VISIBLE);
         }
+        else if(cancelBtn==v) finish();
     }
 
     public void loadImage() {

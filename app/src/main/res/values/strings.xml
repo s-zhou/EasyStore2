@@ -5,6 +5,8 @@
     <string name="Rebost">Rebost</string>
     <string name="AddProduct">Añadir producto</string>
     <string name="ProductName"> Nombre del producto</string>
+    <string name="RecipeName"> Nombre de la receta</string>
+    <string name="RecipeDescription"> Descripción</string>
     <string name="Quantity">Cantidad</string>
     <string name="minuts">minutos</string>
     <string name="create">Crear</string>
@@ -125,6 +127,8 @@
     <string name="goInstructions">Ir a instrucciones</string>
     <string name="loading_recipe">Cargando recetas...</string>
     <string name="loading_products">Cargando productos...</string>
+    <string name="CreateRecipe">Crear receta</string>
+    <string name="creatProduct" />
     <string-array name="SprintItemsUnit">
         <item>unidad</item>
         <item>g</item>
