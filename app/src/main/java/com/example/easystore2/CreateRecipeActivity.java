@@ -1,5 +1,6 @@
 package com.example.easystore2;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,18 +10,42 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.easystore2.Recipe.Recipe;
+import com.example.easystore2.data.model.Products;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class CreateRecipeActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView image;
     TextView compAddImageMsn;
-    Button compDeleteBtn, cancelBtn;
+    EditText name, description,ingredient,instruction;
+    Button compDeleteBtn, cancelBtn, noBtn, saveBtn;
+    String imageUri="";
+    String nameRecipe,imageRecipe,descriptionRecipe,instructionRecipe;
+    boolean favorite;
+    int numIngredientStore;
+    FirebaseUser user ;
+    DatabaseReference databaseReference;
+    ArrayList<String> ingredients=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,13 +55,20 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         compDeleteBtn.setOnClickListener(this);
         image.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
-
+        noBtn.setOnClickListener(this);
+        saveBtn.setOnClickListener(this);
     }
 
     private void linkComponents() {
         image=findViewById(R.id.recipeImageIV);
+        name=findViewById(R.id.recipeName2);
+        description=findViewById(R.id.descriptionRecipeTE);
+        ingredient=findViewById(R.id.ingredientesTV);
+        instruction=findViewById(R.id.ingredientesTV2);
         compAddImageMsn=findViewById(R.id.addImageTextView);
         compDeleteBtn=findViewById(R.id.deleteBtn);
+        noBtn=findViewById(R.id.noBtn);
+        saveBtn=findViewById(R.id.SaveBtn);
         cancelBtn = findViewById(R.id.createRecipeToolbar).findViewById(R.id.Cancel);
     }
 
@@ -47,6 +79,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             final Uri resultUri = UCrop.getOutput(data);
             compAddImageMsn.setVisibility(View.GONE);
             compDeleteBtn.setVisibility(View.VISIBLE);
+            imageUri=resultUri.toString();
             image.setImageURI(resultUri);
 
         }
@@ -72,7 +105,72 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             compDeleteBtn.setVisibility(View.GONE);
             compAddImageMsn.setVisibility(View.VISIBLE);
         }
-        else if(cancelBtn==v) finish();
+        else if(cancelBtn==v||noBtn==v) finish();
+        else if(saveBtn==v){
+            setValues();
+            loadFirebaseInfo();
+            validation();
+
+        }
+    }
+
+    private void loadFirebaseInfo() {
+         user = FirebaseAuth.getInstance().getCurrentUser();
+         databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        FirebaseApp.initializeApp(this);
+    }
+
+    private void setValues() {
+         nameRecipe=name.getText().toString();
+         imageRecipe= imageUri;
+         descriptionRecipe=description.getText().toString();
+         instructionRecipe=instruction.getText().toString();
+         favorite=false;
+         numIngredientStore=0;
+         ingredients=StringToArray(ingredient.getText().toString());
+
+    }
+
+    private void validation() {
+        if(nameRecipe.equals("")){
+            name.setError("Campo obligatorio");
+        }
+        else {
+            databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(nameRecipe).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(!snapshot.exists()){
+                        pushDB();
+                        finish();
+                    }
+                    else{
+                        name.setError("Ya existe este nombre");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
+    }
+
+    private void pushDB() {
+        //public Recipe(
+
+        Recipe recipe = new Recipe(nameRecipe,imageRecipe, descriptionRecipe,instructionRecipe,favorite,numIngredientStore,ingredients);
+
+        databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe);
+        Toast.makeText(this, R.string.created, Toast.LENGTH_LONG).show();
+        //else Toast.makeText(this, "Modificado", Toast.LENGTH_LONG).show();
+    }
+
+    private ArrayList<String> StringToArray(String ingredientString) {
+        String[] parts = ingredientString.split("\\n");
+        return new ArrayList<>(Arrays.asList(parts));
     }
 
     public void loadImage() {
