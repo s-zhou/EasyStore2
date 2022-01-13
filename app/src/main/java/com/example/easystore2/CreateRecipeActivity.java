@@ -17,6 +17,10 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.example.easystore2.Recipe.CropperActivity;
+import com.yalantis.ucrop.UCrop;
+
+import java.io.File;
+import java.util.UUID;
 
 public class CreateRecipeActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView image;
@@ -46,26 +50,42 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==-1 && requestCode==101){
-           String result = data.getStringExtra("RESULT");
-           Uri resultUri=null;
-
-           if(result != null) {
-               resultUri=Uri.parse(result);
-               compAddImageMsn.setVisibility(View.GONE);
-               compDeleteBtn.setVisibility(View.VISIBLE);
-           }
+        if(resultCode==RESULT_OK && requestCode==UCrop.REQUEST_CROP) {
+            final Uri resultUri = UCrop.getOutput(data);
+            compAddImageMsn.setVisibility(View.GONE);
+            compDeleteBtn.setVisibility(View.VISIBLE);
             image.setImageURI(resultUri);
+
+        }
+        else if(resultCode==RESULT_OK){
+            Uri path =data.getData();
+            UCrop.Options options = new UCrop.Options();
+            String dest_uri = new StringBuffer(UUID.randomUUID().toString()).append(".jpg").toString();
+            UCrop.of(path,Uri.fromFile(new File(getCacheDir(),dest_uri)))
+                    .withOptions(options)
+                    .withAspectRatio(3,2)
+                    .withMaxResultSize(2000,250)
+                    .start(CreateRecipeActivity.this);
         }
     }
 
     @Override
     public void onClick(View v) {
-        if(image==v) mGetContent.launch("image/*");
+        if(image==v) {
+            //mGetContent.launch("image/*");
+            loadImage();
+        }
         else if(compDeleteBtn==v){
             image.setImageResource(R.drawable._642037847251);
             compDeleteBtn.setVisibility(View.GONE);
             compAddImageMsn.setVisibility(View.VISIBLE);
         }
     }
+
+    public void loadImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/");
+        startActivityForResult(intent.createChooser(intent,"Selecione la aplicación"),10);
+    }
+
 }
