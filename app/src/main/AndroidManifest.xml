@@ -14,9 +14,6 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".Recipe.CropperActivity"
-            android:exported="false" />
-        <activity
             android:name=".Recipe.MyRecipeFragment"
             android:exported="false" />
         <activity

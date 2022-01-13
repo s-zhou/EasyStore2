@@ -1,8 +1,5 @@
 package com.example.easystore2;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,9 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
-import com.example.easystore2.Recipe.CropperActivity;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -26,7 +21,6 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     ImageView image;
     TextView compAddImageMsn;
     Button compDeleteBtn;
-    ActivityResultLauncher<String> mGetContent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +31,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         compDeleteBtn.setVisibility(View.GONE);
         compDeleteBtn.setOnClickListener(this);
         image.setOnClickListener(this);
-        mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
-            @Override
-            public void onActivityResult(Uri result) {
-                Intent intent = new Intent(CreateRecipeActivity.this, CropperActivity.class);
-                intent.putExtra("DATA",result.toString());
-                startActivityForResult(intent,101);
-            }
-        });
+
     }
 
     @Override
@@ -64,7 +51,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             UCrop.of(path,Uri.fromFile(new File(getCacheDir(),dest_uri)))
                     .withOptions(options)
                     .withAspectRatio(3,2)
-                    .withMaxResultSize(2000,250)
+                    .withMaxResultSize(2000,2000)
                     .start(CreateRecipeActivity.this);
         }
     }
@@ -72,7 +59,6 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         if(image==v) {
-            //mGetContent.launch("image/*");
             loadImage();
         }
         else if(compDeleteBtn==v){
