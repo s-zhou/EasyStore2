@@ -224,6 +224,7 @@ public class RecipeFragment extends Fragment {
         intent.putExtra("image",r.getImage());
         intent.putExtra("instructions",r.getIngredients());
         intent.putExtra("instruction",r.getInstruction());
+        intent.putExtra("description", r.getDescription());
         intent.putExtra("like",exists);//mirar
         startActivity(intent);
     }

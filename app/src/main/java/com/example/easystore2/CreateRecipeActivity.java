@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easystore2.Recipe.Recipe;
-import com.example.easystore2.data.model.Products;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,12 +29,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.yalantis.ucrop.UCrop;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 public class CreateRecipeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -62,6 +57,8 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.create_recipe_activity);
         linkComponents();
         context=this;
+        resultUriImage = Uri.parse("android.resource://" + getPackageName() +"/"+R.drawable._642037847251);
+
         compDeleteBtn.setVisibility(View.GONE);
         compDeleteBtn.setOnClickListener(this);
         image.setOnClickListener(this);
@@ -71,7 +68,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void linkComponents() {
-        image=findViewById(R.id.recipeImageIV);
+        image=findViewById(R.id.recipeImageView);
         name=findViewById(R.id.recipeName2);
         description=findViewById(R.id.descriptionName3);
         ingredient=findViewById(R.id.ingredientesTV);
@@ -184,7 +181,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     private void pushDB() {
         //public Recipe(
 
-        Recipe recipe = new Recipe(nameRecipe,imageRecipe, descriptionRecipe,instructionRecipe,favorite,numIngredientStore,ingredients);
+        Recipe recipe = new Recipe(nameRecipe,resultUriImage.getLastPathSegment(), descriptionRecipe,instructionRecipe,favorite,numIngredientStore,ingredients);
         databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe);
         pushImage();
         Toast.makeText(this, R.string.created, Toast.LENGTH_LONG).show();

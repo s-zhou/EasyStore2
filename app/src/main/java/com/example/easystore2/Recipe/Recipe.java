@@ -24,6 +24,7 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
+
     public boolean isFavorite() {
         return favorite;
     }

@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.easystore2.R;
 import com.example.easystore2.Recipe.Recipe;
 
@@ -27,10 +28,12 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
     public ArrayList<Recipe> model;
     private View.OnClickListener listener;
     RequestQueue request;
+    Context c;
 
     public AdapterRecipe(Context context, ArrayList<Recipe> model){
         this.inflater = LayoutInflater.from(context);
         this.model = model;
+        c=context;
     }
     public AdapterRecipe(){};
 
@@ -50,25 +53,13 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         String name = model.get(position).getName();
         String image = model.get(position).getImage();
-        //String url = model.get(position).getUrl();
-        //String ingredients = model.get(position).getIngredients().toString();
         request = Volley.newRequestQueue(inflater.getContext());
         holder.name.setText(name);
-        ImageRequest imageRequest = new ImageRequest(image, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                holder.image.setImageBitmap(response);
-            }
-        }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-               // holder.image.
-            }
-        });
-        request.add(imageRequest);
-        //holder.image.setImageURI();
-        //holder.url.setText(url);
-        //holder.ingredients.setText(ingredients);
+        Glide.with(c)
+                .load(model.get(position).getImage())
+                .centerCrop()
+                .into(holder.image);
+
     }
 
 

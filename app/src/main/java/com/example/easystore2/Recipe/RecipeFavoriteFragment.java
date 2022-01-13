@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.easystore2.R;
-import com.example.easystore2.Recipe.Adapter.AdapterRecipeFavorite;
+import com.example.easystore2.Recipe.Adapter.AdapterRecipe;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class RecipeFavoriteFragment extends Fragment {
     ConstraintLayout loadConstraint;
     RecyclerView recipeRecyclerView;
-    AdapterRecipeFavorite adapterRecipe;
+    AdapterRecipe adapterRecipe;
     ArrayList<Recipe> recipes = new ArrayList<>();
     public Context c;
     @Nullable
@@ -81,7 +81,7 @@ public class RecipeFavoriteFragment extends Fragment {
     private void showListItems(ArrayList<Recipe> list) {
         loadConstraint.setVisibility(View.GONE);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapterRecipe = new AdapterRecipeFavorite(c, list);
+        adapterRecipe = new AdapterRecipe(c, list);
         recipeRecyclerView.setAdapter(adapterRecipe);
         adapterRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +92,7 @@ public class RecipeFavoriteFragment extends Fragment {
                 intent.putExtra("image", r.getImage());
                 intent.putExtra("instructions", r.getIngredients());
                 intent.putExtra("instruction", r.getInstruction());
+                intent.putExtra("description", "receta externa -101");
                 intent.putExtra("like", r.isFavorite());//mirar
                 startActivity(intent);
             }
