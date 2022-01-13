@@ -98,6 +98,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
         //load main fragment
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
+        //cambiar
         fragmentTransaction.add(R.id.container, mainFragment);
         fragmentTransaction.commit();
 

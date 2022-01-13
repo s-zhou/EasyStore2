@@ -89,7 +89,7 @@
                     app:backgroundTint="#FC22978A" />
 
                 <EditText
-                    android:id="@+id/descriptionRecipeTE"
+                    android:id="@+id/descriptionName3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/common_google_signin_btn_icon_light_normal_background"

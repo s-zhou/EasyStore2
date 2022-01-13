@@ -24,22 +24,6 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public Recipe(String name, String image, String url, boolean favorite, int numIngredientStore, ArrayList<String> ingredients) {
-        this.name = name;
-        this.instruction = url;
-        this.image = image;
-        this.favorite = favorite;
-        this.numIngredientStore = numIngredientStore;
-        this.ingredients = ingredients;
-    }
-
-    public Recipe(@NonNull String name, String image, String url, int numIngredientStore, ArrayList<String> ingredients) {
-        this.name = name;
-        this.image = image;
-        this.instruction = url;
-        this.numIngredientStore = numIngredientStore;
-        this.ingredients = ingredients;
-    }
     public boolean isFavorite() {
         return favorite;
     }
@@ -86,10 +70,6 @@ public class Recipe {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getUrl() {
-        return instruction;
     }
 
 

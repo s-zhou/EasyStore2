@@ -3,7 +3,6 @@ package com.example.easystore2.Recipe.Adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +21,17 @@ import com.example.easystore2.Recipe.Recipe;
 
 import java.util.ArrayList;
 
-public class AdapterRecipeFavorite extends RecyclerView.Adapter<RecipeViewHolder> implements View.OnClickListener {
+public class AdapterMyRecipe extends RecyclerView.Adapter<RecipeViewHolder> implements View.OnClickListener {
     LayoutInflater inflater;
     public ArrayList<Recipe> model;
     private View.OnClickListener listener;
     RequestQueue request;
 
-    public AdapterRecipeFavorite(Context context, ArrayList<Recipe> model){
+    public AdapterMyRecipe(Context context, ArrayList<Recipe> model){
         this.inflater = LayoutInflater.from(context);
         this.model = model;
     }
-    public AdapterRecipeFavorite(){
+    public AdapterMyRecipe(){
     }
     @NonNull
     @Override
@@ -49,10 +48,9 @@ public class AdapterRecipeFavorite extends RecyclerView.Adapter<RecipeViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         String name = model.get(position).getName();
-        Uri image = Uri.parse(model.get(position).getImage());
+        String image = model.get(position).getImage();
         request = Volley.newRequestQueue(inflater.getContext());
         holder.name.setText(name);
-        holder.image.setImageURI(image);/*
         ImageRequest imageRequest = new ImageRequest(image, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
@@ -63,7 +61,7 @@ public class AdapterRecipeFavorite extends RecyclerView.Adapter<RecipeViewHolder
             public void onErrorResponse(VolleyError error) {
             }
         });
-        request.add(imageRequest);*/
+        request.add(imageRequest);
     }
 
 

@@ -92,12 +92,12 @@ public class RecipeFragment extends Fragment {
                     for (DataSnapshot prod : snapshot.getChildren()) {
                         String name = prod.child("name").getValue().toString();
                         String image = prod.child("image").getValue().toString();
-                        String url = prod.child("url").getValue().toString();
+                        String instruction = prod.child("instruction").getValue().toString();
                         Iterable<DataSnapshot> ingredientsDS = prod.child("ingredients").getChildren();
                         ArrayList<String> ingredients = new ArrayList<>();
                         for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
                         boolean fav = prod.child("favorite").getValue().toString().equals("true");
-                        Recipe r = new Recipe(name, image, url, fav, 0, ingredients);
+                        Recipe r = new Recipe(name, image, "" ,instruction, fav, 0, ingredients);
                         recipes.add(r);
                     }
                     showListItems(recipes);
@@ -223,7 +223,7 @@ public class RecipeFragment extends Fragment {
         intent.putExtra("name",r.getName());
         intent.putExtra("image",r.getImage());
         intent.putExtra("instructions",r.getIngredients());
-        intent.putExtra("url",r.getUrl());
+        intent.putExtra("instruction",r.getInstruction());
         intent.putExtra("like",exists);//mirar
         startActivity(intent);
     }
@@ -291,13 +291,13 @@ public class RecipeFragment extends Fragment {
     private Recipe generateRecipe(JSONObject recipe, Integer n) throws JSONException {
         String name = recipe.getString("label");
         String image = recipe.getString("image");
-        String url = recipe.getString("url");
+        String instruction = recipe.getString("url");
         ArrayList<String> ingredients = new ArrayList<>();
         JSONArray listIngJSON = recipe.getJSONArray("ingredientLines");
         for(int i =0; i<listIngJSON.length(); ++i){
             ingredients.add(listIngJSON.get(i).toString());
         }
-        return new Recipe(name, image, url, false,n, ingredients);
+        return new Recipe(name, image, "",instruction, false,n, ingredients);
     }
 
 

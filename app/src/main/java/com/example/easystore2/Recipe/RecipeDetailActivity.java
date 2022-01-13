@@ -17,7 +17,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.easystore2.R;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +30,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
     Button goUrlComp, backComp,favoriteComp;
     ImageView imageComp;
     ArrayList<String> ingredientsLines = new ArrayList<>();
-    String name, ingredients, url, image;
+    String name, ingredients, instruction, image;
     RequestQueue request;
     Recipe recipe;
     @Override
@@ -63,12 +62,12 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         ingredients =  loadListIngredients(ingredientsLines);
         ingredientsComp.setText(ingredients);
 
-        url = parameters.getString("url");
+        instruction = parameters.getString("instruction");
         goUrlComp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
+                intent.setData(Uri.parse(instruction));
                 startActivity(intent);
             }
         });
@@ -91,7 +90,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         if(like)favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
         else favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
 
-        recipe = new Recipe(name,image,url,like,0,ingredientsLines);
+        recipe = new Recipe(name,image,"" ,instruction,like,0,ingredientsLines);
     }
 
     private String loadListIngredients(ArrayList<String> ingredientLines) {

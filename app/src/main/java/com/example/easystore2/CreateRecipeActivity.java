@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -25,9 +28,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.yalantis.ucrop.UCrop;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,12 +52,16 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     FirebaseUser user ;
     DatabaseReference databaseReference;
     ArrayList<String> ingredients=new ArrayList<>();
+    Context context;
+    StorageReference mStorage;
+    private Uri resultUriImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_recipe_activity);
         linkComponents();
+        context=this;
         compDeleteBtn.setVisibility(View.GONE);
         compDeleteBtn.setOnClickListener(this);
         image.setOnClickListener(this);
@@ -62,7 +73,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     private void linkComponents() {
         image=findViewById(R.id.recipeImageIV);
         name=findViewById(R.id.recipeName2);
-        description=findViewById(R.id.descriptionRecipeTE);
+        description=findViewById(R.id.descriptionName3);
         ingredient=findViewById(R.id.ingredientesTV);
         instruction=findViewById(R.id.ingredientesTV2);
         compAddImageMsn=findViewById(R.id.addImageTextView);
@@ -76,23 +87,24 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK && requestCode==UCrop.REQUEST_CROP) {
-            final Uri resultUri = UCrop.getOutput(data);
+            resultUriImage = UCrop.getOutput(data);
             compAddImageMsn.setVisibility(View.GONE);
             compDeleteBtn.setVisibility(View.VISIBLE);
-            imageUri=resultUri.toString();
-            image.setImageURI(resultUri);
-
+            imageUri=resultUriImage.toString();
+            image.setImageURI(resultUriImage);
         }
         else if(resultCode==RESULT_OK){
             Uri path =data.getData();
             UCrop.Options options = new UCrop.Options();
+
             String dest_uri = new StringBuffer(UUID.randomUUID().toString()).append(".jpg").toString();
             UCrop.of(path,Uri.fromFile(new File(getCacheDir(),dest_uri)))
                     .withOptions(options)
                     .withAspectRatio(3,2)
                     .withMaxResultSize(2000,2000)
                     .start(CreateRecipeActivity.this);
-        }
+            }
+
     }
 
     @Override
@@ -107,7 +119,11 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         }
         else if(cancelBtn==v||noBtn==v) finish();
         else if(saveBtn==v){
-            setValues();
+            try {
+                setValues();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             loadFirebaseInfo();
             validation();
 
@@ -115,15 +131,16 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void loadFirebaseInfo() {
-         user = FirebaseAuth.getInstance().getCurrentUser();
-         databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+        mStorage= FirebaseStorage.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
         FirebaseApp.initializeApp(this);
     }
 
-    private void setValues() {
+    private void setValues() throws IOException {
          nameRecipe=name.getText().toString();
-         imageRecipe= imageUri;
-         descriptionRecipe=description.getText().toString();
+        imageRecipe=imageUri;
+        descriptionRecipe=description.getText().toString();
          instructionRecipe=instruction.getText().toString();
          favorite=false;
          numIngredientStore=0;
@@ -141,6 +158,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(!snapshot.exists()){
                         pushDB();
+
                         finish();
                     }
                     else{
@@ -158,12 +176,17 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    private void pushImage() {
+        StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeImage").child(resultUriImage.getLastPathSegment());
+        filePath.putFile(resultUriImage);
+    }
+
     private void pushDB() {
         //public Recipe(
 
         Recipe recipe = new Recipe(nameRecipe,imageRecipe, descriptionRecipe,instructionRecipe,favorite,numIngredientStore,ingredients);
-
         databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe);
+        pushImage();
         Toast.makeText(this, R.string.created, Toast.LENGTH_LONG).show();
         //else Toast.makeText(this, "Modificado", Toast.LENGTH_LONG).show();
     }
