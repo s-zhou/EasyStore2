@@ -9,29 +9,33 @@ public class Recipe {
     String image;
     String description;
     String instruction;
-    boolean favorite = false;
+
+    boolean mine;
+
+    boolean favorite;
     int numIngredientStore;
-    ArrayList<String> ingredients=new ArrayList<>();
-
-
-    public Recipe(String name, String image, String description, String instruction, boolean favorite, int numIngredientStore, ArrayList<String> ingredients) {
+    public Recipe(String name, String image, String description, String instruction, boolean mine, boolean favorite, int numIngredientStore, ArrayList<String> ingredients) {
         this.name = name;
         this.image = image;
         this.description = description;
         this.instruction = instruction;
+        this.mine = mine;
         this.favorite = favorite;
         this.numIngredientStore = numIngredientStore;
         this.ingredients = ingredients;
     }
 
+    ArrayList<String> ingredients=new ArrayList<>();
+
+
 
     public boolean isFavorite() {
         return favorite;
     }
+
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
-
     public int getNumIngredientStore() {
         return numIngredientStore;
     }
@@ -80,5 +84,13 @@ public class Recipe {
 
     public void setIngredients(ArrayList<String> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public boolean isMine() {
+        return mine;
+    }
+
+    public void setMine(boolean mine) {
+        this.mine = mine;
     }
 }

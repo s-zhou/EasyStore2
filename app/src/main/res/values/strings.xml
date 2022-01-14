@@ -120,17 +120,20 @@
     </string-array>
     <string name="excluded">Ingrediente excluido</string>
     <string name="filter">Filtrar</string>
-    <string name="cancel">Cancelar</string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="CreateRecipe">Crear receta</string>
+    <string name="creatProduct" />
+    <string name="cancel">Cancelar</string>
     <string name="ingredients">Ingredientes</string>
     <string name="preparation">Preparación</string>
     <string name="recipeDetail">Detalle de la receta</string>
     <string name="goInstructions">Ir a instrucciones</string>
     <string name="loading_recipe">Cargando recetas...</string>
     <string name="loading_products">Cargando productos...</string>
-    <string name="CreateRecipe">Crear receta</string>
-    <string name="creatProduct" />
+    <string name="loading">Guardando la receta...</string>
+    <string name="imposibleCreation">No se ha podido guardar la receta</string>
+    <string name="createdAndImageRetard">Creado, la imagen puede tardar un poco en crearse</string>
     <string-array name="SprintItemsUnit">
         <item>unidad</item>
         <item>g</item>

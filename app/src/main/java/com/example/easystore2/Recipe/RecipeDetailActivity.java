@@ -1,9 +1,12 @@
 package com.example.easystore2.Recipe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.easystore2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,11 +30,13 @@ import java.util.ArrayList;
 
 
 public class RecipeDetailActivity extends AppCompatActivity implements View.OnClickListener {
-    TextView nameComp, ingredientsComp;
+    TextView nameComp, ingredientsComp, ingredientTVcomp, instructionTVcomp,descriptionTVcomp;
     Button goUrlComp, backComp,favoriteComp;
     ImageView imageComp;
+    ConstraintLayout processBar;
     ArrayList<String> ingredientsLines = new ArrayList<>();
     String name, ingredients, instruction, image;
+    boolean mine;
     RequestQueue request;
     Recipe recipe;
     @Override
@@ -38,6 +44,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_detail_activity);
         associateComponents();
+        imageComp.setImageResource(R.drawable._642037847251);
         loadInfo();
 
         backComp.setOnClickListener(this);
@@ -46,57 +53,84 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
 
     private void associateComponents() {
         nameComp = findViewById(R.id.recipeNameTV);
-        ingredientsComp = findViewById(R.id.ingredientListTextView);
+        ingredientTVcomp = findViewById(R.id.ingredientTV);
+        instructionTVcomp = findViewById(R.id.instrucionTV);
+        ingredientsComp = findViewById(R.id.ingredientListTextEditor);
         goUrlComp = findViewById(R.id.goInstruccionBtn);
+        processBar = findViewById(R.id.processLayout);
         imageComp = findViewById(R.id.recipeImageView);
         backComp =findViewById(R.id.recipeBackBtn);
         favoriteComp =findViewById(R.id.recipeFavoriteBtn);
-
+        descriptionTVcomp =findViewById(R.id.descriptionTV);
     }
 
     private void loadInfo() {
+        processBar.setVisibility(View.VISIBLE);
         Bundle parameters = this.getIntent().getExtras();
-        name =parameters.getString("name");
+        name = parameters.getString("name");
         nameComp.setText(name);
-        ingredientsLines =parameters.getStringArrayList("instructions");
+        String description =  parameters.getString("description");
+        if(description.equals("")) descriptionTVcomp.setVisibility(View.GONE);
+        else {
+            descriptionTVcomp.setVisibility(View.VISIBLE);
+            descriptionTVcomp.setText(description);
+        }
+        ingredientsLines = parameters.getStringArrayList("ingredients");
         ingredients =  loadListIngredients(ingredientsLines);
         ingredientsComp.setText(ingredients);
 
+        mine =parameters.getBoolean("mine");
         instruction = parameters.getString("instruction");
-        goUrlComp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(instruction));
-                startActivity(intent);
-            }
-        });
+        if(mine) {
+            goUrlComp.setVisibility(View.GONE);
+            instructionTVcomp.setVisibility(View.VISIBLE);
+        }
+        else{
+            instructionTVcomp.setVisibility(View.GONE);
+            goUrlComp.setVisibility(View.VISIBLE);
+            goUrlComp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(instruction));
+                    startActivity(intent);
+                }
+            });
+        }
 
         image = parameters.getString("image");
         request = Volley.newRequestQueue(this);
-        ImageRequest imageRequest = new ImageRequest(image, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                imageComp.setImageBitmap(response);
-            }
-        }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        request.add(imageRequest);
+        Glide.with(this)
+                .load(image)
+                .centerCrop()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        processBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        processBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(imageComp);
 
         boolean like =parameters.getBoolean("like");
         if(like)favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
         else favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
 
-        recipe = new Recipe(name,image,"" ,instruction,like,0,ingredientsLines);
+        recipe = new Recipe(name,image,"" ,instruction,mine,like,0,ingredientsLines);
     }
 
     private String loadListIngredients(ArrayList<String> ingredientLines) {
         String ingredients="";
-        for(String i: ingredientLines){
-            ingredients += i+"\n";
+        int size=ingredientLines.size();
+        for(int i=0; i<size;++i){
+            ingredients += ingredientLines.get(i);
+            if(i !=(size-1))ingredients+="\n";
         }
         return ingredients;
 

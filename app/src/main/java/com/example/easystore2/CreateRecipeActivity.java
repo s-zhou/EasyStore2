@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easystore2.Recipe.Recipe;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -48,6 +55,8 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     DatabaseReference databaseReference;
     ArrayList<String> ingredients=new ArrayList<>();
     Context context;
+    Recipe recipe;
+    AlertDialog dialog;
     StorageReference mStorage;
     private Uri resultUriImage;
 
@@ -150,13 +159,12 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             name.setError("Campo obligatorio");
         }
         else {
+            dialog();
             databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(nameRecipe).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(!snapshot.exists()){
                         pushDB();
-
-                        finish();
                     }
                     else{
                         name.setError("Ya existe este nombre");
@@ -175,16 +183,54 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
 
     private void pushImage() {
         StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeImage").child(resultUriImage.getLastPathSegment());
-        filePath.putFile(resultUriImage);
+        filePath.putFile(resultUriImage).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).removeValue();
+                Toast.makeText(context, R.string.imposibleCreation, Toast.LENGTH_LONG).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                dialog.dismiss();
+                finish();
+                Toast.makeText(context, R.string.createdAndImageRetard, Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
+    }
+
+    private void dialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateRecipeActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.my_recipe_log_dialog, null);
+        builder.setView(view);
+        builder.setCancelable(false);
+
+        dialog = builder.create();
+        dialog.show();
     }
 
     private void pushDB() {
         //public Recipe(
 
-        Recipe recipe = new Recipe(nameRecipe,resultUriImage.getLastPathSegment(), descriptionRecipe,instructionRecipe,favorite,numIngredientStore,ingredients);
-        databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe);
-        pushImage();
-        Toast.makeText(this, R.string.created, Toast.LENGTH_LONG).show();
+        recipe = new Recipe(nameRecipe,resultUriImage.getLastPathSegment(), descriptionRecipe,instructionRecipe,true,favorite,numIngredientStore,ingredients);
+        databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                pushImage();
+                }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                dialog.dismiss();
+                Toast.makeText(context, R.string.imposibleCreation, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
         //else Toast.makeText(this, "Modificado", Toast.LENGTH_LONG).show();
     }
 

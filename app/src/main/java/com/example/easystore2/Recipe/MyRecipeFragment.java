@@ -59,6 +59,7 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void loadRecipe() {
+        loadConstraint.setVisibility(View.VISIBLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
@@ -80,8 +81,8 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
                         ArrayList<String> ingredients = new ArrayList<>();
                         for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
                         boolean fav = prod.child("favorite").getValue().toString().equals("true");
-                        Recipe r = new Recipe(name,image,description, instruction, fav, 0, ingredients);
-
+                        boolean mine = prod.child("mine").getValue().toString().equals("true");
+                        Recipe r = new Recipe(name,image,description, instruction, mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
                     loadImage();
@@ -123,6 +124,8 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showListItems(ArrayList<Recipe> list) {
+        loadConstraint.setVisibility(View.GONE);
+
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapterRecipe = new AdapterRecipe(c, list);
         recipeRecyclerView.setAdapter(adapterRecipe);
@@ -133,9 +136,11 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
                 intent.putExtra("name", r.getName());
                 intent.putExtra("image", r.getImage());
-                intent.putExtra("instructions", r.getIngredients());
+                intent.putExtra("ingredients", r.getIngredients());
                 intent.putExtra("description", r.getDescription());
                 intent.putExtra("instruction", r.getInstruction());
+                boolean mine= r.isMine();
+                intent.putExtra("mine",mine);
                 intent.putExtra("like", r.isFavorite());//mirar
                 startActivity(intent);
             }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 public class RecipeFavoriteFragment extends Fragment {
     ConstraintLayout loadConstraint;
     RecyclerView recipeRecyclerView;
+    Button createRecipeBtn;
     AdapterRecipe adapterRecipe;
     ArrayList<Recipe> recipes = new ArrayList<>();
     public Context c;
@@ -39,6 +41,8 @@ public class RecipeFavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.recipe_sub_activity, container, false);
         loadConstraint = view.findViewById(R.id.loadConstrant);
         loadConstraint.setVisibility(View.GONE);
+        createRecipeBtn = view.findViewById(R.id.creatRecipeBtn);
+        createRecipeBtn.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         loadFavoriteRecipeName();
         c=getContext();
@@ -64,7 +68,8 @@ public class RecipeFavoriteFragment extends Fragment {
                         ArrayList<String> ingredients = new ArrayList<>();
                         for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
                         boolean fav = prod.child("favorite").getValue().toString().equals("true");
-                        Recipe r = new Recipe(name, image,"", instruction, fav, 0, ingredients);
+                        boolean mine = prod.child("mine").getValue().toString().equals("true");
+                        Recipe r = new Recipe(name, image,"", instruction, mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
                 }
@@ -90,9 +95,11 @@ public class RecipeFavoriteFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
                 intent.putExtra("name", r.getName());
                 intent.putExtra("image", r.getImage());
-                intent.putExtra("instructions", r.getIngredients());
+                intent.putExtra("ingredients", r.getIngredients());
                 intent.putExtra("instruction", r.getInstruction());
-                intent.putExtra("description", "receta externa -101");
+                boolean mine= r.isMine();
+                intent.putExtra("mine",mine);
+                intent.putExtra("description", "");
                 intent.putExtra("like", r.isFavorite());//mirar
                 startActivity(intent);
             }

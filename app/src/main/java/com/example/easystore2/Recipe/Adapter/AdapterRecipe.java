@@ -55,6 +55,7 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
         String image = model.get(position).getImage();
         request = Volley.newRequestQueue(inflater.getContext());
         holder.name.setText(name);
+        holder.image.setImageResource(R.drawable._642037847251);
         Glide.with(c)
                 .load(model.get(position).getImage())
                 .centerCrop()

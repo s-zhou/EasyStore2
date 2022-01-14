@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -65,6 +66,7 @@ public class RecipeFragment extends Fragment {
     public List<String> productNameList= new ArrayList<>();
     public ArrayList<String> nameListTranslate= new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
+    private Button createRecipeBtn;
 
     @Nullable
     @Override
@@ -73,7 +75,8 @@ public class RecipeFragment extends Fragment {
         loadConstrait = view.findViewById(R.id.loadConstrant);
         loadConstrait.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
-
+        createRecipeBtn = view.findViewById(R.id.creatRecipeBtn);
+        createRecipeBtn.setVisibility(View.GONE);
         mQueue = Volley.newRequestQueue(getContext());
         loadDBRecipe();
 
@@ -97,7 +100,8 @@ public class RecipeFragment extends Fragment {
                         ArrayList<String> ingredients = new ArrayList<>();
                         for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
                         boolean fav = prod.child("favorite").getValue().toString().equals("true");
-                        Recipe r = new Recipe(name, image, "" ,instruction, fav, 0, ingredients);
+                        boolean mine = prod.child("mine").getValue().toString().equals("true");
+                        Recipe r = new Recipe(name, image, "" ,instruction, mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
                     showListItems(recipes);
@@ -222,9 +226,11 @@ public class RecipeFragment extends Fragment {
         Intent intent = new Intent( getActivity(), RecipeDetailActivity.class);
         intent.putExtra("name",r.getName());
         intent.putExtra("image",r.getImage());
-        intent.putExtra("instructions",r.getIngredients());
+        intent.putExtra("ingredients",r.getIngredients());
         intent.putExtra("instruction",r.getInstruction());
         intent.putExtra("description", r.getDescription());
+        boolean mine= r.isMine();
+        intent.putExtra("mine",mine);
         intent.putExtra("like",exists);//mirar
         startActivity(intent);
     }
@@ -298,7 +304,7 @@ public class RecipeFragment extends Fragment {
         for(int i =0; i<listIngJSON.length(); ++i){
             ingredients.add(listIngJSON.get(i).toString());
         }
-        return new Recipe(name, image, "",instruction, false,n, ingredients);
+        return new Recipe(name, image, "",instruction, false, false,n, ingredients);
     }
 
 
