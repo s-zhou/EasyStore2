@@ -9,7 +9,7 @@
         app:title="Inventario"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#16675E"
+        android:background="@color/general_color"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
     </androidx.appcompat.widget.Toolbar>
 </LinearLayout>

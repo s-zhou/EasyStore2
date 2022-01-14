@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_green">#16675E</color>
+    <color name="general_color">#5A874D</color>
+    <color name="color_button">#8BC34A</color>
+    <color name="original_green">#009688</color>
+    <color name="letter_color">#8C8C8C</color>
+
 </resources>

@@ -79,6 +79,8 @@ public class RecipeFavoriteFragment extends Fragment {
                         Recipe r = new Recipe(name, image,"", instruction, mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
+                    noneRecipe.setVisibility(View.GONE);
+
                 }
                 else {
                     noneRecipe.setVisibility(View.VISIBLE);

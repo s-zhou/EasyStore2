@@ -9,6 +9,12 @@
     android:orientation="vertical"
     tools:context=".Recipe.RecipeDetailActivity">
 
+    <include
+        android:id="@+id/recepiDetailToolbar"
+        layout="@layout/recipe_drawer_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -92,7 +98,7 @@
                         android:layout_marginTop="20dp"
                         android:paddingBottom="5dp"
                         android:text="@string/ingredients"
-                        android:textColor="#1E5A54"
+                        android:textColor="@color/letter_color"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -112,7 +118,7 @@
                         android:layout_marginTop="20dp"
                         android:paddingBottom="5dp"
                         android:text="@string/preparation"
-                        android:textColor="#1E5A54"
+                        android:textColor="@color/letter_color"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -120,7 +126,7 @@
                         android:id="@+id/goInstruccionBtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#009688"
+                        android:backgroundTint="@color/color_button"
                         android:text="@string/goInstructions" />
 
                     <TextView
@@ -135,12 +141,6 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-
-        <include
-            android:id="@+id/recepiDetailToolbar"
-            layout="@layout/recipe_drawer_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></include>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

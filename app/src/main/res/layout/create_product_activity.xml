@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="@string/Quantity"
-                    android:textColor="#1E5A54"
+                    android:textColor="@color/letter_color"
                     android:textSize="16sp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout

@@ -4,17 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#16675E"
+    android:background="@color/general_color"
     tools:context=".Login.MainActivity">
 
     <ImageView
         android:layout_width="170dp"
         android:layout_height="167dp"
-        android:layout_marginStart="107dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="108dp"
-        android:layout_marginBottom="46dp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

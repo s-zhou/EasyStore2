@@ -133,8 +133,10 @@
     <string name="loading_products">Cargando productos...</string>
     <string name="loading">Guardando la receta...</string>
     <string name="imposibleCreation">No se ha podido guardar la receta</string>
-    <string name="createdAndImageRetard">Creado, la imagen puede tardar un poco en crearse</string>
+    <string name="createdAndImageRetard">Se ha creado una nueva recet</string>
     <string name="favoriteConfiDelete">¿Estas seguro que ya no te gusta la receta?</string>
+    <string name="firebaseNoLoad">Uy... No carga la base de datos, comprebe si tiene conección</string>
+    <string name="modifiedAndImageRetard">Se ha modificado la receta,</string>
     <string-array name="SprintItemsUnit">
         <item>unidad</item>
         <item>g</item>

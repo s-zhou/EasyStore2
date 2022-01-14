@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.easystore2.CreateRecipeActivity;
 import com.example.easystore2.MainActivityNavBar;
 import com.example.easystore2.ProductList.CreateProduct;
 import com.example.easystore2.R;
@@ -36,15 +37,13 @@ import java.util.ArrayList;
 
 public class RecipeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView nameComp, ingredientsComp, ingredientTVcomp, instructionTVcomp,descriptionTVcomp;
-    Button goUrlComp, backComp,favoriteComp;
+    Button goUrlComp, backComp,favoriteComp,editBtn;
     ImageView imageComp;
     ConstraintLayout processBar;
     ArrayList<String> ingredientsLines = new ArrayList<>();
-    String name, ingredients, instruction, image;
-    boolean mine;
+    String name, ingredients, instruction, image, description;
+    boolean mine, like;
     DatabaseReference ref;
-
-    RequestQueue request;
     Recipe recipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +51,11 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.recipe_detail_activity);
         associateComponents();
         imageComp.setImageResource(R.drawable._642037847251);
+        editBtn.setVisibility(View.GONE);
         loadInfo();
 
         backComp.setOnClickListener(this);
+        editBtn.setOnClickListener(this);
         favoriteComp.setOnClickListener(this);
     }
 
@@ -65,6 +66,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         ingredientsComp = findViewById(R.id.ingredientListTextEditor);
         goUrlComp = findViewById(R.id.goInstruccionBtn);
         processBar = findViewById(R.id.processLayout);
+        editBtn = findViewById(R.id.editBtn);
         imageComp = findViewById(R.id.recipeImageView);
         backComp =findViewById(R.id.recipeBackBtn);
         favoriteComp =findViewById(R.id.recipeFavoriteBtn);
@@ -76,7 +78,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         Bundle parameters = this.getIntent().getExtras();
         name = parameters.getString("name");
         nameComp.setText(name);
-        String description =  parameters.getString("description");
+        description =  parameters.getString("description");
         if(description.equals("")) descriptionTVcomp.setVisibility(View.GONE);
         else {
             descriptionTVcomp.setVisibility(View.VISIBLE);
@@ -88,9 +90,12 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
 
         mine =parameters.getBoolean("mine");
         instruction = parameters.getString("instruction");
+
         if(mine) {
+            editBtn.setVisibility(View.VISIBLE);
             goUrlComp.setVisibility(View.GONE);
             instructionTVcomp.setVisibility(View.VISIBLE);
+            instructionTVcomp.setText(instruction);
         }
         else{
             instructionTVcomp.setVisibility(View.GONE);
@@ -106,7 +111,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         }
 
         image = parameters.getString("image");
-        request = Volley.newRequestQueue(this);
         Glide.with(this)
                 .load(image)
                 .centerCrop()
@@ -125,7 +129,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
                 })
                 .into(imageComp);
 
-        boolean like =parameters.getBoolean("like");
+        like =parameters.getBoolean("like");
         if(like)favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
         else favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
 
@@ -149,13 +153,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         if(v==backComp){
             finish();
         }
+        else if(v==editBtn){
+            loadEditRecipe();
+        }
         else if(v==favoriteComp){
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
             ref = databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName());
             if(recipe.isFavorite()){
                 dialog();
-
             }
             else {
                 favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
@@ -163,6 +169,19 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
                 ref.setValue(recipe);
             }
         }
+    }
+
+    private void loadEditRecipe() {
+        Intent intent=new Intent(this, CreateRecipeActivity.class);
+        intent.putExtra("name",name);
+        intent.putExtra("image",image);
+        intent.putExtra("ingredients",ingredients);
+        intent.putExtra("instruction",instruction);
+        intent.putExtra("description", description);
+        intent.putExtra("mine",mine);
+        intent.putExtra("like",like);//mirar
+        startActivity(intent);
+        finish();
     }
 
     private void dialog() {

@@ -1,5 +1,6 @@
 package com.example.easystore2.Recipe;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -67,6 +68,7 @@ public class RecipeFragment extends Fragment {
     public ArrayList<String> nameListTranslate= new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
     private Button createRecipeBtn;
+    private TextView noneRecipe;
 
     @Nullable
     @Override
@@ -74,6 +76,8 @@ public class RecipeFragment extends Fragment {
         view = inflater.inflate(R.layout.recipe_sub_activity,container, false);
         loadConstrait = view.findViewById(R.id.loadConstrant);
         loadConstrait.setVisibility(View.GONE);
+        noneRecipe = view.findViewById(R.id.recipeNoneTV);
+        noneRecipe.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         createRecipeBtn = view.findViewById(R.id.creatRecipeBtn);
         createRecipeBtn.setVisibility(View.GONE);
@@ -105,8 +109,12 @@ public class RecipeFragment extends Fragment {
                         recipes.add(r);
                     }
                     showListItems(recipes);
+                    noneRecipe.setVisibility(View.GONE);
+
                 }
                 else {
+                    noneRecipe.setVisibility(View.VISIBLE);
+
                     ref.removeValue();
                     prepareTranslateModel("");
                 }
@@ -292,6 +300,7 @@ public class RecipeFragment extends Fragment {
     private void addRecepe(JSONObject recipe) throws JSONException {
         String ing=recipe.getJSONArray("ingredientLines").toString();
         recipes.add(generateRecipe(recipe, scoreRecipe(ing)));
+        noneRecipe.setVisibility(View.GONE);
     }
 
 

@@ -75,6 +75,7 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
                 recipes.clear();
                 boolean end=false;
                 if (snapshot.exists()) {
+                    noneRecipe.setVisibility(View.GONE);
                     for (DataSnapshot prod : snapshot.getChildren()) {
                         String name = prod.child("name").getValue().toString();
                         String instruction = prod.child("instruction").getValue().toString();
@@ -127,7 +128,7 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void createRecipe() {
-        Intent intent = new Intent( getContext(), CreateRecipeActivity.class);
+        Intent intent = new Intent(getContext(), CreateRecipeActivity.class);
         startActivity(intent);
     }
 

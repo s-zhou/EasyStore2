@@ -10,8 +10,8 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"
         >
-        <item name="colorPrimary">@color/dark_green</item>
-        <item name="colorPrimaryDark">@color/dark_green</item>
-        <item name="colorAccent">@color/dark_green</item>
+        <item name="colorPrimary">@color/general_color</item>
+        <item name="colorPrimaryDark">@color/general_color</item>
+        <item name="colorAccent">@color/general_color</item>
     </style>
 </resources>

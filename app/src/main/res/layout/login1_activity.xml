@@ -4,38 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#16675E"
+    android:background="@color/general_color"
     tools:context=".Login.ContinueWithActivity">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="170dp"
         android:layout_height="167dp"
-        android:layout_marginStart="107dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="108dp"
         android:layout_marginBottom="46dp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.076"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/appicon_invertido500" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="242dp"
         android:layout_height="47dp"
-        android:layout_marginStart="94dp"
-        android:layout_marginTop="424dp"
-        android:layout_marginEnd="95dp"
+        android:layout_marginTop="28dp"
         android:backgroundTint="#FFFFFF"
         android:drawableLeft="@drawable/_c030bd6bd7ee87ad41485e3c7598dd4__1_"
         android:text="@string/continuar_google"
-        android:textColor="#16675E"
+        android:textColor="@color/general_color"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         tools:ignore="UsingOnClickInXml" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,12 +9,14 @@
         android:id="@+id/emailTextView"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="#16675E"
-        android:padding="20dp"
+        android:background="@color/general_color"
         android:gravity="bottom"
+        android:padding="20dp"
         android:text="Drawer Header"
         android:textColor="#FFFFFF"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
