@@ -27,14 +27,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp">
 
-                    <ImageView
-                        android:id="@+id/recipeImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/_642037847251"
-                        tools:layout_editor_absoluteY="58dp" />
-
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/processLayout"
                         android:layout_width="match_parent"
@@ -58,6 +50,14 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/recipeImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/_642037847251"
+                        tools:layout_editor_absoluteY="58dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

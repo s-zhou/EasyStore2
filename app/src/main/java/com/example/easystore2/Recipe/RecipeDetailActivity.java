@@ -4,15 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -20,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.easystore2.MainActivityNavBar;
+import com.example.easystore2.ProductList.CreateProduct;
 import com.example.easystore2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +42,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
     ArrayList<String> ingredientsLines = new ArrayList<>();
     String name, ingredients, instruction, image;
     boolean mine;
+    DatabaseReference ref;
+
     RequestQueue request;
     Recipe recipe;
     @Override
@@ -145,11 +152,10 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         else if(v==favoriteComp){
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
-            DatabaseReference ref = databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName());
+            ref = databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName());
             if(recipe.isFavorite()){
-                favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
-                recipe.setFavorite(false);
-                ref.removeValue();
+                dialog();
+
             }
             else {
                 favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
@@ -157,6 +163,33 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
                 ref.setValue(recipe);
             }
         }
+    }
+
+    private void dialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RecipeDetailActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.recepe_favorite_confi_delete_dialog, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button siBtn = view.findViewById(R.id.recipeFilterBtn);
+        siBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
+                recipe.setFavorite(false);
+                ref.removeValue();
+                dialog.dismiss();
+            }
+        });
+        Button noBtn = view.findViewById(R.id.noBtn);
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
 }

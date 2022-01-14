@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.easystore2.CreateRecipeActivity;
@@ -44,6 +45,7 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
     RecyclerView recipeRecyclerView;
     AdapterRecipe adapterRecipe;
     public Context c;
+    TextView noneRecipe;
     ArrayList<Recipe> recipes = new ArrayList<>();
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
         createRecipeBtn.setOnClickListener(this);
         loadConstraint = view.findViewById(R.id.loadConstrant);
         loadConstraint.setVisibility(View.GONE);
+        noneRecipe = view.findViewById(R.id.recipeNoneTV);
+        noneRecipe.setVisibility(View.GONE);
+
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         c=getContext();
         loadRecipe();
@@ -70,9 +75,7 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
                 recipes.clear();
                 boolean end=false;
                 if (snapshot.exists()) {
-                    int j=0;
                     for (DataSnapshot prod : snapshot.getChildren()) {
-                        ++j;
                         String name = prod.child("name").getValue().toString();
                         String instruction = prod.child("instruction").getValue().toString();
                         String description = prod.child("description").getValue().toString();
@@ -86,6 +89,11 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
                         recipes.add(r);
                     }
                     loadImage();
+                }
+                else{
+                    noneRecipe.setVisibility(View.VISIBLE);
+                    loadConstraint.setVisibility(View.GONE);
+                    showListItems(recipes);
                 }
 
 

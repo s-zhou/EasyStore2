@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 public class RecipeFavoriteFragment extends Fragment {
     ConstraintLayout loadConstraint;
@@ -35,6 +38,8 @@ public class RecipeFavoriteFragment extends Fragment {
     AdapterRecipe adapterRecipe;
     ArrayList<Recipe> recipes = new ArrayList<>();
     public Context c;
+    private TextView noneRecipe;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,6 +48,8 @@ public class RecipeFavoriteFragment extends Fragment {
         loadConstraint.setVisibility(View.GONE);
         createRecipeBtn = view.findViewById(R.id.creatRecipeBtn);
         createRecipeBtn.setVisibility(View.GONE);
+        noneRecipe = view.findViewById(R.id.recipeNoneTV);
+        noneRecipe.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         loadFavoriteRecipeName();
         c=getContext();
@@ -72,6 +79,10 @@ public class RecipeFavoriteFragment extends Fragment {
                         Recipe r = new Recipe(name, image,"", instruction, mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
+                }
+                else {
+                    noneRecipe.setVisibility(View.VISIBLE);
+                    loadConstraint.setVisibility(View.GONE);
                 }
                 showListItems(recipes);
             }

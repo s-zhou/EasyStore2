@@ -134,6 +134,7 @@
     <string name="loading">Guardando la receta...</string>
     <string name="imposibleCreation">No se ha podido guardar la receta</string>
     <string name="createdAndImageRetard">Creado, la imagen puede tardar un poco en crearse</string>
+    <string name="favoriteConfiDelete">¿Estas seguro que ya no te gusta la receta?</string>
     <string-array name="SprintItemsUnit">
         <item>unidad</item>
         <item>g</item>

@@ -67,7 +67,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         linkComponents();
         context=this;
         resultUriImage = Uri.parse("android.resource://" + getPackageName() +"/"+R.drawable._642037847251);
-
+        imageUri = resultUriImage.getLastPathSegment().toString()+".jpg";
         compDeleteBtn.setVisibility(View.GONE);
         compDeleteBtn.setOnClickListener(this);
         image.setOnClickListener(this);
@@ -145,8 +145,8 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
 
     private void setValues() throws IOException {
          nameRecipe=name.getText().toString();
-        imageRecipe=imageUri;
-        descriptionRecipe=description.getText().toString();
+         imageRecipe=imageUri;
+         descriptionRecipe=description.getText().toString();
          instructionRecipe=instruction.getText().toString();
          favorite=false;
          numIngredientStore=0;
