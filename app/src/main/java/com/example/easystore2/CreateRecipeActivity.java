@@ -218,7 +218,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         }
 
         else {
-            databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(originalName).removeValue();
+            if(modification)databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(originalName).removeValue();
             if (!nameRecipe.equals(originalName)) {
                 databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(nameRecipe).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
