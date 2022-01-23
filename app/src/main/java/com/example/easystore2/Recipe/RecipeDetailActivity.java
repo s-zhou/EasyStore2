@@ -1,6 +1,7 @@
 package com.example.easystore2.Recipe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,11 +39,12 @@ import java.util.ArrayList;
 
 public class RecipeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView nameComp, ingredientsComp, ingredientTVcomp, instructionTVcomp,descriptionTVcomp;
-    Button goUrlComp, backComp,favoriteComp,editBtn;
+    Button goUrlComp, backComp,favoriteComp,editBtn, docBtn;
     ImageView imageComp;
+    LinearLayout docLayout;
     ConstraintLayout processBar;
     ArrayList<String> ingredientsLines = new ArrayList<>();
-    String name, ingredients, instruction, image, description;
+    String name, ingredients, instruction, image, description,doc;
     boolean mine, like;
     DatabaseReference ref;
     Recipe recipe;
@@ -50,6 +53,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_detail_activity);
         associateComponents();
+        docLayout.setVisibility(View.GONE);
         imageComp.setImageResource(R.drawable._642037847251);
         editBtn.setVisibility(View.GONE);
         loadInfo();
@@ -67,8 +71,10 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         processBar = findViewById(R.id.processLayout);
         editBtn = findViewById(R.id.editBtn);
         imageComp = findViewById(R.id.recipeImageView);
+        docLayout = findViewById(R.id.docLayout);
         backComp =findViewById(R.id.recipeBackBtn);
         favoriteComp =findViewById(R.id.recipeFavoriteBtn);
+        docBtn =findViewById(R.id.showFile);
         descriptionTVcomp =findViewById(R.id.descriptionTV);
     }
 
@@ -131,8 +137,12 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         like =parameters.getBoolean("like");
         if(like)favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
         else favoriteComp.setBackgroundResource(R.drawable.favorite_unselect_24);
-
-        recipe = new Recipe(name,image,"" ,instruction,mine,like,0,ingredientsLines);
+        doc= parameters.getString("doc");
+        if(!doc.equals("")) {
+            docLayout.setVisibility(View.VISIBLE);
+            docBtn.setText(doc);
+        }
+        recipe = new Recipe(name,image,"" ,instruction,doc,mine,like,0,ingredientsLines);
     }
 
     private String loadListIngredients(ArrayList<String> ingredientLines) {
@@ -177,6 +187,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         intent.putExtra("ingredients",ingredients);
         intent.putExtra("instruction",instruction);
         intent.putExtra("description", description);
+        intent.putExtra("doc", doc);
         intent.putExtra("mine",mine);
         intent.putExtra("like",like);//mirar
         startActivity(intent);

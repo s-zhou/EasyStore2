@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.easystore2.ProductList.CreateProduct;
 import com.example.easystore2.Recipe.Recipe;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,17 +48,20 @@ import java.util.UUID;
 
 public class CreateRecipeActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView image;
-    TextView compAddImageMsn, toolbarTitle;
+    TextView compAddImageMsn, toolbarTitle, docName;
     EditText nameComp, descriptionComp, ingredientComp, instructionComp;
-    Button compDeleteBtn, cancelBtn, noBtn, saveBtn,loadDocBtn;
+    Button compDeleteBtn, cancelBtn, noBtn, saveBtn,loadDocBtn, deleteDocBtn;
     String imageUri="",originalName;
     String nameRecipe,descriptionRecipe,ingredientRecipe,instructionRecipe;
-    boolean favorite,modification, imageChanced;
+    boolean favorite,modification, imageChanced, docChanged, docDeleted;
     int numIngredientStore;
     FirebaseUser user ;
+    ConstraintLayout loadDocLayout;
     DatabaseReference databaseReference;
     ArrayList<String> ingredients=new ArrayList<>();
     Context context;
+    Uri docUri;
+    String docString;
     Recipe recipe;
     String[] imageNameOnFirebase;
     AlertDialog dialog;
@@ -73,10 +77,13 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         modification=false;
         context=this;
         imageChanced=false;
+        docChanged=false;
+        docDeleted=false;
         resultUriImage = Uri.parse("android.resource://" + getPackageName() +"/"+R.drawable._642037847251);
         imageUri = resultUriImage.getLastPathSegment().toString()+".jpg";
         compDeleteBtn.setVisibility(View.GONE);
         processBar.setVisibility(View.GONE);
+        loadDocLayout.setVisibility(View.GONE);
         cancelBtn.setVisibility(View.GONE);
         toolbarTitle.setText(R.string.CreateRecipe);
         loadInfoCom();
@@ -86,17 +93,22 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         cancelBtn.setOnClickListener(this);
         noBtn.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
+        loadDocBtn.setOnClickListener(this);
+        deleteDocBtn.setOnClickListener(this);
 
     }
 
     private void linkComponents() {
         image=findViewById(R.id.recipeImageView);
+        deleteDocBtn=findViewById(R.id.deleteDocBtn);
         nameComp =findViewById(R.id.recipeName2);
+        loadDocLayout =findViewById(R.id.loadDocLayoud);
         descriptionComp =findViewById(R.id.descriptionName3);
         ingredientComp =findViewById(R.id.ingredientesTV);
         instructionComp =findViewById(R.id.ingredientesTV2);
         compAddImageMsn=findViewById(R.id.addImageTextView);
         compDeleteBtn=findViewById(R.id.deleteBtn);
+        docName = findViewById(R.id.docName);
         loadDocBtn=findViewById(R.id.loadDocBtn);
         noneImage=findViewById(R.id.noneImageLayout);
         processBar = findViewById(R.id.processLayout);
@@ -153,38 +165,25 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
                         })
                         .into(image);
             }
-        }
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK && requestCode==UCrop.REQUEST_CROP) {
-            imageChanced = true;
-            resultUriImage = UCrop.getOutput(data);
-            compAddImageMsn.setVisibility(View.GONE);
-            compDeleteBtn.setVisibility(View.VISIBLE);
-            imageUri=resultUriImage.toString();
-            image.setImageURI(resultUriImage);
-        }
-        else if(resultCode==RESULT_OK){
-            Uri path =data.getData();
-            UCrop.Options options = new UCrop.Options();
-
-            String dest_uri = new StringBuffer(UUID.randomUUID().toString()).append(".jpg").toString();
-            UCrop.of(path,Uri.fromFile(new File(getCacheDir(),dest_uri)))
-                    .withOptions(options)
-                    .withAspectRatio(3,2)
-                    .withMaxResultSize(2000,2000)
-                    .start(CreateRecipeActivity.this);
+            docString = parameters.getString("doc");
+            if(!docString.equals("")){
+                loadDocLayout.setVisibility(View.VISIBLE);
+                loadDocBtn.setText(docString);
             }
-
+        }
     }
 
     @Override
     public void onClick(View v) {
         if(image==v) {
             loadImage();
+        }
+        else if(v==deleteDocBtn){
+            docDeleted=true;
+        }
+        else if(loadDocBtn==v){
+            loadDoc();
         }
         else if(compDeleteBtn==v){
             image.setImageResource(R.drawable._642037847251);
@@ -247,45 +246,6 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    private void pushImage(){
-            if(modification){
-
-            }
-            StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeImage").child(imageUri);
-           /* if (modification) {
-                filePath = filePath.child(imageNameOnFirebase[0]);
-                if (!imageChanced) resultUriImage = Uri.parse(imageRecipe);
-                else {
-                }
-            }
-            else filePath = filePath.child(resultUriImage.getLastPathSegment());*/
-            filePath.putFile(resultUriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    dialog.dismiss();
-                    finish();
-                    if (modification) {
-                        Toast.makeText(context, R.string.modifiedAndImageRetard, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(context, R.string.createdAndImageRetard, Toast.LENGTH_LONG).show();
-                    }
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    dialog.dismiss();
-                    finish();
-                    if (modification){
-                        Toast.makeText(context, R.string.modifiedButNoImage, Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(context, R.string.creadButNoImage, Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-    }
-
     private void dialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateRecipeActivity.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -301,7 +261,13 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         if(imageChanced){
             imageUri=Uri.parse(imageUri).getLastPathSegment();
         }
-        else if(!modification) imageUri="";
+        else if(modification && !imageUri.equals("")){
+            imageUri = imageNameOnFirebase[0];
+        }
+        else imageUri="";
+        if(docDeleted)docString ="";
+        else if(docChanged) docString = docUri.getLastPathSegment();
+        else docString ="";
         descriptionRecipe= descriptionComp.getText().toString();
         instructionRecipe= instructionComp.getText().toString();
         favorite=false;
@@ -315,11 +281,12 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             if(modification) imageURIDif= imageNameOnFirebase[0];
              else imageURIDif=resultUriImage.getLastPathSegment();
           }*/
-        recipe = new Recipe(nameRecipe,imageUri, descriptionRecipe,instructionRecipe,true,favorite,numIngredientStore,ingredients);
+        recipe = new Recipe(nameRecipe,imageUri, descriptionRecipe,instructionRecipe,docString,true,favorite,numIngredientStore,ingredients);
         databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                if(imageChanced) pushImage();
+                if(docChanged) pushDoc();
+                else if(imageChanced) pushImage();
                 else{
                     dialog.dismiss();
                     finish();
@@ -334,6 +301,75 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         });
 }
 
+    private void pushDoc() {
+        StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeDoc").child(docUri.getLastPathSegment());
+           /* if (modification) {
+                filePath = filePath.child(imageNameOnFirebase[0]);
+                if (!imageChanced) resultUriImage = Uri.parse(imageRecipe);
+                else {
+                }
+            }
+            else filePath = filePath.child(resultUriImage.getLastPathSegment());*/
+        filePath.putFile(docUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                if(imageChanced) pushImage();
+                else{
+                    dialog.dismiss();
+                    finish();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                dialog.dismiss();
+                finish();
+                if (modification){
+                    Toast.makeText(context, R.string.modifiedButNoImage, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(context, R.string.creadButNoImage, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void pushImage(){
+        StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeImage").child(imageUri);
+           /* if (modification) {
+                filePath = filePath.child(imageNameOnFirebase[0]);
+                if (!imageChanced) resultUriImage = Uri.parse(imageRecipe);
+                else {
+                }
+            }
+            else filePath = filePath.child(resultUriImage.getLastPathSegment());*/
+        filePath.putFile(resultUriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                dialog.dismiss();
+                if (modification) {
+                    Toast.makeText(context, R.string.modifiedAndImageRetard, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, R.string.createdAndImageRetard, Toast.LENGTH_LONG).show();
+                }
+
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                dialog.dismiss();
+                finish();
+                if (modification){
+                    Toast.makeText(context, R.string.modifiedButNoImage, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(context, R.string.creadButNoImage, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
     private ArrayList<String> StringToArray(String ingredientString) {
         String[] parts = ingredientString.split("\\n");
         return new ArrayList<>(Arrays.asList(parts));
@@ -343,5 +379,43 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/");
         startActivityForResult(intent.createChooser(intent,"Selecione la aplicación"),10);
+    }
+
+    private void loadDoc() {
+        Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        chooseFile.setType("*/*");
+        chooseFile = Intent.createChooser(chooseFile, "Choose a file");
+        startActivityForResult(chooseFile, 1193831491);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK && requestCode==UCrop.REQUEST_CROP) {
+            imageChanced = true;
+            resultUriImage = UCrop.getOutput(data);
+            compAddImageMsn.setVisibility(View.GONE);
+            compDeleteBtn.setVisibility(View.VISIBLE);
+            imageUri=resultUriImage.toString();
+            image.setImageURI(resultUriImage);
+        }
+        else if(resultCode==RESULT_OK){
+            Uri path =data.getData();
+            UCrop.Options options = new UCrop.Options();
+
+            String dest_uri = new StringBuffer(UUID.randomUUID().toString()).append(".jpg").toString();
+            UCrop.of(path,Uri.fromFile(new File(getCacheDir(),dest_uri)))
+                    .withOptions(options)
+                    .withAspectRatio(3,2)
+                    .withMaxResultSize(2000,2000)
+                    .start(CreateRecipeActivity.this);
+        }
+        if(requestCode==1193831491 && resultCode == RESULT_OK) {
+            docUri = data.getData();
+            docDeleted=false;
+            docChanged=true;
+            loadDocLayout.setVisibility(View.VISIBLE);
+            docName.setText(docUri.getLastPathSegment());
+        }
     }
 }

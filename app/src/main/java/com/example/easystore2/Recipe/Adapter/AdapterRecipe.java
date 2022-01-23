@@ -2,6 +2,7 @@ package com.example.easystore2.Recipe.Adapter;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,11 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.easystore2.R;
 import com.example.easystore2.Recipe.Recipe;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -54,27 +60,56 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         String name = model.get(position).getName();
         String image = model.get(position).getImage();
-        request = Volley.newRequestQueue(inflater.getContext());
         holder.name.setText(name);
         holder.image.setImageResource(R.drawable._642037847251);
         processBar.setVisibility(View.VISIBLE);
-        Glide.with(c)
-                .load(model.get(position).getImage())
-                .centerCrop()
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        processBar.setVisibility(View.GONE);
-                        return false;
-                    }
+        request = Volley.newRequestQueue(inflater.getContext());
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        processBar.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .into(holder.image);
+        if (!image.contains("firebasestorage") && !image.contains("android.resource")) {
+            StorageReference filePathImage = FirebaseStorage.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("RecipeImage").child(image);
+            filePathImage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(c)
+                            .load(uri.toString())
+                            .centerCrop()
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    processBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    processBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
+                            .into(holder.image);
+                }
+            });
+        }
+        else {
+
+            Glide.with(c)
+                    .load(model.get(position).getImage())
+                    .centerCrop()
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            processBar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            processBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(holder.image);
+        }
 
     }
 

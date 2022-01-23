@@ -65,6 +65,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     String currentInstance="store";
     MenuItem filterItem ;
     FragmentManager fragmentManager;
+    ActionMenuItemView i1,i2;
     FragmentTransaction fragmentTransaction;
     @SuppressLint("WrongViewCast")
     @Override
@@ -74,6 +75,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         drawerLayout = findViewById(R.id.drawer);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String email = currentFirebaseUser.getEmail();
@@ -116,10 +118,8 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawer(GravityCompat.START);
-
-
-        ActionMenuItemView i1 = toolbar.findViewById(R.id.search);
-        ActionMenuItemView i2 = toolbar.findViewById(R.id.filterItem);
+        i1 = toolbar.findViewById(R.id.search);
+        i2 = toolbar.findViewById(R.id.filterItem);
         i1.setVisibility(View.GONE);
 
         if(item.getItemId() == R.id.home){
@@ -152,6 +152,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             i2.setVisibility(View.GONE);
             fragmentTransaction.commit();
        }else if(item.getItemId() == R.id.myRecipe){
+            //goMyRecipe();
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, new MyRecipeFragment());
@@ -175,6 +176,9 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
             });
         }
         return false;
+    }
+
+    private void goMyRecipe() {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

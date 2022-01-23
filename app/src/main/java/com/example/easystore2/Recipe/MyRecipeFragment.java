@@ -46,6 +46,10 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
     AdapterRecipe adapterRecipe;
     public Context c;
     TextView noneRecipe;
+    FirebaseUser user;
+    StorageReference mStorage;
+    StorageReference filePath;
+
     ArrayList<Recipe> recipes = new ArrayList<>();
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,7 +60,6 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
         loadConstraint.setVisibility(View.GONE);
         noneRecipe = view.findViewById(R.id.recipeNoneTV);
         noneRecipe.setVisibility(View.GONE);
-
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         c=getContext();
         loadRecipe();
@@ -81,17 +84,19 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
                         String instruction = prod.child("instruction").getValue().toString();
                         String description = prod.child("description").getValue().toString();
                         String image = prod.child("image").getValue().toString();
+                        String doc = prod.child("doc").getValue().toString();
                         Iterable<DataSnapshot> ingredientsDS = prod.child("ingredients").getChildren();
                         ArrayList<String> ingredients = new ArrayList<>();
                         for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
                         boolean fav = prod.child("favorite").getValue().toString().equals("true");
                         boolean mine = prod.child("mine").getValue().toString().equals("true");
-                        Recipe r = new Recipe(name,image,description, instruction, mine,fav, 0, ingredients);
+                        Recipe r = new Recipe(name,image,description, instruction, doc,mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
                     loadImage();
                 }
                 else{
+                    noneRecipe.setText("Sin recetas");
                     noneRecipe.setVisibility(View.VISIBLE);
                     loadConstraint.setVisibility(View.GONE);
                     showListItems(recipes);
@@ -108,29 +113,28 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void loadImage() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-        StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeImage");
+         user = FirebaseAuth.getInstance().getCurrentUser();
+         mStorage = FirebaseStorage.getInstance().getReference();
+
+         filePath = mStorage.child("User").child(user.getUid()).child("RecipeImage");
         int i=0;
 
         for(Recipe r: recipes){
-            ++i;
             if(r.getImage().equals("")){
                 r.setImage("android.resource://" + c.getPackageName() +"/"+R.drawable._642037847251);
-                if (i == recipes.size()) showListItems(recipes);
             }
             else {
                 StorageReference filePathImage = filePath.child(r.getImage());
-                int finalI = i;
                 filePathImage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         r.setImage(uri.toString());
-                        if (finalI == recipes.size()) showListItems(recipes);
+                         showListItems(recipes);
                     }
                 });
             }
         }
+        showListItems(recipes);
     }
 
     private void createRecipe() {
@@ -140,7 +144,6 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
 
     private void showListItems(ArrayList<Recipe> list) {
         loadConstraint.setVisibility(View.GONE);
-
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapterRecipe = new AdapterRecipe(c, list);
         recipeRecyclerView.setAdapter(adapterRecipe);
@@ -150,14 +153,29 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
                 Recipe r = list.get(recipeRecyclerView.getChildAdapterPosition(v));
                 Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
                 intent.putExtra("name", r.getName());
-                intent.putExtra("image", r.getImage());
                 intent.putExtra("ingredients", r.getIngredients());
                 intent.putExtra("description", r.getDescription());
                 intent.putExtra("instruction", r.getInstruction());
+                intent.putExtra("doc",r.getDoc());
                 boolean mine= r.isMine();
                 intent.putExtra("mine",mine);
                 intent.putExtra("like", r.isFavorite());//mirar
-                startActivity(intent);
+                if(!r.getImage().contains("firebasestorage")&&!r.getImage().contains("android.resource")){
+                    StorageReference filePathImage = filePath.child(r.getImage());
+                    filePathImage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            intent.putExtra("image", uri.toString());
+                            startActivity(intent);
+
+                        }
+                    });
+                }
+                else{
+                    intent.putExtra("image", r.getImage());
+                    startActivity(intent);
+                }
+
             }
         });
     }

@@ -141,6 +141,7 @@
     <string name="ModifyRecipe">Modificar recepta</string>
     <string name="creadButNoImage">Se ha creado la receta, pero ha ha sido possible subir la imagen</string>
     <string name="modifiedButNoImage">Se ha modificado la receta, pero no se ha podido cargar la imagen</string>
+    <string name="Doc">Documento</string>
     <string-array name="SprintItemsUnit">
         <item>unidad</item>
         <item>g</item>

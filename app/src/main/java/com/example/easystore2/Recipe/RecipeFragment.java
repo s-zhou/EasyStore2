@@ -77,6 +77,8 @@ public class RecipeFragment extends Fragment {
         loadConstrait = view.findViewById(R.id.loadConstrant);
         loadConstrait.setVisibility(View.GONE);
         noneRecipe = view.findViewById(R.id.recipeNoneTV);
+        noneRecipe.setText("Sin recetas");
+
         noneRecipe.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         createRecipeBtn = view.findViewById(R.id.creatRecipeBtn);
@@ -105,7 +107,7 @@ public class RecipeFragment extends Fragment {
                         for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
                         boolean fav = prod.child("favorite").getValue().toString().equals("true");
                         boolean mine = prod.child("mine").getValue().toString().equals("true");
-                        Recipe r = new Recipe(name, image, "" ,instruction, mine,fav, 0, ingredients);
+                        Recipe r = new Recipe(name, image, "" ,instruction,"", mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
                     showListItems(recipes);
@@ -313,7 +315,7 @@ public class RecipeFragment extends Fragment {
         for(int i =0; i<listIngJSON.length(); ++i){
             ingredients.add(listIngJSON.get(i).toString());
         }
-        return new Recipe(name, image, "",instruction, false, false,n, ingredients);
+        return new Recipe(name, image, "",instruction,"", false, false,n, ingredients);
     }
 
 

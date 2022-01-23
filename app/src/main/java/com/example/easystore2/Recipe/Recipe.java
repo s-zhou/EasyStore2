@@ -9,24 +9,31 @@ public class Recipe {
     String image;
     String description;
     String instruction;
-
+    String doc;
     boolean mine;
-
     boolean favorite;
     int numIngredientStore;
-    public Recipe(String name, String image, String description, String instruction, boolean mine, boolean favorite, int numIngredientStore, ArrayList<String> ingredients) {
+    ArrayList<String> ingredients=new ArrayList<>();
+
+    public Recipe(String name, String image, String description, String instruction, String doc, boolean mine, boolean favorite, int numIngredientStore, ArrayList<String> ingredients) {
         this.name = name;
         this.image = image;
         this.description = description;
         this.instruction = instruction;
+        this.doc = doc;
         this.mine = mine;
         this.favorite = favorite;
         this.numIngredientStore = numIngredientStore;
         this.ingredients = ingredients;
     }
 
-    ArrayList<String> ingredients=new ArrayList<>();
+    public String getDoc() {
+        return doc;
+    }
 
+    public void setDoc(String doc) {
+        this.doc = doc;
+    }
 
 
     public boolean isFavorite() {

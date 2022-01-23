@@ -49,6 +49,8 @@ public class RecipeFavoriteFragment extends Fragment {
         createRecipeBtn = view.findViewById(R.id.creatRecipeBtn);
         createRecipeBtn.setVisibility(View.GONE);
         noneRecipe = view.findViewById(R.id.recipeNoneTV);
+        noneRecipe.setText("Sin recetas");
+
         noneRecipe.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         loadFavoriteRecipeName();
@@ -73,10 +75,11 @@ public class RecipeFavoriteFragment extends Fragment {
                         String instruction = prod.child("instruction").getValue().toString();
                         Iterable<DataSnapshot> ingredientsDS = prod.child("ingredients").getChildren();
                         ArrayList<String> ingredients = new ArrayList<>();
+                        String doc = prod.child("doc").getValue().toString();
                         for (DataSnapshot i : ingredientsDS) ingredients.add(i.getValue().toString());
                         boolean fav = prod.child("favorite").getValue().toString().equals("true");
                         boolean mine = prod.child("mine").getValue().toString().equals("true");
-                        Recipe r = new Recipe(name, image,"", instruction, mine,fav, 0, ingredients);
+                        Recipe r = new Recipe(name, image,"", instruction,doc, mine,fav, 0, ingredients);
                         recipes.add(r);
                     }
                     noneRecipe.setVisibility(View.GONE);
@@ -107,6 +110,7 @@ public class RecipeFavoriteFragment extends Fragment {
                 Recipe r = list.get(recipeRecyclerView.getChildAdapterPosition(v));
                 Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
                 intent.putExtra("name", r.getName());
+                intent.putExtra("doc",r.getDoc());
                 intent.putExtra("image", r.getImage());
                 intent.putExtra("ingredients", r.getIngredients());
                 intent.putExtra("instruction", r.getInstruction());

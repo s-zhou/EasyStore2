@@ -55,6 +55,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         load.setVisibility(View.GONE);
         creatProductBtn = view.findViewById(R.id.createProductBtn);
         noneProduct = view.findViewById(R.id.noneProductTextView);
+        noneProduct.setText("Sin productos");
         noneProduct.setVisibility(View.GONE);
         creatProductBtn.setVisibility(View.GONE);
         creatProductBtn.setOnClickListener(this);
