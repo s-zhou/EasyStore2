@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -48,11 +47,11 @@ import java.util.UUID;
 
 public class CreateRecipeActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView image;
-    TextView compAddImageMsn;
+    TextView compAddImageMsn, toolbarTitle;
     EditText nameComp, descriptionComp, ingredientComp, instructionComp;
-    Button compDeleteBtn, cancelBtn, noBtn, saveBtn;
+    Button compDeleteBtn, cancelBtn, noBtn, saveBtn,loadDocBtn;
     String imageUri="",originalName;
-    String nameRecipe,imageRecipe,descriptionRecipe,ingredientRecipe,instructionRecipe;
+    String nameRecipe,descriptionRecipe,ingredientRecipe,instructionRecipe;
     boolean favorite,modification, imageChanced;
     int numIngredientStore;
     FirebaseUser user ;
@@ -60,7 +59,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     ArrayList<String> ingredients=new ArrayList<>();
     Context context;
     Recipe recipe;
-    String[] p;
+    String[] imageNameOnFirebase;
     AlertDialog dialog;
     StorageReference mStorage;
     private Uri resultUriImage;
@@ -78,8 +77,10 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         imageUri = resultUriImage.getLastPathSegment().toString()+".jpg";
         compDeleteBtn.setVisibility(View.GONE);
         processBar.setVisibility(View.GONE);
-
+        cancelBtn.setVisibility(View.GONE);
+        toolbarTitle.setText(R.string.CreateRecipe);
         loadInfoCom();
+
         compDeleteBtn.setOnClickListener(this);
         image.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
@@ -96,10 +97,12 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         instructionComp =findViewById(R.id.ingredientesTV2);
         compAddImageMsn=findViewById(R.id.addImageTextView);
         compDeleteBtn=findViewById(R.id.deleteBtn);
+        loadDocBtn=findViewById(R.id.loadDocBtn);
         noneImage=findViewById(R.id.noneImageLayout);
         processBar = findViewById(R.id.processLayout);
         noBtn=findViewById(R.id.noBtn);
         saveBtn=findViewById(R.id.SaveBtn);
+        toolbarTitle=findViewById(R.id.toolbar_title);
         cancelBtn = findViewById(R.id.createRecipeToolbar).findViewById(R.id.Cancel);
     }
 
@@ -109,6 +112,8 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             processBar.setVisibility(View.VISIBLE);
             compAddImageMsn.setVisibility(View.GONE);
             modification=true;
+            toolbarTitle.setText(R.string.ModifyRecipe);
+            cancelBtn.setVisibility(View.VISIBLE);
             nameRecipe = parameters.getString("name");
             originalName = nameRecipe;
             nameComp.setText(nameRecipe);
@@ -120,29 +125,34 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             instructionComp.setVisibility(View.VISIBLE);
             instructionRecipe = parameters.getString("instruction");
             instructionComp.setText(instructionRecipe);
-            imageRecipe = parameters.getString("image");
-            imageUri=imageRecipe;
-            String[] parts = imageUri.split("\\%2F");
-            p= parts[3].split("\\?alt=");
-            Glide.with(this)
-                    .load(imageRecipe)
-                    .centerCrop()
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            noneImage.setVisibility(View.VISIBLE);
-                            processBar.setVisibility(View.GONE);
-                            return false;
-                        }
+            imageUri = parameters.getString("image");
+            if(imageUri.contains("android.resource")){
+                image.setImageResource(R.drawable._642037847251);
+                imageUri="";
+            }
+            else {
+                String[] parts = imageUri.split("\\%2F");
+                imageNameOnFirebase = parts[3].split("\\?alt=");
+                Glide.with(this)
+                        .load(imageUri)
+                        .centerCrop()
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                noneImage.setVisibility(View.VISIBLE);
+                                processBar.setVisibility(View.GONE);
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            noneImage.setVisibility(View.VISIBLE);
-                            processBar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .into(image);
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                noneImage.setVisibility(View.VISIBLE);
+                                processBar.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .into(image);
+            }
         }
     }
 
@@ -181,7 +191,11 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             compDeleteBtn.setVisibility(View.GONE);
             compAddImageMsn.setVisibility(View.VISIBLE);
         }
-        else if(cancelBtn==v||noBtn==v) finish();
+        else if(cancelBtn==v||noBtn==v){
+            loadFirebaseInfo();
+            databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(originalName).removeValue();
+            finish();
+        }
         else if(saveBtn==v){
             try {
                 setValues();
@@ -201,22 +215,10 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         FirebaseApp.initializeApp(this);
     }
 
-    private void setValues() throws IOException {
-         nameRecipe= nameComp.getText().toString();
-         imageRecipe=imageUri;
-         descriptionRecipe= descriptionComp.getText().toString();
-         instructionRecipe= instructionComp.getText().toString();
-         favorite=false;
-         numIngredientStore=0;
-         ingredients=StringToArray(ingredientComp.getText().toString());
-
-    }
-
     private void validation() {
         if(nameRecipe.equals("")){
             nameComp.setError("Campo obligatorio");
         }
-
         else {
             if(modification)databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(originalName).removeValue();
             if (!nameRecipe.equals(originalName)) {
@@ -246,31 +248,42 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
 
 
     private void pushImage(){
-        StorageReference filePath=mStorage.child("User").child(user.getUid()).child("RecipeImage");
-        if(!imageChanced && modification)filePath= filePath.child(p[0]);
-        else filePath= filePath.child(resultUriImage.getLastPathSegment());
-        filePath.putFile(resultUriImage).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).removeValue();
-                Toast.makeText(context, R.string.imposibleCreation, Toast.LENGTH_LONG).show();
+            if(modification){
+
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                dialog.dismiss();
-                finish();
-                if(modification){
-                    finish();
-                    Toast.makeText(context, R.string.modifiedAndImageRetard, Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(context, R.string.createdAndImageRetard, Toast.LENGTH_LONG).show();
+            StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeImage").child(imageUri);
+           /* if (modification) {
+                filePath = filePath.child(imageNameOnFirebase[0]);
+                if (!imageChanced) resultUriImage = Uri.parse(imageRecipe);
+                else {
                 }
-
             }
-        });
+            else filePath = filePath.child(resultUriImage.getLastPathSegment());*/
+            filePath.putFile(resultUriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    dialog.dismiss();
+                    finish();
+                    if (modification) {
+                        Toast.makeText(context, R.string.modifiedAndImageRetard, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(context, R.string.createdAndImageRetard, Toast.LENGTH_LONG).show();
+                    }
 
-
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    dialog.dismiss();
+                    finish();
+                    if (modification){
+                        Toast.makeText(context, R.string.modifiedButNoImage, Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(context, R.string.creadButNoImage, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
     }
 
     private void dialog() {
@@ -279,21 +292,39 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         View view = inflater.inflate(R.layout.my_recipe_log_dialog, null);
         builder.setView(view);
         builder.setCancelable(false);
-
         dialog = builder.create();
         dialog.show();
     }
 
+    private void setValues() throws IOException {
+        nameRecipe= nameComp.getText().toString();
+        if(imageChanced){
+            imageUri=Uri.parse(imageUri).getLastPathSegment();
+        }
+        else if(!modification) imageUri="";
+        descriptionRecipe= descriptionComp.getText().toString();
+        instructionRecipe= instructionComp.getText().toString();
+        favorite=false;
+        numIngredientStore=0;
+        ingredients=StringToArray(ingredientComp.getText().toString());
+
+    }
+
     private void pushDB() {
-        String imageURIDif;
-        if(modification) imageURIDif=p[0];
-        else imageURIDif=resultUriImage.getLastPathSegment();
-        recipe = new Recipe(nameRecipe,imageURIDif, descriptionRecipe,instructionRecipe,true,favorite,numIngredientStore,ingredients);
+       /* if(imageChanced) {
+            if(modification) imageURIDif= imageNameOnFirebase[0];
+             else imageURIDif=resultUriImage.getLastPathSegment();
+          }*/
+        recipe = new Recipe(nameRecipe,imageUri, descriptionRecipe,instructionRecipe,true,favorite,numIngredientStore,ingredients);
         databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                pushImage();
+                if(imageChanced) pushImage();
+                else{
+                    dialog.dismiss();
+                    finish();
                 }
+            }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -313,9 +344,4 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         intent.setType("image/");
         startActivityForResult(intent.createChooser(intent,"Selecione la aplicación"),10);
     }
-
-
-
-
-
 }

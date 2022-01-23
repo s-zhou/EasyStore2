@@ -53,7 +53,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         imageComp.setImageResource(R.drawable._642037847251);
         editBtn.setVisibility(View.GONE);
         loadInfo();
-
         backComp.setOnClickListener(this);
         editBtn.setOnClickListener(this);
         favoriteComp.setOnClickListener(this);

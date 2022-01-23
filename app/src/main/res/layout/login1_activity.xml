@@ -16,14 +16,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/appicon_invertido500" />
+        app:srcCompat="@drawable/appicon_invertido500x500" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/loginBtn"
         android:layout_width="242dp"
         android:layout_height="47dp"
         android:layout_marginTop="28dp"
         android:backgroundTint="#FFFFFF"
+        android:onClick="loginBotton"
         android:drawableLeft="@drawable/_c030bd6bd7ee87ad41485e3c7598dd4__1_"
         android:text="@string/continuar_google"
         android:textColor="@color/general_color"

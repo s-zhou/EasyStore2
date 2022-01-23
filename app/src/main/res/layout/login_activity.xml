@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/appicon_invertido500" />
+        app:srcCompat="@drawable/appicon_invertido500x500" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

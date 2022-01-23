@@ -20,11 +20,11 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="63dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/appicon_invertido500" />
+        app:srcCompat="@drawable/appicon_invertido500x500" />
 </androidx.constraintlayout.widget.ConstraintLayout>

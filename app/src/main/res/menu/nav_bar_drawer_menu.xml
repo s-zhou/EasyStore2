@@ -14,7 +14,7 @@
     <menu>
         <item
             android:id="@+id/recipe"
-            android:icon="@drawable/ic_list"
+            android:icon="@drawable/ic_baseline_menu_book_24"
             android:title="@string/recipeDay"></item>
         <item
             android:id="@+id/favoriteRecipe"
@@ -22,7 +22,7 @@
             android:title="@string/favoriteRecipes"></item>
         <item
             android:id="@+id/myRecipe"
-            android:icon="@drawable/ic_baseline_favorite_24"
+            android:icon="@drawable/ic_list"
             android:title="@string/myRecipes"></item>
     </menu>
 </item><item android:title="@string/sistem">

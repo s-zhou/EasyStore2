@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment implements View.OnClickListener{
     public AdapterProducts adapterProducts;
+    TextView noneProduct;
     RecyclerView productRecyclerView;
 
     ConstraintLayout load;
@@ -52,6 +54,8 @@ public class MainFragment extends Fragment implements View.OnClickListener{
         load = view.findViewById(R.id.productLoadConstraint);
         load.setVisibility(View.GONE);
         creatProductBtn = view.findViewById(R.id.createProductBtn);
+        noneProduct = view.findViewById(R.id.noneProductTextView);
+        noneProduct.setVisibility(View.GONE);
         creatProductBtn.setVisibility(View.GONE);
         creatProductBtn.setOnClickListener(this);
         productRecyclerView = view.findViewById(R.id.storeRecyclerView);
@@ -114,7 +118,13 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                         listProductRV.add(new ProductRV(name, quantity,expiredDate,category,description, unit, s));
                     }
                      listProductRV = pLO.orderByName(listProductRV);
+                    if(allProductName.size()>0) noneProduct.setVisibility(View.GONE);
                     showListItems(listProductRV);
+                }
+                else{
+                    creatProductBtn.setVisibility(View.VISIBLE);
+                    noneProduct.setVisibility(View.VISIBLE);
+                    load.setVisibility(View.GONE);
                 }
             }
 

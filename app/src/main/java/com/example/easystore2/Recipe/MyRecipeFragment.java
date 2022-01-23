@@ -115,15 +115,21 @@ public class MyRecipeFragment extends Fragment implements View.OnClickListener {
 
         for(Recipe r: recipes){
             ++i;
-            StorageReference filePathImage= filePath.child(r.getImage());
-            int finalI = i;
-            filePathImage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    r.setImage(uri.toString());
-                    if(finalI ==recipes.size())  showListItems(recipes);
-                }
-            });
+            if(r.getImage().equals("")){
+                r.setImage("android.resource://" + c.getPackageName() +"/"+R.drawable._642037847251);
+                if (i == recipes.size()) showListItems(recipes);
+            }
+            else {
+                StorageReference filePathImage = filePath.child(r.getImage());
+                int finalI = i;
+                filePathImage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        r.setImage(uri.toString());
+                        if (finalI == recipes.size()) showListItems(recipes);
+                    }
+                });
+            }
         }
     }
 
