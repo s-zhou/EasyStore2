@@ -65,7 +65,7 @@ public class AdapterRecipe extends RecyclerView.Adapter<RecipeViewHolder> implem
         processBar.setVisibility(View.VISIBLE);
         request = Volley.newRequestQueue(inflater.getContext());
 
-        if (!image.contains("firebasestorage") && !image.contains("android.resource")) {
+        if (!image.contains("firebasestorage") && !image.contains("android.resource")  && !image.contains("edamam")  ) {
             StorageReference filePathImage = FirebaseStorage.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("RecipeImage").child(image);
             filePathImage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override

@@ -239,7 +239,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
             if(this.validation()){
                 pushDB();
                 Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         }else if(comSaveProduct ==v){
@@ -247,7 +247,7 @@ public class CreateProduct extends AppCompatActivity implements View.OnClickList
                 deleteProduct(iniProduct);
                 pushDB();
                 Intent intent = new Intent(CreateProduct.this, MainActivityNavBar.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+               //s intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
             }

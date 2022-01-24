@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,10 +30,13 @@ import com.example.easystore2.CreateRecipeActivity;
 import com.example.easystore2.MainActivityNavBar;
 import com.example.easystore2.ProductList.CreateProduct;
 import com.example.easystore2.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -60,6 +64,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         backComp.setOnClickListener(this);
         editBtn.setOnClickListener(this);
         favoriteComp.setOnClickListener(this);
+        docBtn.setOnClickListener(this);
     }
 
     private void associateComponents() {
@@ -165,19 +170,39 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
         else if(v==editBtn){
             loadEditRecipe();
         }
+        else if(v==docBtn){
+            showDoc();
+        }
         else if(v==favoriteComp){
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
             ref = databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName());
             if(recipe.isFavorite()){
                 dialog();
+
             }
             else {
                 favoriteComp.setBackgroundResource(R.drawable.favorite_select_24);
                 recipe.setFavorite(true);
                 ref.setValue(recipe);
+                like=true;
             }
+            if(mine) databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).child("favorite").setValue(recipe.isFavorite());
+
         }
+    }
+
+    private void showDoc() {
+        StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+        StorageReference filePath = mStorage.child("User").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("RecipeDoc").child(doc);
+        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(browserIntent);
+            }
+        });
+
     }
 
     private void loadEditRecipe() {
@@ -210,6 +235,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements View.OnCl
                 recipe.setFavorite(false);
                 ref.removeValue();
                 dialog.dismiss();
+                like=false;
             }
         });
         Button noBtn = view.findViewById(R.id.noBtn);

@@ -69,6 +69,7 @@ public class RecipeFragment extends Fragment {
     ArrayList<Recipe> recipes = new ArrayList<>();
     private Button createRecipeBtn;
     private TextView noneRecipe;
+    private boolean filterRecipe;
 
     @Nullable
     @Override
@@ -78,15 +79,13 @@ public class RecipeFragment extends Fragment {
         loadConstrait.setVisibility(View.GONE);
         noneRecipe = view.findViewById(R.id.recipeNoneTV);
         noneRecipe.setText("Sin recetas");
-
+        filterRecipe=false;
         noneRecipe.setVisibility(View.GONE);
         recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
         createRecipeBtn = view.findViewById(R.id.creatRecipeBtn);
         createRecipeBtn.setVisibility(View.GONE);
         mQueue = Volley.newRequestQueue(getContext());
         loadDBRecipe();
-
-
         return view;
     }
 
@@ -241,6 +240,7 @@ public class RecipeFragment extends Fragment {
         intent.putExtra("description", r.getDescription());
         boolean mine= r.isMine();
         intent.putExtra("mine",mine);
+        intent.putExtra("doc","");
         intent.putExtra("like",exists);//mirar
         startActivity(intent);
     }
@@ -284,7 +284,8 @@ public class RecipeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadRV() {
         recipes.sort((d1, d2) -> (new Integer(d2.getNumIngredientStore())).compareTo(new Integer(d1.getNumIngredientStore())));
-        saveDB(recipes);
+        if(!filterRecipe)saveDB(recipes);
+        else filterRecipe =false;
         showListItems(recipes);
     }
 
@@ -293,7 +294,6 @@ public class RecipeFragment extends Fragment {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://easystore-beb89-default-rtdb.europe-west1.firebasedatabase.app").getReference();
         DatabaseReference ref = databaseReference.child("User").child(user.getUid()).child("DayRecipe").child(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
         for(Recipe r: this.recipes){
-
             ref.child(r.getName()).setValue(r);
         }
     }
@@ -336,7 +336,7 @@ public class RecipeFragment extends Fragment {
         String filter ="";
         recipes.clear();
         //cadapterRecipe.notifyDataSetChanged();
-
+        filterRecipe=true;
         if(!diet.equals("None")) filter += "&diet=" + diet;
         if(!health.equals("None")) filter += "&health=" + health;
         if(!cuisineType.equals("None")) filter += "&cuisineType=" + cuisineType;

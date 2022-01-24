@@ -223,6 +223,7 @@ public class MainActivityNavBar extends AppCompatActivity implements NavigationV
 
                 return false;
             }
+
         });
         return super.onCreateOptionsMenu(menu);
     }

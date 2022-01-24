@@ -51,9 +51,9 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
     TextView compAddImageMsn, toolbarTitle, docName;
     EditText nameComp, descriptionComp, ingredientComp, instructionComp;
     Button compDeleteBtn, cancelBtn, noBtn, saveBtn,loadDocBtn, deleteDocBtn;
-    String imageUri="",originalName;
+    String imageUri="",originalName, docOld;
     String nameRecipe,descriptionRecipe,ingredientRecipe,instructionRecipe;
-    boolean favorite,modification, imageChanced, docChanged, docDeleted;
+    boolean modification, imageChanced, docChanged, docDeleted,oldDeleted,like;
     int numIngredientStore;
     FirebaseUser user ;
     ConstraintLayout loadDocLayout;
@@ -79,6 +79,8 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         imageChanced=false;
         docChanged=false;
         docDeleted=false;
+        like=false;
+        oldDeleted=false;
         resultUriImage = Uri.parse("android.resource://" + getPackageName() +"/"+R.drawable._642037847251);
         imageUri = resultUriImage.getLastPathSegment().toString()+".jpg";
         compDeleteBtn.setVisibility(View.GONE);
@@ -128,6 +130,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             cancelBtn.setVisibility(View.VISIBLE);
             nameRecipe = parameters.getString("name");
             originalName = nameRecipe;
+            like = parameters.getBoolean("like");
             nameComp.setText(nameRecipe);
             descriptionRecipe = parameters.getString("description");
             descriptionComp.setText(descriptionRecipe);
@@ -169,7 +172,8 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
             docString = parameters.getString("doc");
             if(!docString.equals("")){
                 loadDocLayout.setVisibility(View.VISIBLE);
-                loadDocBtn.setText(docString);
+                docName.setText(docString);
+                docOld=docString;
             }
         }
     }
@@ -181,6 +185,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         }
         else if(v==deleteDocBtn){
             docDeleted=true;
+            loadDocLayout.setVisibility(View.GONE);
         }
         else if(loadDocBtn==v){
             loadDoc();
@@ -270,27 +275,22 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         else docString ="";
         descriptionRecipe= descriptionComp.getText().toString();
         instructionRecipe= instructionComp.getText().toString();
-        favorite=false;
         numIngredientStore=0;
         ingredients=StringToArray(ingredientComp.getText().toString());
 
     }
 
     private void pushDB() {
-       /* if(imageChanced) {
-            if(modification) imageURIDif= imageNameOnFirebase[0];
-             else imageURIDif=resultUriImage.getLastPathSegment();
-          }*/
-        recipe = new Recipe(nameRecipe,imageUri, descriptionRecipe,instructionRecipe,docString,true,favorite,numIngredientStore,ingredients);
+        recipe = new Recipe(nameRecipe,imageUri, descriptionRecipe,instructionRecipe,docString,true,like,numIngredientStore,ingredients);
         databaseReference.child("User").child(user.getUid()).child("MisRecetas").child(recipe.getName()).setValue(recipe).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                if(docChanged) pushDoc();
-                else if(imageChanced) pushImage();
-                else{
-                    dialog.dismiss();
-                    finish();
+                pushDBSuccessDo();
+                if(like) {
+                    databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(originalName).removeValue();
+                    databaseReference.child("User").child(user.getUid()).child("FavoriteRecipe").child(recipe.getName()).setValue(recipe);
                 }
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -301,15 +301,35 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
         });
 }
 
+    private void pushDBSuccessDo() {
+        if(docDeleted){
+            deleteDoc();
+        }
+        if(docChanged) pushDoc();
+        else if(imageChanced) pushImage();
+        else{
+            dialog.dismiss();
+            finish();
+        }
+    }
+
+    private void deleteDoc() {
+        StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeDoc").child(docOld);
+        filePath.delete().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                oldDeleted=true;
+            }
+        });
+    }
+
     private void pushDoc() {
         StorageReference filePath = mStorage.child("User").child(user.getUid()).child("RecipeDoc").child(docUri.getLastPathSegment());
-           /* if (modification) {
-                filePath = filePath.child(imageNameOnFirebase[0]);
-                if (!imageChanced) resultUriImage = Uri.parse(imageRecipe);
-                else {
-                }
-            }
-            else filePath = filePath.child(resultUriImage.getLastPathSegment());*/
         filePath.putFile(docUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -317,6 +337,7 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
                 else{
                     dialog.dismiss();
                     finish();
+                    if(!oldDeleted)deleteDoc();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -349,9 +370,11 @@ public class CreateRecipeActivity extends AppCompatActivity implements View.OnCl
                 dialog.dismiss();
                 if (modification) {
                     Toast.makeText(context, R.string.modifiedAndImageRetard, Toast.LENGTH_LONG).show();
+
                 } else {
                     Toast.makeText(context, R.string.createdAndImageRetard, Toast.LENGTH_LONG).show();
                 }
+
 
                 finish();
             }
