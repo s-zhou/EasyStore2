@@ -1,5 +1,5 @@
 # EasyStore
-Esta es una aplicación nativa para Android desarrollada por un estudiante de la Facultad de Informática de Barcelona desde zero. 
+Esta es una aplicación nativa para Android desarrollada por Sufang Zhou, estudiante de la Universidad Politécnica de Cataluña, desde zero. 
 La finalidad de la app es intenta de mitigar el desperdicio de alimentos. La aplicación permite a los usuarios registrar su inventario, información que es gestionada para realizar recomendaciones de recetas, con el objetivo de intentar que el usuario consuma los productos antes de la fecha de caducidad.
 
 ## Tecnologias
