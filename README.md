@@ -17,3 +17,12 @@ La aplicación ha sido desarrollada en Android con el back-end de Firebase. Se h
 
 ### Registro de un producto
 ![CrearProducto](https://user-images.githubusercontent.com/64744109/152826563-66c67b79-9c43-491e-b9ef-20f5bb4f8622.gif)
+
+### Filtro de recetas
+![FiltrarRecetas](https://user-images.githubusercontent.com/64744109/152840715-4bc803bf-3b34-4544-97c1-5c39ca8ae79f.gif)
+
+### Recetas favoritas del usuario
+![VerRecetaFavorita](https://user-images.githubusercontent.com/64744109/152841026-3ff1dc4c-8e20-4e31-ab46-abf2d9557677.gif)
+
+### Recetas creadas por el usuario
+![VerMisRecetas](https://user-images.githubusercontent.com/64744109/152841067-4d1ff3c9-209c-4a54-835d-5af684d65205.gif)
