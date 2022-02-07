@@ -8,4 +8,12 @@ La aplicación ha sido desarrollada en Android con el back-end de Firebase. Se h
 ## Vista al detalle
 ### Lista de inventario
 ![Screenrecorder-2022-01-24-16-16-44-901 (1)](https://user-images.githubusercontent.com/64744109/152820819-fedeb9d2-e856-431c-9955-5a21e3b0e5a6.gif)
-![Screenrecorder-2022-01-24-16-03-54-704](https://user-images.githubusercontent.com/64744109/152822459-bc56b7ed-0af4-4982-9de6-7adf96ec2a4c.gif)
+
+### Busqueda de un producto
+![CercaInventario](https://user-images.githubusercontent.com/64744109/152826124-6829ec7d-f998-4575-9e94-a3cd5f753c51.gif)
+
+### Filtro del inventario
+![FiltrarInventario](https://user-images.githubusercontent.com/64744109/152826177-2f833e7d-528a-415b-9dda-2f631807740d.gif)
+
+### Registro de un producto
+![Uploading CrearProducto.gif…]()
