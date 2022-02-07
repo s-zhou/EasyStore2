@@ -6,5 +6,4 @@ La finalidad de la app es intenta de mitigar el desperdicio de alimentos. La apl
 La aplicación ha sido desarrollada en Android con el back-end de Firebase. Se han usado API de google para el LogIn i API de EDAMAM para la busqueda de recetas.
 
 ## Vista al detalle
-
-![image](https://user-images.githubusercontent.com/64744109/152819820-cca3e39a-90fb-459d-b2f5-47d3d6291a03.png)
+![Screenrecorder-2022-01-24-16-16-44-901 (1)](https://user-images.githubusercontent.com/64744109/152820819-fedeb9d2-e856-431c-9955-5a21e3b0e5a6.gif)
